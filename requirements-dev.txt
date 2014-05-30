@@ -1,0 +1,4 @@
+# Linting
+flake8==2.1.0
+# Test runner
+pytest==2.5.2
