@@ -18,3 +18,18 @@ class TestSetupAndTeardown(object):
         Space.teardown()
 
         assert Space.current is None
+
+
+class TestProxyFor(object):
+    def test_creates_new_proxies(self):
+        space = Space()
+        subject = space.proxy_for('some object')
+
+        assert repr(subject) == "<Proxy('some object')>"
+
+    def test_retrieves_existing_proxies(self):
+        space = Space()
+        initial_proxy = space.proxy_for('some object')
+        retrieved_proxy = space.proxy_for('some object')
+
+        assert initial_proxy is retrieved_proxy
