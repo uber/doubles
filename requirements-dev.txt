@@ -1,4 +1,6 @@
 # Linting
 flake8==2.1.0
+# Test doubles - for now!
+mock==1.0.1
 # Test runner
 pytest==2.5.2
