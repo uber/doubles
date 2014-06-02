@@ -1,3 +1,5 @@
+from mock import Mock, patch
+
 from doubles.space import Space
 
 
@@ -18,6 +20,22 @@ class TestSetupAndTeardown(object):
         Space.teardown()
 
         assert Space.current is None
+
+
+@patch('doubles.space.Proxy')
+class TestVerify(object):
+    def setup(self):
+        Space.setup()
+
+    def test_verifies_all_proxies(self, Proxy):
+        Proxy.side_effect = iter([Mock(), Mock(), Mock()])
+        objects = [object(), object(), object()]
+        proxies = [Space.current.proxy_for(obj) for obj in objects]
+
+        Space.verify()
+
+        for proxy in proxies:
+            assert proxy.verify.call_count == 1
 
 
 class TestProxyFor(object):
