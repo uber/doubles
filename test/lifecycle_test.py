@@ -1,35 +1,35 @@
 from mock import patch
 from pytest import raises
 
-import doubles
+from doubles import lifecycle
 
 
 class TestSetupAndTeardown(object):
     def setup(self):
-        doubles.teardown()
+        lifecycle.teardown()
 
     def test_creates_and_stores_a_new_space(self):
-        doubles.setup()
+        lifecycle.setup()
 
-        assert isinstance(doubles._current, doubles.Space)
+        assert isinstance(lifecycle._current, lifecycle.Space)
 
     def test_deletes_the_space(self):
-        doubles.setup()
-        doubles.teardown()
+        lifecycle.setup()
+        lifecycle.teardown()
 
-        assert doubles._current is None
+        assert lifecycle._current is None
 
 
 class TestVerify(object):
     def setup(self):
-        doubles.teardown()
+        lifecycle.teardown()
 
-    @patch('doubles._current')
+    @patch('doubles.lifecycle._current')
     def test_verifies_current_space(self, _current):
-        doubles.verify()
+        lifecycle.verify()
 
         assert _current.verify.call_count == 1
 
     def test_raises_when_verify_is_called_without_a_space(self):
-        with raises(doubles.NoSpaceError):
-            doubles.verify()
+        with raises(lifecycle.NoSpaceError):
+            lifecycle.verify()
