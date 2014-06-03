@@ -1,9 +1,13 @@
 from mock import patch
+from pytest import raises
 
 import doubles
 
 
 class TestSetupAndTeardown(object):
+    def setup(self):
+        doubles.teardown()
+
     def test_creates_and_stores_a_new_space(self):
         doubles.setup()
 
@@ -16,9 +20,16 @@ class TestSetupAndTeardown(object):
         assert doubles._current is None
 
 
-@patch('doubles._current')
 class TestVerify(object):
+    def setup(self):
+        doubles.teardown()
+
+    @patch('doubles._current')
     def test_verifies_current_space(self, _current):
         doubles.verify()
 
         assert _current.verify.call_count == 1
+
+    def test_raises_when_verify_is_called_without_a_space(self):
+        with raises(doubles.NoSpaceError):
+            doubles.verify()

@@ -20,4 +20,11 @@ def teardown():
 
 
 def verify():
-    _current.verify()
+    if _current:
+        _current.verify()
+    else:
+        raise NoSpaceError('Verification can only occur between calls to setup and teardown.')
+
+
+class NoSpaceError(StandardError):
+    pass
