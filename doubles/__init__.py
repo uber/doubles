@@ -1,6 +1,7 @@
 __version__ = '0.0.1'
 
 from doubles.double import Double  # noqa
+from doubles.targets.allowance_target import allow  # noqa
 from doubles.space import Space
 
 
