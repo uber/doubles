@@ -1,11 +1,12 @@
 class Double(object):
-    def __init__(self, target=None):
-        self.target = target
+    def __init__(self, *args):
+        if len(args) >= 1:
+            self._name = args[0]
 
     def __repr__(self):
-        class_name = self.__class__.__name__
+        address = hex(id(self))
 
-        if self.target is None:
-            return '{} (unnamed)'.format(class_name)
+        if hasattr(self, '_name'):
+            return '<Double of {!r} object at {}>'.format(self._name, address)
         else:
-            return '{}({!r})'.format(class_name, self.target)
+            return '<Double object at {}>'.format(address)
