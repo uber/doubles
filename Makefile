@@ -1,5 +1,5 @@
 test: clean lint
-	@py.test -s --cov doubles --cov-report term-missing test
+	@py.test -s test
 
 lint:
 	flake8 doubles test

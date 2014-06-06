@@ -2,3 +2,4 @@
 /.coverage
 /.python-version
 /*.egg-info
+/htmlcov
