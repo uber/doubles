@@ -1,2 +1,3 @@
 class MessageAllowance(object):
-    pass
+    def __init__(self, verify=False):
+        pass

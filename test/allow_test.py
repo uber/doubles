@@ -16,4 +16,4 @@ class TestAllow(object):
         subject = Double()
 
         with raises(UnallowedMethodCallError):
-            subject.foo
+            subject.foo()

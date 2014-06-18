@@ -12,6 +12,10 @@ class MethodDouble(object):
         self._define_proxy_method()
         self._allowances.append(MessageAllowance())
 
+    def add_expectation(self):
+        self._define_proxy_method()
+        self._allowances.append(MessageAllowance(verify=True))
+
     def _define_proxy_method(self):
         def proxy_method():
             pass

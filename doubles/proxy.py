@@ -8,6 +8,9 @@ class Proxy(object):
     def add_allowance(self, method_name):
         self._method_double_for(method_name).add_allowance()
 
+    def add_expectation(self, method_name):
+        self._method_double_for(method_name).add_expectation()
+
     def verify(self):
         pass
 
@@ -16,3 +19,7 @@ class Proxy(object):
 
     def __repr__(self):
         return "<Proxy({!r})>".format(self._obj)
+
+
+class MockExpectationError(Exception):
+    pass
