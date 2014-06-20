@@ -4,6 +4,8 @@ coverage==3.7.1
 flake8==2.1.0
 # Test doubles - for now!
 mock==1.0.1
+# Validate package
+pyroma==1.6
 # Test runner
 pytest==2.5.2
 # Documentation
