@@ -52,6 +52,32 @@ To instruct the stub to return a predetermined value, use the ``and_return`` met
 
 Once a message has been allowed, the double can receive it any number of times and it will always return the value specified.
 
+The examples shown so far will allow the ``foo`` method to be called with any arguments. To specify that a message is allowed only with specific arguments, use ``with_args``::
+
+    from doubles import Double, allow
+
+    def test_allows_foo_with_args():
+        dummy = Double('dummy')
+
+        allow(dummy).to_receive('foo').with_args(2, 'arguments', some='keyword').and_return('bar')
+
+        dummy.foo()  # Raises an UnallowedMethodCallError
+        dummy.foo(2, 'arguments', some='keyword')  # Returns 'bar'
+
+Multiple message allowances can be specified for the same method with different arguments. To specify that a method can only be called *with no arguments*, use ``with_no_args``::
+
+    from doubles import Double, allow
+
+    def test_allows_foo_with_no_args():
+        dummy = Double('dummy')
+
+        allow(dummy).to_receive('foo').with_no_args().and_return('bar')
+
+        dummy.foo('an argument')  # Raises an UnallowedMethodCallError
+        dummy.foo()  # Returns 'bar'
+
+Without the call to ``with_no_args``, ``dummy.foo`` could be called with any combination of arguments.
+
 Mocks and message expectations
 ------------------------------
 
@@ -74,6 +100,8 @@ The above test will fail with a ``MockExpectationError`` exception, because we e
         expect(dummy).to_receive('foo')
 
         dummy.foo()
+
+Mocks support the same interface for specifying arguments and return values that stubs do.
 
 Fakes
 -----
