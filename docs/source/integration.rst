@@ -1,5 +1,5 @@
 Integration with test frameworks
-=============================
+================================
 
 Integrating Doubles with your test framework of choice involves adding a few calls to the setup and teardown hooks. There are three methods from Doubles that must be invoked:
 
