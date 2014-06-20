@@ -1,7 +1,7 @@
 from pytest import raises
 
 from doubles import Double, expect, lifecycle
-from doubles.proxy import MockExpectationError
+from doubles.exceptions import MockExpectationError
 
 
 class TestExpect(object):

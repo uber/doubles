@@ -1,3 +1,6 @@
+from doubles.exceptions import UnallowedMethodCallError
+
+
 class Double(object):
     def __init__(self, *args):
         if len(args) >= 1:
@@ -13,7 +16,3 @@ class Double(object):
             return '<Double of {!r} object at {}>'.format(self._name, address)
         else:
             return '<Double object at {}>'.format(address)
-
-
-class UnallowedMethodCallError(Exception):
-    pass

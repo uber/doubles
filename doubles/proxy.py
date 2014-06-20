@@ -19,7 +19,3 @@ class Proxy(object):
 
     def __repr__(self):
         return "<Proxy({!r})>".format(self._obj)
-
-
-class MockExpectationError(Exception):
-    pass
