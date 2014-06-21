@@ -54,3 +54,10 @@ class TestAllow(object):
         allow(subject).to_receive('foo').with_args('baz').and_return('blah')
 
         assert subject.foo('baz') == 'blah'
+
+    def test_returns_result_of_a_callable(self):
+        subject = Double()
+
+        allow(subject).to_receive('foo').and_return_result_of(lambda: 'bar')
+
+        assert subject.foo() == 'bar'
