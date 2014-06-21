@@ -1,13 +1,7 @@
-from doubles.exceptions import UnallowedMethodCallError
-
-
 class Double(object):
     def __init__(self, *args):
         if len(args) >= 1:
             self._name = args[0]
-
-    def __getattr__(self, attr):
-        raise UnallowedMethodCallError('Double received unallowed method call: {}'.format(attr))
 
     def __repr__(self):
         address = hex(id(self))

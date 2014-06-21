@@ -10,4 +10,4 @@ class AllowanceTarget(object):
         self._proxy = current_space().proxy_for(target)
 
     def to_receive(self, method_name):
-        self._proxy.add_allowance(method_name)
+        return self._proxy.add_allowance(method_name)

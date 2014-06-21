@@ -10,14 +10,15 @@ class MethodDouble(object):
 
     def add_allowance(self):
         self._define_proxy_method()
-        self._allowances.append(MessageAllowance())
-
-    def add_expectation(self):
-        self._define_proxy_method()
-        self._allowances.append(MessageAllowance(verify=True))
+        allowance = MessageAllowance()
+        self._allowances.append(allowance)
+        return allowance
 
     def _define_proxy_method(self):
-        def proxy_method():
-            pass
+        def proxy_method(*args, **kwargs):
+            return self._find_matching_allowance(args, kwargs).return_value
 
         setattr(self._obj, self._method_name, proxy_method)
+
+    def _find_matching_allowance(self, args, kwargs):
+        return self._allowances[0]

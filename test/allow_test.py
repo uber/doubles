@@ -1,7 +1,6 @@
 from pytest import raises
 
 from doubles import allow, Double
-from doubles.double import UnallowedMethodCallError
 
 
 class TestAllow(object):
@@ -12,8 +11,15 @@ class TestAllow(object):
 
         assert subject.foo() is None
 
-    def test_raises_on_unallowed_method_call(self):
+    def test_raises_on_undefined_attribute_access(self):
         subject = Double()
 
-        with raises(UnallowedMethodCallError):
-            subject.foo()
+        with raises(AttributeError):
+            subject.foo
+
+    def test_returns_specified_value(self):
+        subject = Double()
+
+        allow(subject).to_receive('foo').and_return('bar')
+
+        assert subject.foo() == 'bar'
