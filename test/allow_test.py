@@ -1,6 +1,7 @@
 from pytest import raises
 
 from doubles import allow, Double
+from doubles.exceptions import UnallowedMethodCallError
 
 
 class TestAllow(object):
@@ -37,3 +38,11 @@ class TestAllow(object):
         allow(subject).to_receive('foo').with_args('bar', baz='blah')
 
         assert subject.foo('bar', baz='blah') is None
+
+    def test_raises_if_arguments_were_specified_by_not_provided_when_called(self):
+        subject = Double()
+
+        allow(subject).to_receive('foo').with_args('bar', baz='blah')
+
+        with raises(UnallowedMethodCallError):
+            subject.foo()

@@ -1,3 +1,4 @@
+from doubles.exceptions import UnallowedMethodCallError
 from doubles.message_allowance import MessageAllowance
 
 
@@ -16,9 +17,16 @@ class MethodDouble(object):
 
     def _define_proxy_method(self):
         def proxy_method(*args, **kwargs):
-            return self._find_matching_allowance(args, kwargs).return_value
+            allowance = self._find_matching_allowance(args, kwargs)
+
+            if not allowance:
+                raise UnallowedMethodCallError
+
+            return allowance.return_value
 
         setattr(self._obj, self._method_name, proxy_method)
 
     def _find_matching_allowance(self, args, kwargs):
-        return self._allowances[0]
+        for allowance in self._allowances:
+            if allowance.matches(args, kwargs):
+                return allowance
