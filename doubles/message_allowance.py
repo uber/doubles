@@ -4,3 +4,7 @@ class MessageAllowance(object):
 
     def and_return(self, return_value):
         self.return_value = return_value
+
+    def with_args(self, *args, **kwargs):
+        self.args = args
+        self.kwargs = kwargs
