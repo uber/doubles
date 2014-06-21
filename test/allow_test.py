@@ -46,3 +46,11 @@ class TestAllow(object):
 
         with raises(UnallowedMethodCallError):
             subject.foo()
+
+    def test_matches_most_specific_allowance(self):
+        subject = Double()
+
+        allow(subject).to_receive('foo').and_return('bar')
+        allow(subject).to_receive('foo').with_args('baz').and_return('blah')
+
+        assert subject.foo('baz') == 'blah'

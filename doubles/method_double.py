@@ -28,5 +28,9 @@ class MethodDouble(object):
 
     def _find_matching_allowance(self, args, kwargs):
         for allowance in self._allowances:
-            if allowance.matches(args, kwargs):
+            if allowance.matches_exactly(args, kwargs):
+                return allowance
+
+        for allowance in self._allowances:
+            if allowance.allows_any_args():
                 return allowance

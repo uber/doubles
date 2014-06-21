@@ -7,17 +7,19 @@ class MessageAllowance(object):
         self.args = _any
         self.kwargs = _any
 
+    def allows_any_args(self):
+        return self.args is _any and self.kwargs is _any
+
     def and_return(self, return_value):
         self.return_value = return_value
 
     def with_args(self, *args, **kwargs):
         self.args = args
         self.kwargs = kwargs
+        return self
 
-    def matches(self, args, kwargs):
+    def matches_exactly(self, args, kwargs):
         return self._property_matches('args', args) and self._property_matches('kwargs', kwargs)
 
-    def _property_matches(self, name, arg):
-        value = getattr(self, name)
-
-        return value is _any or value == arg
+    def _property_matches(self, name, value):
+        return getattr(self, name) == value
