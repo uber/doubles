@@ -10,10 +10,11 @@ class Proxy(object):
         return self.method_double_for(method_name).add_allowance()
 
     def add_expectation(self, method_name):
-        self.method_double_for(method_name).add_expectation()
+        return self.method_double_for(method_name).add_expectation()
 
     def verify(self):
-        pass
+        for method_double in self._method_doubles.values():
+            method_double.verify()
 
     def method_double_for(self, method_name):
         if method_name in self._method_doubles:
