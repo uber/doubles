@@ -9,20 +9,22 @@ class MethodDouble(object):
         self._obj = obj
 
         self._allowances = []
-        self._expectations = []
+
+        self._define_proxy_method()
 
     def add_allowance(self):
-        self._define_proxy_method()
         allowance = MessageAllowance()
         self._allowances.append(allowance)
         return allowance
 
     def add_expectation(self):
-        self._expectations.append(MessageExpectation())
+        expectation = MessageExpectation()
+        self._allowances.append(expectation)
+        return expectation
 
     def verify(self):
-        for expectation in self._expectations:
-            if not expectation.is_satisfied():
+        for allowance in self._allowances:
+            if not allowance.is_satisfied():
                 raise MockExpectationError
 
     def _define_proxy_method(self):
@@ -39,8 +41,10 @@ class MethodDouble(object):
     def _find_matching_allowance(self, args, kwargs):
         for allowance in self._allowances:
             if allowance.matches_exactly(args, kwargs):
+                allowance.record_call()
                 return allowance
 
         for allowance in self._allowances:
             if allowance.allows_any_args():
+                allowance.record_call()
                 return allowance

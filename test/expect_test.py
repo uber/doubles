@@ -12,3 +12,10 @@ class TestExpect(object):
 
         with raises(MockExpectationError):
             verify()
+
+    def test_passes_if_an_expected_method_call_is_made(self):
+        subject = Double()
+
+        expect(subject).to_receive('foo')
+
+        subject.foo()

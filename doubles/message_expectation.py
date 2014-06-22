@@ -1,3 +1,6 @@
-class MessageExpectation(object):
+from doubles.message_allowance import MessageAllowance
+
+
+class MessageExpectation(MessageAllowance):
     def is_satisfied(self):
-        pass
+        return self._called

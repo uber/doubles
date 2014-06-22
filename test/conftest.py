@@ -23,4 +23,5 @@ def pytest_runtest_setup(item):
 
 
 def pytest_runtest_teardown(item, nextitem):
+    lifecycle.verify()
     lifecycle.teardown()
