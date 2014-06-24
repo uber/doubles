@@ -34,8 +34,10 @@ class MethodDouble(object):
                 raise MockExpectationError
 
     def _define_proxy_method(self):
-        def proxy_method(*args, **kwargs):
-            expectation = self._find_matching_expectation(args, kwargs)
+        _self = self
+
+        def proxy_method(self, *args, **kwargs):
+            expectation = _self._find_matching_expectation(args, kwargs)
 
             if not expectation:
                 raise UnallowedMethodCallError
@@ -47,7 +49,8 @@ class MethodDouble(object):
         except AttributeError:
             pass
 
-        setattr(self._obj, self._method_name, proxy_method)
+        bound_proxy_method = proxy_method.__get__(self._obj)
+        setattr(self._obj, self._method_name, bound_proxy_method)
 
     def _find_matching_expectation(self, args, kwargs):
         for expectation in self._expectations:
