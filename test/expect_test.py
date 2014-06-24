@@ -19,3 +19,10 @@ class TestExpect(object):
         expect(subject).to_receive('foo')
 
         subject.foo()
+
+    def test_passes_if_method_is_called_with_specified_arguments(self):
+        subject = Double()
+
+        expect(subject).to_receive('foo').with_args('bar', baz='blah')
+
+        assert subject.foo('bar', baz='blah') is None
