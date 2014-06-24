@@ -18,6 +18,9 @@ def setup():
 def teardown():
     global _current_space
 
+    if current_space():
+        current_space().teardown()
+
     _current_space = None
 
 

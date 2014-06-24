@@ -9,6 +9,10 @@ class Space(object):
     def proxy_for(self, obj):
         return self._proxies.setdefault(id(obj), Proxy(obj))
 
+    def teardown(self):
+        for proxy in self._proxies.values():
+            proxy.restore_original_object()
+
     def verify(self):
         if self._is_verified:
             return

@@ -12,6 +12,10 @@ class Proxy(object):
     def add_expectation(self, method_name):
         return self.method_double_for(method_name).add_expectation()
 
+    def restore_original_object(self):
+        for method_double in self._method_doubles.values():
+            method_double.restore_original_method()
+
     def verify(self):
         for method_double in self._method_doubles.values():
             method_double.verify()

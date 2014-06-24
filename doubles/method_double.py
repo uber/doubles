@@ -22,6 +22,12 @@ class MethodDouble(object):
         self._expectations.append(expectation)
         return expectation
 
+    def restore_original_method(self):
+        try:
+            setattr(self._obj, self._method_name, self._original_method)
+        except AttributeError:
+            pass
+
     def verify(self):
         for expectation in self._expectations:
             if not expectation.is_satisfied():
@@ -35,6 +41,11 @@ class MethodDouble(object):
                 raise UnallowedMethodCallError
 
             return expectation.return_value
+
+        try:
+            self._original_method = getattr(self._obj, self._method_name)
+        except AttributeError:
+            pass
 
         setattr(self._obj, self._method_name, proxy_method)
 
