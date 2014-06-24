@@ -1,18 +1,20 @@
-from doubles import Double, allow, teardown
+from doubles import allow, Double, teardown
 
 
 class User(object):
+    class_attribute = 'foo'
+
     def __init__(self, name, age):
         self.name = name
         self._age = age
 
-    @classmethod
-    def get_first(cls):
-        return 'First user'
-
     @property
     def age(self):
         return self._age
+
+    @classmethod
+    def get_first(self):
+        return 'First user'
 
     def get_name(self):
         return self.name
@@ -54,3 +56,13 @@ class TestPartialDouble(object):
         allow(User).to_receive('get_first').and_return(user)
 
         assert User.get_first() is user
+
+    def test_stubs_class_attributes(self):
+        allow(User).to_receive('class_attribute').and_return('bar')
+
+        assert User.class_attribute() == 'bar'
+
+    def test_stubs_nonexistent_class_methods(self):
+        allow(User).to_receive('class_method').and_return('bar')
+
+        assert User.class_method() == 'bar'

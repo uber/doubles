@@ -1,3 +1,6 @@
+from inspect import isclass, ismethod
+
+from doubles.double import Double
 from doubles.exceptions import MockExpectationError, UnallowedMethodCallError
 from doubles.message_expectation import MessageAllowance
 from doubles.message_expectation import MessageExpectation
@@ -26,7 +29,7 @@ class MethodDouble(object):
         try:
             setattr(self._obj, self._method_name, self._original_method)
         except AttributeError:
-            pass
+            delattr(self._obj, self._method_name)
 
     def verify(self):
         for expectation in self._expectations:
@@ -36,7 +39,7 @@ class MethodDouble(object):
     def _define_proxy_method(self):
         _self = self
 
-        def proxy_method(self, *args, **kwargs):
+        def proxy_method(instance_or_class, *args, **kwargs):
             expectation = _self._find_matching_expectation(args, kwargs)
 
             if not expectation:
@@ -44,12 +47,17 @@ class MethodDouble(object):
 
             return expectation.return_value
 
-        try:
-            self._original_method = getattr(self._obj, self._method_name)
-        except AttributeError:
-            pass
+        if not self._is_pure_double():
+            try:
+                self._original_method = getattr(self._obj, self._method_name)
+            except AttributeError:
+                pass
 
-        bound_proxy_method = proxy_method.__get__(self._obj)
+        if self._is_class_method():
+            bound_proxy_method = classmethod(proxy_method)
+        else:
+            bound_proxy_method = proxy_method.__get__(self._obj, type(self._obj))
+
         setattr(self._obj, self._method_name, bound_proxy_method)
 
     def _find_matching_expectation(self, args, kwargs):
@@ -60,3 +68,15 @@ class MethodDouble(object):
         for expectation in self._expectations:
             if expectation.satisfy_any_args_match():
                 return expectation
+
+    def _is_pure_double(self):
+        return isinstance(self._obj, Double)
+
+    def _is_class_method(self):
+        if not isclass(self._obj):
+            return False
+
+        try:
+            return ismethod(self._original_method) and self._original_method.__self__ is self._obj
+        except AttributeError:
+            return True
