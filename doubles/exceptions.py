@@ -4,6 +4,12 @@ class MockExpectationError(Exception):
     pass
 
 
+class NoSpaceError(Exception):
+    """An exception raised when attempting to verify the lifecycle after it's been torn down."""
+
+    pass
+
+
 class UnallowedMethodCallError(Exception):
     """An exception raised when a double receives a message that has not been allowed."""
 

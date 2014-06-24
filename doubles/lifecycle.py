@@ -1,3 +1,4 @@
+from doubles.exceptions import NoSpaceError
 from doubles.space import Space
 
 
@@ -25,7 +26,3 @@ def verify():
         current_space().verify()
     else:
         raise NoSpaceError('Verification can only occur between calls to setup and teardown.')
-
-
-class NoSpaceError(StandardError):
-    pass
