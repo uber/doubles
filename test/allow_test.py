@@ -39,7 +39,7 @@ class TestAllow(object):
 
         assert subject.foo('bar', baz='blah') is None
 
-    def test_raises_if_arguments_were_specified_by_not_provided_when_called(self):
+    def test_raises_if_arguments_were_specified_but_not_provided_when_called(self):
         subject = Double()
 
         allow(subject).to_receive('foo').with_args('bar', baz='blah')
