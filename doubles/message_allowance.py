@@ -27,6 +27,11 @@ class MessageAllowance(object):
         self.kwargs = kwargs
         return self
 
+    def with_no_args(self):
+        self.args = ()
+        self.kwargs = {}
+        return self
+
     def satisfy_any_args_match(self):
         return self.args is _any and self.kwargs is _any
 

@@ -79,3 +79,27 @@ class TestWithArgs(object):
         allow(subject).to_receive('foo').with_args('baz').and_return('blah')
 
         assert subject.foo('baz') == 'blah'
+
+
+class TestWithNoArgs(object):
+    def test_allows_call_with_no_arguments(self):
+        subject = Double()
+
+        allow(subject).to_receive('foo').with_no_args()
+
+        assert subject.foo() is None
+
+    def test_raises_if_called_with_args(self):
+        subject = Double()
+
+        allow(subject).to_receive('foo').with_no_args()
+
+        with raises(UnallowedMethodCallError):
+            subject.foo('bar')
+
+    def test_chains_with_return_values(self):
+        subject = Double()
+
+        allow(subject).to_receive('foo').with_no_args().and_return('bar')
+
+        assert subject.foo() == 'bar'
