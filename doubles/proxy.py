@@ -22,6 +22,3 @@ class Proxy(object):
         else:
             method_double = self._method_doubles[method_name] = MethodDouble(method_name, self._obj)
             return method_double
-
-    def __repr__(self):
-        return "<Proxy({!r})>".format(self._obj)
