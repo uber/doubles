@@ -61,3 +61,17 @@ class TestAllow(object):
         allow(subject).to_receive('foo').and_return_result_of(lambda: 'bar')
 
         assert subject.foo() == 'bar'
+
+    def test_returns_result_of_callable_if_specified_after_regular_return(self):
+        subject = Double()
+
+        allow(subject).to_receive('foo').and_return('bar').and_return_result_of(lambda: 'baz')
+
+        assert subject.foo() == 'baz'
+
+    def test_returns_static_value_if_specified_after_callable_return_value(self):
+        subject = Double()
+
+        allow(subject).to_receive('foo').and_return_result_of(lambda: 'bar').and_return('baz')
+
+        assert subject.foo() == 'baz'

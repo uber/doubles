@@ -15,10 +15,12 @@ class MessageAllowance(object):
     def and_return(self, return_value):
         self._return_value = return_value
         self._is_callable_return = False
+        return self
 
     def and_return_result_of(self, return_value):
         self._return_value = return_value
         self._is_callable_return = True
+        return self
 
     def is_satisfied(self):
         return True
