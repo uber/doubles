@@ -1,5 +1,5 @@
 from doubles.exceptions import MockExpectationError, UnallowedMethodCallError
-from doubles.message_allowance import MessageAllowance
+from doubles.message_expectation import MessageAllowance
 from doubles.message_expectation import MessageExpectation
 
 
@@ -8,43 +8,41 @@ class MethodDouble(object):
         self._method_name = method_name
         self._obj = obj
 
-        self._allowances = []
+        self._expectations = []
 
         self._define_proxy_method()
 
     def add_allowance(self):
         allowance = MessageAllowance()
-        self._allowances.append(allowance)
+        self._expectations.append(allowance)
         return allowance
 
     def add_expectation(self):
         expectation = MessageExpectation()
-        self._allowances.append(expectation)
+        self._expectations.append(expectation)
         return expectation
 
     def verify(self):
-        for allowance in self._allowances:
-            if not allowance.is_satisfied():
+        for expectation in self._expectations:
+            if not expectation.is_satisfied():
                 raise MockExpectationError
 
     def _define_proxy_method(self):
         def proxy_method(*args, **kwargs):
-            allowance = self._find_matching_allowance(args, kwargs)
+            expectation = self._find_matching_expectation(args, kwargs)
 
-            if not allowance:
+            if not expectation:
                 raise UnallowedMethodCallError
 
-            return allowance.return_value
+            return expectation.return_value
 
         setattr(self._obj, self._method_name, proxy_method)
 
-    def _find_matching_allowance(self, args, kwargs):
-        for allowance in self._allowances:
-            if allowance.matches_exactly(args, kwargs):
-                allowance.record_call()
-                return allowance
+    def _find_matching_expectation(self, args, kwargs):
+        for expectation in self._expectations:
+            if expectation.satisfy_exact_match(args, kwargs):
+                return expectation
 
-        for allowance in self._allowances:
-            if allowance.allows_any_args():
-                allowance.record_call()
-                return allowance
+        for expectation in self._expectations:
+            if expectation.satisfy_any_args_match():
+                return expectation

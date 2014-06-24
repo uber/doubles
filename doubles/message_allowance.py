@@ -7,10 +7,7 @@ class MessageAllowance(object):
         self.args = _any
         self.kwargs = _any
         self._is_callable_return = False
-        self._called = False
-
-    def allows_any_args(self):
-        return self.args is _any and self.kwargs is _any
+        self._is_satisfied = True
 
     def and_return(self, return_value):
         self._return_value = return_value
@@ -23,18 +20,18 @@ class MessageAllowance(object):
         return self
 
     def is_satisfied(self):
-        return True
+        return self._is_satisfied
 
     def with_args(self, *args, **kwargs):
         self.args = args
         self.kwargs = kwargs
         return self
 
-    def matches_exactly(self, args, kwargs):
-        return self._property_matches('args', args) and self._property_matches('kwargs', kwargs)
+    def satisfy_any_args_match(self):
+        return self.args is _any and self.kwargs is _any
 
-    def record_call(self):
-        self._called = True
+    def satisfy_exact_match(self, args, kwargs):
+        return self._property_matches('args', args) and self._property_matches('kwargs', kwargs)
 
     @property
     def return_value(self):
