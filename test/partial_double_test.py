@@ -1,4 +1,6 @@
 from doubles import Double, allow, teardown
+from doubles.exceptions import VerifyingDoubleError
+import pytest
 
 
 class User(object):
@@ -54,3 +56,13 @@ class TestPartialDouble(object):
         allow(User).to_receive('get_first').and_return(user)
 
         assert User.get_first() is user
+
+    def test_nonexistent_instance_method(self):
+        user = User('Alice', 25)
+
+        with pytest.raises(VerifyingDoubleError):
+            allow(user).to_receive('nonexistent_method')
+
+    def test_nonexistent_class_method(self):
+        with pytest.raises(VerifyingDoubleError):
+            allow(User).to_receive('nonexistent_method')

@@ -14,3 +14,9 @@ class UnallowedMethodCallError(Exception):
     """An exception raised when a double receives a message that has not been allowed."""
 
     pass
+
+
+class VerifyingDoubleError(Exception):
+    """An exception raised when a stub on a verifying double is inconsitent with the underlying object"""  # noqa
+
+    pass
