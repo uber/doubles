@@ -31,7 +31,7 @@ class MessageAllowance(object):
         return self.args is _any and self.kwargs is _any
 
     def satisfy_exact_match(self, args, kwargs):
-        return self._property_matches('args', args) and self._property_matches('kwargs', kwargs)
+        return self.args == args and self.kwargs == kwargs
 
     @property
     def return_value(self):
@@ -39,6 +39,3 @@ class MessageAllowance(object):
             return self._return_value()
         else:
             return self._return_value
-
-    def _property_matches(self, name, value):
-        return getattr(self, name) == value
