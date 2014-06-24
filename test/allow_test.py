@@ -4,7 +4,7 @@ from doubles import allow, Double
 from doubles.exceptions import UnallowedMethodCallError
 
 
-class TestAllow(object):
+class TestBasicAllowance(object):
     def test_allows_method_calls_on_doubles(self):
         subject = Double()
 
@@ -18,6 +18,8 @@ class TestAllow(object):
         with raises(AttributeError):
             subject.foo
 
+
+class TestReturnValues(object):
     def test_returns_specified_value(self):
         subject = Double()
 
@@ -25,6 +27,29 @@ class TestAllow(object):
 
         assert subject.foo() == 'bar'
 
+    def test_returns_result_of_a_callable(self):
+        subject = Double()
+
+        allow(subject).to_receive('foo').and_return_result_of(lambda: 'bar')
+
+        assert subject.foo() == 'bar'
+
+    def test_returns_result_of_callable_if_specified_after_regular_return(self):
+        subject = Double()
+
+        allow(subject).to_receive('foo').and_return('bar').and_return_result_of(lambda: 'baz')
+
+        assert subject.foo() == 'baz'
+
+    def test_returns_static_value_if_specified_after_callable_return_value(self):
+        subject = Double()
+
+        allow(subject).to_receive('foo').and_return_result_of(lambda: 'bar').and_return('baz')
+
+        assert subject.foo() == 'baz'
+
+
+class TestWithArgs(object):
     def test_allows_any_arguments_if_none_are_specified(self):
         subject = Double()
 
@@ -54,24 +79,3 @@ class TestAllow(object):
         allow(subject).to_receive('foo').with_args('baz').and_return('blah')
 
         assert subject.foo('baz') == 'blah'
-
-    def test_returns_result_of_a_callable(self):
-        subject = Double()
-
-        allow(subject).to_receive('foo').and_return_result_of(lambda: 'bar')
-
-        assert subject.foo() == 'bar'
-
-    def test_returns_result_of_callable_if_specified_after_regular_return(self):
-        subject = Double()
-
-        allow(subject).to_receive('foo').and_return('bar').and_return_result_of(lambda: 'baz')
-
-        assert subject.foo() == 'baz'
-
-    def test_returns_static_value_if_specified_after_callable_return_value(self):
-        subject = Double()
-
-        allow(subject).to_receive('foo').and_return_result_of(lambda: 'bar').and_return('baz')
-
-        assert subject.foo() == 'baz'
