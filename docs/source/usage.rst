@@ -157,7 +157,7 @@ In addition to pure test doubles created with the ``Double`` constructor, Double
     def test_partial_double():
         dummy_user = Double('user')
 
-        allow(User).to_receive('find_by_email').and_return(user)
+        allow(User).to_receive('find_by_email').and_return(dummy_user)
 
         assert User.find_by_email('alice@example.com') == dummy_user
         assert User.find_by_id(1).name == 'Bob'
