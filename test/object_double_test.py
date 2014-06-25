@@ -19,6 +19,9 @@ class User(object):
     def method_with_varargs(self, *args):
         pass
 
+    def method_with_default_args(self, foo, bar='baz'):
+        pass
+
     noncallable_attribute = 'not a method'
 
 user = User('Alice', 25)
@@ -56,3 +59,10 @@ class TestObjectDouble(object):
         allow(doubled_user).to_receive('method_with_varargs').with_args('foo', 'bar', 'baz')
 
         assert doubled_user.method_with_varargs('foo', 'bar', 'baz') is None
+
+    def test_allows_missing_default_arguments(self):
+        doubled_user = ObjectDouble(user)
+
+        allow(doubled_user).to_receive('method_with_default_args').with_args('blah')
+
+        assert doubled_user.method_with_default_args('blah') is None
