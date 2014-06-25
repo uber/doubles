@@ -119,6 +119,25 @@ Fakes are doubles that have special logic to determine their return values, rath
 
 Although this example is functionally equivalent to calling ``and_return('bar')``, the callable passed to ``and_return_result_of`` can be arbitrarily complex. Fake functionality is available for both stubs and mocks.
 
+Raising exceptions
+------------------
+
+Both stubs and mocks allow a method call to raise an exception instead of returning a result using the ``and_raise`` method. Simply pass the object you want to raise as an argument. The following test will pass::
+
+    from doubles import Double, allow
+
+    def test_raising_an_exception():
+        dummy = Double('dummy')
+
+        allow(dummy).to_receive('foo').and_raise(StandardError)
+
+        try:
+            dummy.foo()
+        except StandardError:
+            pass
+        else:
+            raise AssertionError('Expected test to raise StandardError.')
+
 Partial doubles
 ---------------
 
