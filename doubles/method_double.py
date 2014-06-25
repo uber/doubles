@@ -1,7 +1,7 @@
 from inspect import isclass, ismethod
 
 from doubles.double import Double
-from doubles.verifying_double import VerifyingDouble
+from doubles.verifying_doubles.verifying_double import VerifyingDouble
 from doubles.exceptions import MockExpectationError, UnallowedMethodCallError
 from doubles.message_expectation import MessageAllowance
 from doubles.message_expectation import MessageExpectation

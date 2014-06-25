@@ -1,7 +1,7 @@
 from inspect import getargspec
 
 from doubles.exceptions import VerifyingDoubleError
-from doubles.verifying_double import VerifyingDouble
+from doubles.verifying_doubles.verifying_double import VerifyingDouble
 
 
 class ObjectDouble(VerifyingDouble):
