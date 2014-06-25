@@ -2,8 +2,8 @@ from doubles.message_allowance import MessageAllowance
 
 
 class MessageExpectation(MessageAllowance):
-    def __init__(self):
-        super(MessageExpectation, self).__init__()
+    def __init__(self, obj, method_name):
+        super(MessageExpectation, self).__init__(obj, method_name)
         self._is_satisfied = False
 
     def satisfy_any_args_match(self):

@@ -19,12 +19,12 @@ class MethodDouble(object):
         self._define_proxy_method()
 
     def add_allowance(self):
-        allowance = MessageAllowance()
+        allowance = MessageAllowance(self._obj, self._method_name)
         self._expectations.append(allowance)
         return allowance
 
     def add_expectation(self):
-        expectation = MessageExpectation()
+        expectation = MessageExpectation(self._obj, self._method_name)
         self._expectations.append(expectation)
         return expectation
 

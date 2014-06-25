@@ -1,8 +1,12 @@
+from doubles.verifying_double import VerifyingDouble
+
 _any = object()
 
 
 class MessageAllowance(object):
-    def __init__(self):
+    def __init__(self, obj, method_name):
+        self._obj = obj
+        self._method_name = method_name
         self._return_value = None
         self.args = _any
         self.kwargs = _any
@@ -25,11 +29,13 @@ class MessageAllowance(object):
     def with_args(self, *args, **kwargs):
         self.args = args
         self.kwargs = kwargs
+        self._verify_arguments()
         return self
 
     def with_no_args(self):
         self.args = ()
         self.kwargs = {}
+        self._verify_arguments()
         return self
 
     def satisfy_any_args_match(self):
@@ -44,3 +50,9 @@ class MessageAllowance(object):
             return self._return_value()
         else:
             return self._return_value
+
+    def _verify_arguments(self):
+        if not isinstance(self._obj, VerifyingDouble):
+            return
+
+        self._obj._verify_arguments(self._method_name, self.args, self.kwargs)

@@ -40,3 +40,9 @@ class TestObjectDouble(object):
 
         with raises(VerifyingDoubleError):
             allow(doubled_user).to_receive('noncallable_attribute')
+
+    def test_raises_when_specifying_different_arity(self):
+        doubled_user = ObjectDouble(user)
+
+        with raises(VerifyingDoubleError):
+            allow(doubled_user).to_receive('get_name').with_args('foo', 'bar')
