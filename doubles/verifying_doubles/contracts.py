@@ -12,5 +12,5 @@ def verify_method(target, method_name):
 
 
 def verify_arguments(argspec, args, kwargs):
-    if len(argspec.args) != args:
+    if not argspec.varargs and len(argspec.args) != args:
         raise VerifyingDoubleError

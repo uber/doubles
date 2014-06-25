@@ -16,6 +16,9 @@ class User(object):
     def get_name(self):
         return self.name
 
+    def method_with_varargs(self, *args):
+        pass
+
     noncallable_attribute = 'not a method'
 
 user = User('Alice', 25)
@@ -46,3 +49,10 @@ class TestObjectDouble(object):
 
         with raises(VerifyingDoubleError):
             allow(doubled_user).to_receive('get_name').with_args('foo', 'bar')
+
+    def test_allows_varargs_if_specified(self):
+        doubled_user = ObjectDouble(user)
+
+        allow(doubled_user).to_receive('method_with_varargs').with_args('foo', 'bar', 'baz')
+
+        assert doubled_user.method_with_varargs('foo', 'bar', 'baz') is None
