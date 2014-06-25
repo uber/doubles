@@ -66,3 +66,17 @@ class TestObjectDouble(object):
         allow(doubled_user).to_receive('method_with_default_args').with_args('blah')
 
         assert doubled_user.method_with_default_args('blah') is None
+
+    def test_allows_default_arguments_specified_positionally(self):
+        doubled_user = ObjectDouble(user)
+
+        allow(doubled_user).to_receive('method_with_default_args').with_args('blah', 'blam')
+
+        assert doubled_user.method_with_default_args('blah', 'blam') is None
+
+    def test_allows_default_arguments_specified_with_keywords(self):
+        doubled_user = ObjectDouble(user)
+
+        allow(doubled_user).to_receive('method_with_default_args').with_args('blah', bar='blam')
+
+        assert doubled_user.method_with_default_args('blah', bar='blam') is None
