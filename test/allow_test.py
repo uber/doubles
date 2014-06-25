@@ -4,6 +4,10 @@ from doubles import allow, Double
 from doubles.exceptions import UnallowedMethodCallError
 
 
+class UserDefinedException(Exception):
+    pass
+
+
 class TestBasicAllowance(object):
     def test_allows_method_calls_on_doubles(self):
         subject = Double()
@@ -34,19 +38,22 @@ class TestReturnValues(object):
 
         assert subject.foo() == 'bar'
 
-    def test_returns_result_of_callable_if_specified_after_regular_return(self):
+    def test_raises_provided_exception(self):
         subject = Double()
 
-        allow(subject).to_receive('foo').and_return('bar').and_return_result_of(lambda: 'baz')
+        allow(subject).to_receive('foo').and_raise(UserDefinedException)
 
-        assert subject.foo() == 'baz'
+        with raises(UserDefinedException):
+            subject.foo()
 
-    def test_returns_static_value_if_specified_after_callable_return_value(self):
+    def test_chaining_result_methods_gives_the_last_one_precedence(self):
         subject = Double()
 
-        allow(subject).to_receive('foo').and_return_result_of(lambda: 'bar').and_return('baz')
+        allow(subject).to_receive('foo').and_return('bar').and_return_result_of(
+            lambda: 'baz'
+        ).and_raise(UserDefinedException).and_return('final')
 
-        assert subject.foo() == 'baz'
+        assert subject.foo() == 'final'
 
 
 class TestWithArgs(object):

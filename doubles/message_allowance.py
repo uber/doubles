@@ -13,6 +13,13 @@ class MessageAllowance(object):
 
         self.and_return(None)
 
+    def and_raise(self, exception):
+        def proxy_exception():
+            raise exception
+
+        self._return_value = proxy_exception
+        return self
+
     def and_return(self, return_value):
         self._return_value = lambda: return_value
         return self
