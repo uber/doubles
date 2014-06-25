@@ -1,6 +1,7 @@
 from inspect import isclass, ismethod
 
 from doubles.double import Double
+from doubles.verifying_double import VerifyingDouble
 from doubles.exceptions import MockExpectationError, UnallowedMethodCallError
 from doubles.message_expectation import MessageAllowance
 from doubles.message_expectation import MessageExpectation
@@ -10,6 +11,8 @@ class MethodDouble(object):
     def __init__(self, method_name, obj):
         self._method_name = method_name
         self._obj = obj
+
+        self._verify_method_name()
 
         self._expectations = []
 
@@ -80,3 +83,9 @@ class MethodDouble(object):
             return ismethod(self._original_method) and self._original_method.__self__ is self._obj
         except AttributeError:
             return True
+
+    def _verify_method_name(self):
+        if not isinstance(self._obj, VerifyingDouble):
+            return
+
+        self._obj._verify_method_name(self._method_name)
