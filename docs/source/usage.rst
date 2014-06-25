@@ -175,50 +175,50 @@ Verifying doubles are used just like pure test doubles, except they will cause t
 
 There are three ways of creating verifying doubles:
 
-instance_double
-+++++++++++++++
+InstanceDouble
+++++++++++++++
 
-``instance_double`` creates a pure test double that will ensure its usage matches the API of an instance of the provided class. It's used as follows::
+``InstanceDouble`` creates a pure test double that will ensure its usage matches the API of an instance of the provided class. It's used as follows::
 
-    from doubles import instance_double, allow
+    from doubles import InstanceDouble, allow
 
     def test_verifying_instance_double():
-      user = instance_double('mypackage.User')
+      user = InstanceDouble('mypackage.User')
 
       allow(user).to_receive('nonexistent_method')
 
       assert user.nonexistent_method() is None
 
-The argument to ``instance_double`` is the fully qualified module path to the class in question. The double that's created will verify itself against an instance of that class. The example above will fail with a ``VerifyingDoubleError`` exception. Note that the actual assertion made in this test is irrelevant, it's the call to ``allow`` and ``to_receive`` that will cause the failure.
+The argument to ``InstanceDouble`` is the fully qualified module path to the class in question. The double that's created will verify itself against an instance of that class. The example above will fail with a ``VerifyingDoubleError`` exception. Note that the actual assertion made in this test is irrelevant, it's the call to ``allow`` and ``to_receive`` that will cause the failure.
 
-class_double
-++++++++++++
+ClassDouble
++++++++++++
 
-``class_double`` is the same as ``instance_double``, except that it verifies against the class itself instead of an instance of the class. The following test will fail::
+``ClassDouble`` is the same as ``InstanceDouble``, except that it verifies against the class itself instead of an instance of the class. The following test will fail::
 
-    from doubles import class_double, allow
+    from doubles import ClassDouble, allow
 
     def test_verifying_class_double():
-      User = class_double('mypackage.User')
+      User = ClassDouble('mypackage.User')
 
       allow(User).to_receive('find_by_nonexistent_attribute')
 
       assert User.find_by_nonexistent_attribute() is None
 
-object_double
-+++++++++++++
+ObjectDouble
+++++++++++++
 
-``object_double`` creates a pure test double that is verified against a specific object. The following test will fail::
+``ObjectDouble`` creates a pure test double that is verified against a specific object. The following test will fail::
 
-    from doubles import object_double, allow
+    from doubles import ObjectDouble, allow
 
     from mypackage import some_object
 
     def test_verifying_object_double():
-      something = object_double(some_object)
+      something = ObjectDouble(some_object)
 
       allow(something).to_receive('nonexistent_method')
 
       assert something.nonexistent_method() is None
 
-There is a subtle distinction between a pure test double created with ``object_double`` and a partial double created by passing a non-double object to ``allow`` or ``expect``. The former creates an object that does not respond to any messages which are not explicitly allowed, but verifies any that are against the real object. A partial double modifies parts of the real object itself, allowing some methods to be doubled and others to retain their usual implementation.
+There is a subtle distinction between a pure test double created with ``ObjectDouble`` and a partial double created by passing a non-double object to ``allow`` or ``expect``. The former creates an object that does not respond to any messages which are not explicitly allowed, but verifies any that are against the real object. A partial double modifies parts of the real object itself, allowing some methods to be doubled and others to retain their usual implementation.
