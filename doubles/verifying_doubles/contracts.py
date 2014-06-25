@@ -25,3 +25,8 @@ def verify_arguments(argspec, args, kwargs):
 
     if not argspec.varargs and (arg_count > max_allowed or arg_count < min_allowed):
         raise VerifyingDoubleError
+
+    if argspec.keywords is None:
+        for key in kwargs.keys():
+            if key not in argspec.args:
+                raise VerifyingDoubleError

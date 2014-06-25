@@ -22,6 +22,9 @@ class User(object):
     def method_with_default_args(self, foo, bar='baz'):
         pass
 
+    def method_with_varkwargs(self, **kwargs):
+        pass
+
     noncallable_attribute = 'not a method'
 
 user = User('Alice', 25)
@@ -80,3 +83,22 @@ class TestObjectDouble(object):
         allow(doubled_user).to_receive('method_with_default_args').with_args('blah', bar='blam')
 
         assert doubled_user.method_with_default_args('blah', bar='blam') is None
+
+    def test_raises_when_specifying_higher_arity_to_method_with_default_arguments(self):
+        doubled_user = ObjectDouble(user)
+
+        with raises(VerifyingDoubleError):
+            allow(doubled_user).to_receive('method_with_default_args').with_args(1, 2, 3)
+
+    def test_raises_when_specifying_extra_keyword_arguments(self):
+        doubled_user = ObjectDouble(user)
+
+        with raises(VerifyingDoubleError):
+            allow(doubled_user).to_receive('method_with_default_args').with_args(1, moo='woof')
+
+    def test_allows_varkwargs_if_specified(self):
+        doubled_user = ObjectDouble(user)
+
+        allow(doubled_user).to_receive('method_with_varkwargs').with_args(foo='bar')
+
+        assert doubled_user.method_with_varkwargs(foo='bar') is None
