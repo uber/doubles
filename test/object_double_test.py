@@ -16,6 +16,8 @@ class User(object):
     def get_name(self):
         return self.name
 
+    noncallable_attribute = 'not a method'
+
 user = User('Alice', 25)
 
 
@@ -32,3 +34,9 @@ class TestObjectDouble(object):
 
         with raises(VerifyingDoubleError):
             allow(doubled_user).to_receive('foo')
+
+    def test_raises_when_stubbing_noncallable_attributes(self):
+        doubled_user = ObjectDouble(user)
+
+        with raises(VerifyingDoubleError):
+            allow(doubled_user).to_receive('noncallable_attribute')
