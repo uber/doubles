@@ -25,6 +25,9 @@ class User(object):
     def method_with_varkwargs(self, **kwargs):
         pass
 
+    def method_with_positional_arguments(self, foo):
+        pass
+
     noncallable_attribute = 'not a method'
 
 user = User('Alice', 25)

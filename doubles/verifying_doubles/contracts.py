@@ -1,6 +1,6 @@
-from doubles.exceptions import VerifyingDoubleError
+from inspect import getcallargs
 
-_SELF_LENGTH = 1
+from doubles.exceptions import VerifyingDoubleError
 
 
 def verify_method(target, method_name):
@@ -13,20 +13,8 @@ def verify_method(target, method_name):
         raise VerifyingDoubleError
 
 
-def verify_arguments(argspec, args, kwargs):
-    arg_count = len(args) + _SELF_LENGTH
-
-    max_allowed = len(argspec.args)
-
-    if argspec.defaults is None:
-        min_allowed = max_allowed
-    else:
-        min_allowed = max_allowed - len(argspec.defaults)
-
-    if not argspec.varargs and (arg_count > max_allowed or arg_count < min_allowed):
+def verify_arguments(method, args, kwargs):
+    try:
+        getcallargs(method, *args, **kwargs)
+    except TypeError:
         raise VerifyingDoubleError
-
-    if argspec.keywords is None:
-        for key in kwargs.keys():
-            if key not in argspec.args:
-                raise VerifyingDoubleError
