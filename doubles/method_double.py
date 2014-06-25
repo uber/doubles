@@ -88,4 +88,4 @@ class MethodDouble(object):
         if not isinstance(self._obj, VerifyingDouble):
             return
 
-        self._obj._verify_method_name(self._method_name)
+        self._obj._doubles_verify_method_name(self._method_name)

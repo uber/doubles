@@ -57,4 +57,4 @@ class MessageAllowance(object):
         if not isinstance(self._obj, VerifyingDouble):
             return
 
-        self._obj._verify_arguments(self._method_name, self.args, self.kwargs)
+        self._obj._doubles_verify_arguments(self._method_name, self.args, self.kwargs)

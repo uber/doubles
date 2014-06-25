@@ -1,3 +1,6 @@
-class VerifyingDouble(object):
+from doubles.double import Double
+
+
+class VerifyingDouble(Double):
     def __init__(self, target):
-        self._target = target
+        self._doubles_target = target
