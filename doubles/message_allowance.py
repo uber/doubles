@@ -7,20 +7,18 @@ class MessageAllowance(object):
     def __init__(self, obj, method_name):
         self._obj = obj
         self._method_name = method_name
-        self._return_value = None
         self.args = _any
         self.kwargs = _any
-        self._is_callable_return = False
         self._is_satisfied = True
 
+        self.and_return(None)
+
     def and_return(self, return_value):
-        self._return_value = return_value
-        self._is_callable_return = False
+        self._return_value = lambda: return_value
         return self
 
     def and_return_result_of(self, return_value):
         self._return_value = return_value
-        self._is_callable_return = True
         return self
 
     def is_satisfied(self):
@@ -46,10 +44,7 @@ class MessageAllowance(object):
 
     @property
     def return_value(self):
-        if self._is_callable_return:
-            return self._return_value()
-        else:
-            return self._return_value
+        return self._return_value()
 
     def _verify_arguments(self):
         if not isinstance(self._obj, VerifyingDouble):
