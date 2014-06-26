@@ -2,7 +2,7 @@ from inspect import isclass, ismethod
 
 from doubles.double import Double
 from doubles.verifying_doubles.verifying_double import VerifyingDouble
-from doubles.exceptions import MockExpectationError, UnallowedMethodCallError
+from doubles.exceptions import UnallowedMethodCallError
 from doubles.allowance import Allowance
 from doubles.expectation import Expectation
 
@@ -37,7 +37,7 @@ class MethodDouble(object):
     def verify(self):
         for expectation in self._expectations:
             if not expectation.is_satisfied():
-                raise MockExpectationError
+                expectation.raise_failure_exception()
 
     def _define_proxy_method(self):
         _self = self
