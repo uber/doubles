@@ -1,7 +1,9 @@
 Integration with test frameworks
 ================================
 
-Integrating Doubles with your test framework of choice involves adding a few calls to the setup and teardown hooks. There are three methods from Doubles that must be invoked:
+Doubles includes a class for integrating with the standard unittest test framework. Other test frameworks currently require manual integration.
+
+If you're not using unittest, you'll need to add a few calls to your suite's setup and teardown hooks. There are three methods from Doubles that must be invoked:
 
 1. ``doubles.setup`` must be called before each test.
 2. ``doubles.verify`` must be called after each test, but can be skipped if the test has already failed.
@@ -13,27 +15,12 @@ If your test framework does not provide setup and teardown hooks that apply to a
 unittest
 --------
 
-::
-
-    import unittest
-
-    import doubles
-
-
-    class TestUsingDoubles(unittest.TestCase):
-        def setUp(self):
-            doubles.setup()
-            self.addCleanup(doubles.teardown)
-
-        def tearDown(self):
-            doubles.verify()
+Inherit from ``doubles.unittest.TestCase`` in your test case classes and the Doubles lifecycle will be managed automatically, including automatic verification of expectations for each test.
 
 pytest
 ------
 
-In your ``conftest.py`` file:
-
-::
+In your ``conftest.py`` file::
 
     import doubles
 
