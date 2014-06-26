@@ -1,6 +1,8 @@
 # doubles
 
-A test double package for Python.
+**Doubles** is a Python package that provides test doubles for use in automated tests.
+
+It provides functionality for stubbing, mocking, and verification of test doubles against the real objects they double. In contrast to the Mock package, it provides a clear, expressive syntax and better safety guarantees to prevent API drift and to improve confidence in tests using doubles.
 
 ## Documentation
 
