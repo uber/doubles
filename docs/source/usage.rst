@@ -4,11 +4,9 @@ Usage
 Pure doubles
 ------------
 
-To create a pure test double, use the ``Double`` constructor. Pure test doubles do not respond to any messages by default. If the object receives an unknown message, the test will fail with an ``UnallowedMethodCallError`` exception.
+To create a pure test double, use the ``Double`` constructor. Pure test doubles do allow any method calls by default. Doubles behave like any standard object an raise an ``AttributeError`` when an unknown attribute is accessed.
 
-The following test will fail with such an exception:
-
-::
+The following test will fail with such an exception::
 
     from doubles import Double
 
@@ -22,10 +20,10 @@ Calling the ``Double`` constructor with no arguments creates an unnamed test dou
 
     dummy = Double('dummy')
 
-Stubs and message allowances
+Stubs and allowances
 ----------------------------
 
-Doubles are not particularly useful if they don't respond to any messages. To stub out a method on an object, use the ``allow`` function::
+Doubles are not particularly useful if they don't have any methods. To stub out a method on an object, use the ``allow`` function::
 
     from doubles import Double, allow
 
@@ -36,7 +34,7 @@ Doubles are not particularly useful if they don't respond to any messages. To st
 
         assert dummy.foo() is None
 
-On the first line, we create a pure test double which does not respond to any messages. The second line declares a *message allowance*, after which the double will respond to "foo" without raising an exception. The default return value of a stub is ``None``, which the third line asserts.
+On the first line, we create a pure test double with no methods. The second line declares an *allowance*, after which the double will allow calls on its "foo" property without raising an exception. The default return value of a stub is ``None``, which the third line asserts.
 
 To instruct the stub to return a predetermined value, use the ``and_return`` method::
 
@@ -50,9 +48,9 @@ To instruct the stub to return a predetermined value, use the ``and_return`` met
 
         assert dummy.foo() == 'bar'
 
-Once a message has been allowed, the double can receive it any number of times and it will always return the value specified.
+Once a method call has been allowed, it can be made any number of times and it will always return the value specified.
 
-The examples shown so far will allow the ``foo`` method to be called with any arguments. To specify that a message is allowed only with specific arguments, use ``with_args``::
+The examples shown so far will allow the ``foo`` method to be called with any arguments. To specify that a method call is allowed only with specific arguments, use ``with_args``::
 
     from doubles import Double, allow
 
@@ -64,7 +62,7 @@ The examples shown so far will allow the ``foo`` method to be called with any ar
         dummy.foo()  # Raises an UnallowedMethodCallError
         dummy.foo(2, 'arguments', some='keyword')  # Returns 'bar'
 
-Multiple message allowances can be specified for the same method with different arguments. To specify that a method can only be called *with no arguments*, use ``with_no_args``::
+Multiple allowances can be specified for the same method with different arguments and return values. To specify that a method can only be called *with no arguments*, use ``with_no_args``::
 
     from doubles import Double, allow
 
@@ -73,15 +71,15 @@ Multiple message allowances can be specified for the same method with different 
 
         allow(dummy).to_call('foo').with_no_args().and_return('bar')
 
-        dummy.foo('an argument')  # Raises an UnallowedMethodCallError
         dummy.foo()  # Returns 'bar'
+        dummy.foo('an argument')  # Raises an UnallowedMethodCallError
 
 Without the call to ``with_no_args``, ``dummy.foo`` could be called with any combination of arguments.
 
-Mocks and message expectations
+Mocks and expectations
 ------------------------------
 
-Stubs are useful for returning predetermined values, but they do not verify that they were interacted with. To add assertions about double interaction into the mix, create a mock object by declaring a *message expectation*. This follows a very similar syntax, but uses ``expect`` instead of ``allow``::
+Stubs are useful for returning predetermined values, but they do not verify that they were interacted with. To add assertions about double interaction into the mix, create a mock object by declaring an *expectation*. This follows a very similar syntax, but uses ``expect`` instead of ``allow``::
 
     from doubles import Double, expect
 
@@ -90,7 +88,7 @@ Stubs are useful for returning predetermined values, but they do not verify that
 
         expect(dummy).to_call('foo')
 
-The above test will fail with a ``MockExpectationError`` exception, because we expected the double to receive "foo", but it did not. To satisfy the mock and make the test pass::
+The above test will fail with a ``MockExpectationError`` exception, because we expected ``dummy.foo`` to be called, but it was not. To satisfy the mock and make the test pass::
 
     from doubles import Double, expect
 
@@ -162,16 +160,16 @@ In addition to pure test doubles created with the ``Double`` constructor, Double
         assert User.find_by_email('alice@example.com') == dummy_user
         assert User.find_by_id(1).name == 'Bob'
 
-For the sake of the example, assume that the two class methods on ``User`` are implemented. Instead of using a pure test double created by the ``Double`` constructor, we pass the real ``User`` object to ``allow`` and declare a message allowance for its ``find_by_email`` method. This creates a partial double, stubbing that particular method call on the real object, but allowing everything else, such as ``find_by_id`` to work as usual. The assertions show that the stubbed method returns the predetermined test double ``dummy_user``, while the unaffected method returns a real ``User`` object like normal.
+For the sake of the example, assume that the two class methods on ``User`` are implemented. Instead of using a pure test double created by the ``Double`` constructor, we pass the real ``User`` object to ``allow`` and declare a allowance for its ``find_by_email`` method. This creates a partial double, stubbing that particular method call on the real object, but allowing everything else, such as ``find_by_id`` to work as usual. The assertions show that the stubbed method returns the predetermined test double ``dummy_user``, while the unaffected method returns a real ``User`` object like normal.
 
 After a test has run, all partial doubles will be restored to their pristine, undoubled state.
 
 Verifying doubles
 -----------------
 
-One of the dangers of using test doubles is that production code may change after tests are written, and the doubles may no longer match the interface of the real object they are doubling. This is known as "API drift" and is the cause of the situation where a test suite is passing but the production code is broken. This potential for API drift is often used as an argument for avoiding the use of test doubles. Doubles provides a feature called verifying doubles to help address API drift and increase confidence in test suites.
+One of the dangers of using test doubles is that production code may change after tests are written, and the doubles may no longer match the interface of the real object they are doubling. This is known as "API drift" and is the cause of the situation where a test suite is passing but the production code is broken. The potential for API drift is often used as an argument against using test doubles. Doubles provides a feature called verifying doubles to help address API drift and to increase confidence in test suites.
 
-Verifying doubles are used just like pure test doubles, except they will cause the test to fail if a message allowance or expectation is declared for a method that does not exist on the real object. In addition, the test will fail if the method exists but is called with an arity that doesn't match the real method's signature.
+Verifying doubles are used just like pure test doubles, except they will cause the test to fail if an allowance or expectation is declared for a method that does not exist on the real object. In addition, the test will fail if the method exists but is specified with arguments that don't match the real method's signature.
 
 There are three ways of creating verifying doubles:
 
@@ -187,9 +185,7 @@ InstanceDouble
 
       allow(user).to_call('nonexistent_method')
 
-      assert user.nonexistent_method() is None
-
-The argument to ``InstanceDouble`` is the fully qualified module path to the class in question. The double that's created will verify itself against an instance of that class. The example above will fail with a ``VerifyingDoubleError`` exception. Note that the actual assertion made in this test is irrelevant, it's the call to ``allow`` and ``to_call`` that will cause the failure.
+The argument to ``InstanceDouble`` is the fully qualified module path to the class in question. The double that's created will verify itself against an instance of that class. The example above will fail with a ``VerifyingDoubleError`` exception.
 
 ClassDouble
 +++++++++++
@@ -202,8 +198,6 @@ ClassDouble
       User = ClassDouble('mypackage.User')
 
       allow(User).to_call('find_by_nonexistent_attribute')
-
-      assert User.find_by_nonexistent_attribute() is None
 
 ObjectDouble
 ++++++++++++
@@ -219,6 +213,4 @@ ObjectDouble
 
       allow(something).to_call('nonexistent_method')
 
-      assert something.nonexistent_method() is None
-
-There is a subtle distinction between a pure test double created with ``ObjectDouble`` and a partial double created by passing a non-double object to ``allow`` or ``expect``. The former creates an object that does not respond to any messages which are not explicitly allowed, but verifies any that are against the real object. A partial double modifies parts of the real object itself, allowing some methods to be doubled and others to retain their usual implementation.
+There is a subtle distinction between a pure test double created with ``ObjectDouble`` and a partial double created by passing a non-double object to ``allow`` or ``expect``. The former creates an object that does not accept any method calls which are not explicitly allowed, but verifies any that are against the real object. A partial double modifies parts of the real object itself, allowing some methods to be doubled and others to retain their usual implementation.
