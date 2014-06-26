@@ -8,13 +8,13 @@ class TestInstanceMethods(object):
     def test_stubs_instance_methods(self):
         user = User('Alice', 25)
 
-        allow(user).to_receive('get_name').and_return('Bob')
+        allow(user).to_call('get_name').and_return('Bob')
 
         assert user.get_name() == 'Bob'
 
     def test_restores_instance_methods_on_teardown(self):
         user = User('Alice', 25)
-        allow(user).to_receive('get_name').and_return('Bob')
+        allow(user).to_call('get_name').and_return('Bob')
 
         teardown()
 
@@ -23,20 +23,20 @@ class TestInstanceMethods(object):
     def test_only_affects_stubbed_method(self):
         user = User('Alice', 25)
 
-        allow(user).to_receive('get_name').and_return('Bob')
+        allow(user).to_call('get_name').and_return('Bob')
 
         assert user.age == 25
 
     def test_stubs_nonexistent_instance_methods(self):
         user = User('Alice', 25)
 
-        allow(user).to_receive('gender').and_return('Female')
+        allow(user).to_call('gender').and_return('Female')
 
         assert user.gender() == 'Female'
 
     def test_removes_nonexistent_instance_methods_on_teardown(self):
         user = User('Alice', 25)
-        allow(user).to_receive('gender').and_return('Female')
+        allow(user).to_call('gender').and_return('Female')
 
         teardown()
 
@@ -48,49 +48,49 @@ class TestClassMethods(object):
     def test_stubs_constructors(self):
         user = Double('User')
 
-        allow(User).to_receive('__new__').and_return(user)
+        allow(User).to_call('__new__').and_return(user)
 
         assert User('Alice', 25) is user
 
     def test_restores_constructor_on_teardown(self):
         user = Double('User')
-        allow(User).to_receive('__new__').and_return(user)
+        allow(User).to_call('__new__').and_return(user)
 
         teardown()
 
         assert User('Alice', 25) is not user
 
     def test_stubs_class_methods(self):
-        allow(User).to_receive('class_method').and_return('overridden value')
+        allow(User).to_call('class_method').and_return('overridden value')
 
         assert User.class_method() == 'overridden value'
 
     def test_restores_class_methods_on_teardown(self):
-        allow(User).to_receive('class_method').and_return('overridden value')
+        allow(User).to_call('class_method').and_return('overridden value')
 
         teardown()
 
         assert User.class_method() == 'class method'
 
     def test_stubs_class_attributes(self):
-        allow(User).to_receive('class_attribute').and_return('bar')
+        allow(User).to_call('class_attribute').and_return('bar')
 
         assert User.class_attribute() == 'bar'
 
     def test_restores_class_attributes_on_teardown(self):
-        allow(User).to_receive('class_attribute').and_return('bar')
+        allow(User).to_call('class_attribute').and_return('bar')
 
         teardown()
 
         assert User.class_attribute == 'foo'
 
     def test_stubs_nonexistent_class_methods(self):
-        allow(User).to_receive('nonexistent_method').and_return('bar')
+        allow(User).to_call('nonexistent_method').and_return('bar')
 
         assert User.nonexistent_method() == 'bar'
 
     def test_removes_nonexistent_class_methods_on_teardown(self):
-        allow(User).to_receive('nonexistent_method').and_return('bar')
+        allow(User).to_call('nonexistent_method').and_return('bar')
 
         teardown()
 

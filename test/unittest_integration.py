@@ -9,6 +9,6 @@ class UnittestIntegration(TestCase):
     def runTest(self):
         subject = Double()
 
-        expect(subject).to_receive('foo')
+        expect(subject).to_call('foo')
 
 unittest.main()

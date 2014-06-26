@@ -32,7 +32,7 @@ Doubles are not particularly useful if they don't respond to any messages. To st
     def test_allows_foo():
         dummy = Double('dummy')
 
-        allow(dummy).to_receive('foo')
+        allow(dummy).to_call('foo')
 
         assert dummy.foo() is None
 
@@ -46,7 +46,7 @@ To instruct the stub to return a predetermined value, use the ``and_return`` met
     def test_allows_foo():
         dummy = Double('dummy')
 
-        allow(dummy).to_receive('foo').and_return('bar')
+        allow(dummy).to_call('foo').and_return('bar')
 
         assert dummy.foo() == 'bar'
 
@@ -59,7 +59,7 @@ The examples shown so far will allow the ``foo`` method to be called with any ar
     def test_allows_foo_with_args():
         dummy = Double('dummy')
 
-        allow(dummy).to_receive('foo').with_args(2, 'arguments', some='keyword').and_return('bar')
+        allow(dummy).to_call('foo').with_args(2, 'arguments', some='keyword').and_return('bar')
 
         dummy.foo()  # Raises an UnallowedMethodCallError
         dummy.foo(2, 'arguments', some='keyword')  # Returns 'bar'
@@ -71,7 +71,7 @@ Multiple message allowances can be specified for the same method with different 
     def test_allows_foo_with_no_args():
         dummy = Double('dummy')
 
-        allow(dummy).to_receive('foo').with_no_args().and_return('bar')
+        allow(dummy).to_call('foo').with_no_args().and_return('bar')
 
         dummy.foo('an argument')  # Raises an UnallowedMethodCallError
         dummy.foo()  # Returns 'bar'
@@ -88,7 +88,7 @@ Stubs are useful for returning predetermined values, but they do not verify that
     def test_expects_foo():
         dummy = Double('dummy')
 
-        expect(dummy).to_receive('foo')
+        expect(dummy).to_call('foo')
 
 The above test will fail with a ``MockExpectationError`` exception, because we expected the double to receive "foo", but it did not. To satisfy the mock and make the test pass::
 
@@ -97,7 +97,7 @@ The above test will fail with a ``MockExpectationError`` exception, because we e
     def test_expects_foo():
         dummy = Double('dummy')
 
-        expect(dummy).to_receive('foo')
+        expect(dummy).to_call('foo')
 
         dummy.foo()
 
@@ -113,7 +113,7 @@ Fakes are doubles that have special logic to determine their return values, rath
     def test_fake():
         dummy = Double('dummy')
 
-        allow(dummy).to_receive('foo').and_return_result_of(lambda: 'bar')
+        allow(dummy).to_call('foo').and_return_result_of(lambda: 'bar')
 
         assert dummy.foo() == 'bar'
 
@@ -129,7 +129,7 @@ Both stubs and mocks allow a method call to raise an exception instead of return
     def test_raising_an_exception():
         dummy = Double('dummy')
 
-        allow(dummy).to_receive('foo').and_raise(StandardError)
+        allow(dummy).to_call('foo').and_raise(StandardError)
 
         try:
             dummy.foo()
@@ -157,7 +157,7 @@ In addition to pure test doubles created with the ``Double`` constructor, Double
     def test_partial_double():
         dummy_user = Double('user')
 
-        allow(User).to_receive('find_by_email').and_return(dummy_user)
+        allow(User).to_call('find_by_email').and_return(dummy_user)
 
         assert User.find_by_email('alice@example.com') == dummy_user
         assert User.find_by_id(1).name == 'Bob'
@@ -185,11 +185,11 @@ InstanceDouble
     def test_verifying_instance_double():
       user = InstanceDouble('mypackage.User')
 
-      allow(user).to_receive('nonexistent_method')
+      allow(user).to_call('nonexistent_method')
 
       assert user.nonexistent_method() is None
 
-The argument to ``InstanceDouble`` is the fully qualified module path to the class in question. The double that's created will verify itself against an instance of that class. The example above will fail with a ``VerifyingDoubleError`` exception. Note that the actual assertion made in this test is irrelevant, it's the call to ``allow`` and ``to_receive`` that will cause the failure.
+The argument to ``InstanceDouble`` is the fully qualified module path to the class in question. The double that's created will verify itself against an instance of that class. The example above will fail with a ``VerifyingDoubleError`` exception. Note that the actual assertion made in this test is irrelevant, it's the call to ``allow`` and ``to_call`` that will cause the failure.
 
 ClassDouble
 +++++++++++
@@ -201,7 +201,7 @@ ClassDouble
     def test_verifying_class_double():
       User = ClassDouble('mypackage.User')
 
-      allow(User).to_receive('find_by_nonexistent_attribute')
+      allow(User).to_call('find_by_nonexistent_attribute')
 
       assert User.find_by_nonexistent_attribute() is None
 
@@ -217,7 +217,7 @@ ObjectDouble
     def test_verifying_object_double():
       something = ObjectDouble(some_object)
 
-      allow(something).to_receive('nonexistent_method')
+      allow(something).to_call('nonexistent_method')
 
       assert something.nonexistent_method() is None
 
