@@ -11,7 +11,7 @@ class NoSpaceError(Exception):
 
 
 class UnallowedMethodCallError(AssertionError):
-    """An exception raised when a double receives a message that has not been allowed."""
+    """An exception raised when an unallowed method call is made on a double."""
 
     pass
 

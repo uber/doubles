@@ -3,8 +3,8 @@ from inspect import isclass, ismethod
 from doubles.double import Double
 from doubles.verifying_doubles.verifying_double import VerifyingDouble
 from doubles.exceptions import MockExpectationError, UnallowedMethodCallError
-from doubles.message_expectation import MessageAllowance
-from doubles.message_expectation import MessageExpectation
+from doubles.allowance import Allowance
+from doubles.expectation import Expectation
 
 
 class MethodDouble(object):
@@ -19,12 +19,12 @@ class MethodDouble(object):
         self._define_proxy_method()
 
     def add_allowance(self):
-        allowance = MessageAllowance(self._obj, self._method_name)
+        allowance = Allowance(self._obj, self._method_name)
         self._expectations.append(allowance)
         return allowance
 
     def add_expectation(self):
-        expectation = MessageExpectation(self._obj, self._method_name)
+        expectation = Expectation(self._obj, self._method_name)
         self._expectations.append(expectation)
         return expectation
 

@@ -3,7 +3,7 @@ from doubles.verifying_doubles.verifying_double import VerifyingDouble
 _any = object()
 
 
-class MessageAllowance(object):
+class Allowance(object):
     def __init__(self, obj, method_name):
         self._obj = obj
         self._method_name = method_name
