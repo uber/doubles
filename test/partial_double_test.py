@@ -1,25 +1,7 @@
 from pytest import raises
 
 from doubles import allow, Double, teardown
-
-
-class User(object):
-    class_attribute = 'foo'
-
-    def __init__(self, name, age):
-        self.name = name
-        self._age = age
-
-    @property
-    def age(self):
-        return self._age
-
-    @classmethod
-    def get_first(self):
-        return 'First user'
-
-    def get_name(self):
-        return self.name
+from doubles.testing import User
 
 
 class TestInstanceMethods(object):
@@ -79,19 +61,16 @@ class TestClassMethods(object):
         assert User('Alice', 25) is not user
 
     def test_stubs_class_methods(self):
-        user = Double('User')
+        allow(User).to_receive('class_method').and_return('overridden value')
 
-        allow(User).to_receive('get_first').and_return(user)
-
-        assert User.get_first() is user
+        assert User.class_method() == 'overridden value'
 
     def test_restores_class_methods_on_teardown(self):
-        user = Double('User')
-        allow(User).to_receive('get_first').and_return(user)
+        allow(User).to_receive('class_method').and_return('overridden value')
 
         teardown()
 
-        assert User.get_first() == 'First user'
+        assert User.class_method() == 'class method'
 
     def test_stubs_class_attributes(self):
         allow(User).to_receive('class_attribute').and_return('bar')
@@ -106,14 +85,14 @@ class TestClassMethods(object):
         assert User.class_attribute == 'foo'
 
     def test_stubs_nonexistent_class_methods(self):
-        allow(User).to_receive('class_method').and_return('bar')
+        allow(User).to_receive('nonexistent_method').and_return('bar')
 
-        assert User.class_method() == 'bar'
+        assert User.nonexistent_method() == 'bar'
 
     def test_removes_nonexistent_class_methods_on_teardown(self):
-        allow(User).to_receive('class_method').and_return('bar')
+        allow(User).to_receive('nonexistent_method').and_return('bar')
 
         teardown()
 
         with raises(AttributeError):
-            User.class_method()
+            User.nonexistent_method()

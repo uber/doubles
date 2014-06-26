@@ -2,33 +2,7 @@ from pytest import raises
 
 from doubles import allow, ObjectDouble
 from doubles.exceptions import VerifyingDoubleError
-
-
-class User(object):
-    def __init__(self, name, age):
-        self.name = name
-        self._age = age
-
-    @property
-    def age(self):
-        return self._age
-
-    def get_name(self):
-        return self.name
-
-    def method_with_varargs(self, *args):
-        pass
-
-    def method_with_default_args(self, foo, bar='baz'):
-        pass
-
-    def method_with_varkwargs(self, **kwargs):
-        pass
-
-    def method_with_positional_arguments(self, foo):
-        pass
-
-    noncallable_attribute = 'not a method'
+from doubles.testing import User
 
 user = User('Alice', 25)
 
@@ -51,7 +25,7 @@ class TestObjectDouble(object):
         doubled_user = ObjectDouble(user)
 
         with raises(VerifyingDoubleError):
-            allow(doubled_user).to_receive('noncallable_attribute')
+            allow(doubled_user).to_receive('class_attribute')
 
     def test_raises_when_specifying_different_arity(self):
         doubled_user = ObjectDouble(user)
