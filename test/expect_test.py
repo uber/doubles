@@ -20,6 +20,20 @@ class TestExpect(object):
             e.value.message
         )
 
+    def test_raises_if_method_is_called_with_wrong_arguments(self):
+        subject = Double()
+
+        expect(subject).to_call('foo').with_args('bar')
+
+        with raises(MockExpectationError) as e:
+            verify()
+
+        assert re.match(
+            r"Expected 'foo' to be called on <Double object at .+> with "
+            r"\(args=\('bar',\), kwargs={}\), but was not.",
+            e.value.message
+        )
+
     def test_passes_if_an_expected_method_call_is_made(self):
         subject = Double()
 

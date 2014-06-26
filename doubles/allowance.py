@@ -64,7 +64,10 @@ class Allowance(object):
         return self._return_value()
 
     def _expected_argument_string(self):
-        return 'any args'
+        if self.args is _any and self.kwargs is _any:
+            return 'any args'
+        else:
+            return '(args={!r}, kwargs={!r})'.format(self.args, self.kwargs)
 
     def _verify_arguments(self):
         if not isinstance(self._obj, VerifyingDouble):
