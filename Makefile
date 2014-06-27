@@ -1,9 +1,6 @@
 test: clean lint
 	@py.test -s test
 
-unittest: clean lint
-	python test/unittest_integration.py
-
 lint:
 	flake8 doubles test
 
