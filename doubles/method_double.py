@@ -46,7 +46,14 @@ class MethodDouble(object):
             expectation = _self._find_matching_expectation(args, kwargs)
 
             if not expectation:
-                raise UnallowedMethodCallError
+                raise UnallowedMethodCallError(
+                    "Received unexpected call to '{}' on {!r} with (args={}, kwargs={}).".format(
+                        self._method_name,
+                        self._obj,
+                        args,
+                        kwargs
+                    )
+                )
 
             return expectation.return_value
 

@@ -1,3 +1,5 @@
+import re
+
 from pytest import raises
 
 from doubles import allow, Double
@@ -76,8 +78,14 @@ class TestWithArgs(object):
 
         allow(subject).to_call('foo').with_args('bar', baz='blah')
 
-        with raises(UnallowedMethodCallError):
+        with raises(UnallowedMethodCallError) as e:
             subject.foo()
+
+        assert re.match(
+            r"Received unexpected call to 'foo' on <Double object at .+> "
+            r"with \(args=\(\), kwargs={}\).",
+            e.value.message
+        )
 
     def test_matches_most_specific_allowance(self):
         subject = Double()
@@ -101,8 +109,14 @@ class TestWithNoArgs(object):
 
         allow(subject).to_call('foo').with_no_args()
 
-        with raises(UnallowedMethodCallError):
+        with raises(UnallowedMethodCallError) as e:
             subject.foo('bar')
+
+        assert re.match(
+            r"Received unexpected call to 'foo' on <Double object at .+> "
+            r"with \(args=\('bar',\), kwargs={}\).",
+            e.value.message
+        )
 
     def test_chains_with_return_values(self):
         subject = Double()
