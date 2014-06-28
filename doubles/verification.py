@@ -30,5 +30,5 @@ def verify_method(target, method_name, class_level=False):
 def verify_arguments(method, args, kwargs):
     try:
         getcallargs(method, *args, **kwargs)
-    except TypeError:
-        raise VerifyingDoubleError('bad arguments')
+    except TypeError as e:
+        raise VerifyingDoubleError(e.message)

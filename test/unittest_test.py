@@ -1,7 +1,7 @@
 from StringIO import StringIO
 import unittest
 
-from doubles.double import Double
+from doubles.instance_double import InstanceDouble
 from doubles.targets.expectation_target import expect
 from doubles.unittest import TestCase
 
@@ -9,9 +9,9 @@ from doubles.unittest import TestCase
 def test_unittest_integration():
     class UnittestIntegration(TestCase):
         def runTest(self):
-            subject = Double()
+            subject = InstanceDouble('doubles.testing.User')
 
-            expect(subject).to_call('foo')
+            expect(subject).to_call('instance_method')
 
     test_loader = unittest.TestLoader()
     suite = test_loader.loadTestsFromTestCase(UnittestIntegration)

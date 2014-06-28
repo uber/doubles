@@ -1,10 +1,24 @@
+import re
+
 from pytest import raises
 
-from doubles import allow, ObjectDouble
 from doubles.exceptions import VerifyingDoubleError
+from doubles.object_double import ObjectDouble
+from doubles.targets.allowance_target import allow
 from doubles.testing import User
 
 user = User('Alice', 25)
+
+
+class TestRepr(object):
+    def test_displays_correct_class_name(self):
+        subject = ObjectDouble(user)
+
+        assert re.match(
+            r"<ObjectDouble of <doubles.testing.User object at 0x[0-9a-f]{9}> object "
+            r"at 0x[0-9a-f]{9}>",
+            repr(subject)
+        )
 
 
 class TestObjectDouble(object):

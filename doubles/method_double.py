@@ -1,10 +1,9 @@
 from inspect import isclass, ismethod
 
-from doubles.double import Double
-from doubles.verifying_doubles.verifying_double import VerifyingDouble
-from doubles.exceptions import UnallowedMethodCallError
 from doubles.allowance import Allowance
+from doubles.exceptions import UnallowedMethodCallError
 from doubles.expectation import Expectation
+from doubles.object_double import ObjectDouble
 
 
 class MethodDouble(object):
@@ -57,11 +56,10 @@ class MethodDouble(object):
 
             return expectation.return_value
 
-        if not self._is_pure_double():
-            try:
-                self._original_method = getattr(self._obj, self._method_name)
-            except AttributeError:
-                pass
+        try:
+            self._original_method = getattr(self._obj, self._method_name)
+        except AttributeError:
+            pass
 
         if self._is_class_method():
             bound_proxy_method = classmethod(proxy_method)
@@ -79,9 +77,6 @@ class MethodDouble(object):
             if expectation.satisfy_any_args_match():
                 return expectation
 
-    def _is_pure_double(self):
-        return isinstance(self._obj, Double)
-
     def _is_class_method(self):
         if not isclass(self._obj):
             return False
@@ -92,7 +87,5 @@ class MethodDouble(object):
             return True
 
     def _verify_method_name(self):
-        if not isinstance(self._obj, VerifyingDouble):
-            return
-
-        self._obj._doubles_verify_method_name(self._method_name)
+        if isinstance(self._obj, ObjectDouble):
+            self._obj._doubles_verify_method_name(self._method_name)

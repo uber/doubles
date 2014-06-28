@@ -1,6 +1,7 @@
 from pytest import raises
 
-from doubles import allow, Double, teardown
+from doubles.lifecycle import teardown
+from doubles.targets.allowance_target import allow
 from doubles.testing import User
 
 
@@ -46,14 +47,14 @@ class TestInstanceMethods(object):
 
 class TestClassMethods(object):
     def test_stubs_constructors(self):
-        user = Double('User')
+        user = object()
 
         allow(User).to_call('__new__').and_return(user)
 
         assert User('Alice', 25) is user
 
     def test_restores_constructor_on_teardown(self):
-        user = Double('User')
+        user = object()
         allow(User).to_call('__new__').and_return(user)
 
         teardown()

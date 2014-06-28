@@ -1,5 +1,4 @@
 from doubles.exceptions import MockExpectationError
-from doubles.verifying_doubles.verifying_double import VerifyingDouble
 
 _any = object()
 
@@ -70,7 +69,4 @@ class Allowance(object):
             return '(args={!r}, kwargs={!r})'.format(self.args, self.kwargs)
 
     def _verify_arguments(self):
-        if not isinstance(self._obj, VerifyingDouble):
-            return
-
         self._obj._doubles_verify_arguments(self._method_name, self.args, self.kwargs)

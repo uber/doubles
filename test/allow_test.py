@@ -2,8 +2,9 @@ import re
 
 from pytest import raises
 
-from doubles import allow, Double
 from doubles.exceptions import UnallowedMethodCallError
+from doubles.instance_double import InstanceDouble
+from doubles.targets.allowance_target import allow
 
 
 class UserDefinedException(Exception):
@@ -12,115 +13,117 @@ class UserDefinedException(Exception):
 
 class TestBasicAllowance(object):
     def test_allows_method_calls_on_doubles(self):
-        subject = Double()
+        subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).to_call('foo')
+        allow(subject).to_call('instance_method')
 
-        assert subject.foo() is None
+        assert subject.instance_method() is None
 
     def test_raises_on_undefined_attribute_access(self):
-        subject = Double()
+        subject = InstanceDouble('doubles.testing.User')
 
         with raises(AttributeError):
-            subject.foo
+            subject.instance_method
 
 
 class TestReturnValues(object):
     def test_returns_specified_value(self):
-        subject = Double()
+        subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).to_call('foo').and_return('bar')
+        allow(subject).to_call('instance_method').and_return('bar')
 
-        assert subject.foo() == 'bar'
+        assert subject.instance_method() == 'bar'
 
     def test_returns_result_of_a_callable(self):
-        subject = Double()
+        subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).to_call('foo').and_return_result_of(lambda: 'bar')
+        allow(subject).to_call('instance_method').and_return_result_of(lambda: 'bar')
 
-        assert subject.foo() == 'bar'
+        assert subject.instance_method() == 'bar'
 
     def test_raises_provided_exception(self):
-        subject = Double()
+        subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).to_call('foo').and_raise(UserDefinedException)
+        allow(subject).to_call('instance_method').and_raise(UserDefinedException)
 
         with raises(UserDefinedException):
-            subject.foo()
+            subject.instance_method()
 
     def test_chaining_result_methods_gives_the_last_one_precedence(self):
-        subject = Double()
+        subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).to_call('foo').and_return('bar').and_return_result_of(
+        allow(subject).to_call('instance_method').and_return('bar').and_return_result_of(
             lambda: 'baz'
         ).and_raise(UserDefinedException).and_return('final')
 
-        assert subject.foo() == 'final'
+        assert subject.instance_method() == 'final'
 
 
 class TestWithArgs(object):
     def test_allows_any_arguments_if_none_are_specified(self):
-        subject = Double()
+        subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).to_call('foo').and_return('bar')
+        allow(subject).to_call('instance_method').and_return('bar')
 
-        assert subject.foo('unspecified argument') == 'bar'
+        assert subject.instance_method('unspecified argument') == 'bar'
 
     def test_allows_specification_of_arguments(self):
-        subject = Double()
+        subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).to_call('foo').with_args('bar', baz='blah')
+        allow(subject).to_call('method_with_positional_arguments').with_args('foo')
 
-        assert subject.foo('bar', baz='blah') is None
+        assert subject.method_with_positional_arguments('foo') is None
 
     def test_raises_if_arguments_were_specified_but_not_provided_when_called(self):
-        subject = Double()
+        subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).to_call('foo').with_args('bar', baz='blah')
+        allow(subject).to_call('method_with_default_args').with_args('one', bar='two')
 
         with raises(UnallowedMethodCallError) as e:
-            subject.foo()
+            subject.method_with_default_args()
 
         assert re.match(
-            r"Received unexpected call to 'foo' on <Double object at .+> "
+            r"Received unexpected call to 'method_with_default_args' on "
+            r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with \(args=\(\), kwargs={}\).",
             e.value.message
         )
 
     def test_matches_most_specific_allowance(self):
-        subject = Double()
+        subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).to_call('foo').and_return('bar')
-        allow(subject).to_call('foo').with_args('baz').and_return('blah')
+        allow(subject).to_call('method_with_varargs').and_return('bar')
+        allow(subject).to_call('method_with_varargs').with_args('baz').and_return('blah')
 
-        assert subject.foo('baz') == 'blah'
+        assert subject.method_with_varargs('baz') == 'blah'
 
 
 class TestWithNoArgs(object):
     def test_allows_call_with_no_arguments(self):
-        subject = Double()
+        subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).to_call('foo').with_no_args()
+        allow(subject).to_call('instance_method').with_no_args()
 
-        assert subject.foo() is None
+        assert subject.instance_method() is None
 
     def test_raises_if_called_with_args(self):
-        subject = Double()
+        subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).to_call('foo').with_no_args()
+        allow(subject).to_call('instance_method').with_no_args()
 
         with raises(UnallowedMethodCallError) as e:
-            subject.foo('bar')
+            subject.instance_method('bar')
 
         assert re.match(
-            r"Received unexpected call to 'foo' on <Double object at .+> "
+            r"Received unexpected call to 'instance_method' on "
+            r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with \(args=\('bar',\), kwargs={}\).",
             e.value.message
         )
 
     def test_chains_with_return_values(self):
-        subject = Double()
+        subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).to_call('foo').with_no_args().and_return('bar')
+        allow(subject).to_call('instance_method').with_no_args().and_return('bar')
 
-        assert subject.foo() == 'bar'
+        assert subject.instance_method() == 'bar'
