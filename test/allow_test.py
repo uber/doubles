@@ -15,7 +15,7 @@ class TestBasicAllowance(object):
     def test_allows_method_calls_on_doubles(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).to_call('instance_method')
+        allow(subject).instance_method
 
         assert subject.instance_method() is None
 
@@ -30,21 +30,21 @@ class TestReturnValues(object):
     def test_returns_specified_value(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).to_call('instance_method').and_return('bar')
+        allow(subject).instance_method.and_return('bar')
 
         assert subject.instance_method() == 'bar'
 
     def test_returns_result_of_a_callable(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).to_call('instance_method').and_return_result_of(lambda: 'bar')
+        allow(subject).instance_method.and_return_result_of(lambda: 'bar')
 
         assert subject.instance_method() == 'bar'
 
     def test_raises_provided_exception(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).to_call('instance_method').and_raise(UserDefinedException)
+        allow(subject).instance_method.and_raise(UserDefinedException)
 
         with raises(UserDefinedException):
             subject.instance_method()
@@ -52,7 +52,7 @@ class TestReturnValues(object):
     def test_chaining_result_methods_gives_the_last_one_precedence(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).to_call('instance_method').and_return('bar').and_return_result_of(
+        allow(subject).instance_method.and_return('bar').and_return_result_of(
             lambda: 'baz'
         ).and_raise(UserDefinedException).and_return('final')
 
@@ -63,21 +63,21 @@ class TestWithArgs(object):
     def test_allows_any_arguments_if_none_are_specified(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).to_call('instance_method').and_return('bar')
+        allow(subject).instance_method.and_return('bar')
 
         assert subject.instance_method('unspecified argument') == 'bar'
 
     def test_allows_specification_of_arguments(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).to_call('method_with_positional_arguments').with_args('foo')
+        allow(subject).method_with_positional_arguments.with_args('foo')
 
         assert subject.method_with_positional_arguments('foo') is None
 
     def test_raises_if_arguments_were_specified_but_not_provided_when_called(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).to_call('method_with_default_args').with_args('one', bar='two')
+        allow(subject).method_with_default_args.with_args('one', bar='two')
 
         with raises(UnallowedMethodCallError) as e:
             subject.method_with_default_args()
@@ -92,8 +92,8 @@ class TestWithArgs(object):
     def test_matches_most_specific_allowance(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).to_call('method_with_varargs').and_return('bar')
-        allow(subject).to_call('method_with_varargs').with_args('baz').and_return('blah')
+        allow(subject).method_with_varargs.and_return('bar')
+        allow(subject).method_with_varargs.with_args('baz').and_return('blah')
 
         assert subject.method_with_varargs('baz') == 'blah'
 
@@ -102,14 +102,14 @@ class TestWithNoArgs(object):
     def test_allows_call_with_no_arguments(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).to_call('instance_method').with_no_args()
+        allow(subject).instance_method.with_no_args()
 
         assert subject.instance_method() is None
 
     def test_raises_if_called_with_args(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).to_call('instance_method').with_no_args()
+        allow(subject).instance_method.with_no_args()
 
         with raises(UnallowedMethodCallError) as e:
             subject.instance_method('bar')
@@ -124,6 +124,6 @@ class TestWithNoArgs(object):
     def test_chains_with_return_values(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).to_call('instance_method').with_no_args().and_return('bar')
+        allow(subject).instance_method.with_no_args().and_return('bar')
 
         assert subject.instance_method() == 'bar'

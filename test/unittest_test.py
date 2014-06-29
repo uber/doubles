@@ -11,7 +11,7 @@ def test_unittest_integration():
         def runTest(self):
             subject = InstanceDouble('doubles.testing.User')
 
-            expect(subject).to_call('instance_method')
+            expect(subject).instance_method
 
     test_loader = unittest.TestLoader()
     suite = test_loader.loadTestsFromTestCase(UnittestIntegration)

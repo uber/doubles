@@ -12,7 +12,7 @@ class TestExpect(object):
     def test_raises_if_an_expected_method_call_is_not_made(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        expect(subject).to_call('instance_method')
+        expect(subject).instance_method
 
         with raises(MockExpectationError) as e:
             verify()
@@ -27,7 +27,7 @@ class TestExpect(object):
     def test_raises_if_method_is_called_with_wrong_arguments(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        expect(subject).to_call('method_with_varargs').with_args('bar')
+        expect(subject).method_with_varargs.with_args('bar')
 
         with raises(MockExpectationError) as e:
             verify()
@@ -42,13 +42,13 @@ class TestExpect(object):
     def test_passes_if_an_expected_method_call_is_made(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        expect(subject).to_call('instance_method')
+        expect(subject).instance_method
 
         subject.instance_method()
 
     def test_passes_if_method_is_called_with_specified_arguments(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        expect(subject).to_call('method_with_default_args').with_args('one', bar='two')
+        expect(subject).method_with_default_args.with_args('one', bar='two')
 
         assert subject.method_with_default_args('one', bar='two') is None
