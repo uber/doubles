@@ -32,6 +32,9 @@ setup(
     packages=['doubles'],
     tests_require=['pytest'],
     cmdclass={'test': PyTest},
+    entry_points = {
+        'pytest11': ['doubles = doubles.pytest']
+    },
     zip_safe=True,
     keywords=['testing', 'test doubles', 'mocks', 'mocking', 'stubs', 'stubbing'],
     classifiers=[

@@ -1,11 +1,9 @@
 from coverage import coverage
 
-
 cov = coverage(source=('doubles',))
 cov.start()
 
-
-from doubles import lifecycle
+from doubles.pytest import pytest_runtest_call  # noqa
 
 
 def pytest_sessionfinish(session, exitstatus):
@@ -16,13 +14,3 @@ def pytest_terminal_summary(terminalreporter):
     print "\nCoverage report:\n"
     cov.report(show_missing=True, ignore_errors=True, file=terminalreporter._tw)
     cov.html_report()
-
-
-def pytest_runtest_setup(item):
-    lifecycle.setup()
-
-
-def pytest_runtest_teardown(item, nextitem):
-    if lifecycle.current_space():
-        lifecycle.verify()
-        lifecycle.teardown()
