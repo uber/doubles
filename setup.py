@@ -33,7 +33,8 @@ setup(
     tests_require=['pytest'],
     cmdclass={'test': PyTest},
     entry_points = {
-        'pytest11': ['doubles = doubles.pytest']
+        'pytest11': ['doubles = doubles.pytest'],
+        'nose.plugins.0.10': ['doubles = doubles.nose:NoseIntegration']
     },
     zip_safe=True,
     keywords=['testing', 'test doubles', 'mocks', 'mocking', 'stubs', 'stubbing'],

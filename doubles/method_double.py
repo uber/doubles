@@ -1,9 +1,9 @@
-from inspect import isclass, ismethod
+from inspect import isclass
 
 from doubles.allowance import Allowance
-from doubles.exceptions import UnallowedMethodCallError
 from doubles.expectation import Expectation
-from doubles.object_double import ObjectDouble
+from doubles.proxy_method import ProxyMethod
+from doubles.verification import verify_method
 
 
 class MethodDouble(object):
@@ -15,7 +15,11 @@ class MethodDouble(object):
 
         self._expectations = []
 
-        self._define_proxy_method()
+        self._proxy_method = ProxyMethod(
+            obj,
+            method_name,
+            lambda args, kwargs: self._find_matching_expectation(args, kwargs)
+        )
 
     def add_allowance(self):
         allowance = Allowance(self._obj, self._method_name)
@@ -28,45 +32,12 @@ class MethodDouble(object):
         return expectation
 
     def restore_original_method(self):
-        try:
-            setattr(self._obj, self._method_name, self._original_method)
-        except AttributeError:
-            delattr(self._obj, self._method_name)
+        self._proxy_method.restore_original_method()
 
     def verify(self):
         for expectation in self._expectations:
             if not expectation.is_satisfied():
                 expectation.raise_failure_exception()
-
-    def _define_proxy_method(self):
-        _self = self
-
-        def proxy_method(instance_or_class, *args, **kwargs):
-            expectation = _self._find_matching_expectation(args, kwargs)
-
-            if not expectation:
-                raise UnallowedMethodCallError(
-                    "Received unexpected call to '{}' on {!r} with (args={}, kwargs={}).".format(
-                        self._method_name,
-                        self._obj,
-                        args,
-                        kwargs
-                    )
-                )
-
-            return expectation.return_value
-
-        try:
-            self._original_method = getattr(self._obj, self._method_name)
-        except AttributeError:
-            pass
-
-        if self._is_class_method():
-            bound_proxy_method = classmethod(proxy_method)
-        else:
-            bound_proxy_method = proxy_method.__get__(self._obj, type(self._obj))
-
-        setattr(self._obj, self._method_name, bound_proxy_method)
 
     def _find_matching_expectation(self, args, kwargs):
         for expectation in self._expectations:
@@ -77,15 +48,10 @@ class MethodDouble(object):
             if expectation.satisfy_any_args_match():
                 return expectation
 
-    def _is_class_method(self):
-        if not isclass(self._obj):
-            return False
-
-        try:
-            return ismethod(self._original_method) and self._original_method.__self__ is self._obj
-        except AttributeError:
-            return True
-
     def _verify_method_name(self):
-        if isinstance(self._obj, ObjectDouble):
+        if hasattr(self._obj, '_doubles_verify_method_name'):
             self._obj._doubles_verify_method_name(self._method_name)
+        elif isclass(self._obj):
+            verify_method(self._obj, self._method_name, class_level=True)
+        else:
+            verify_method(self._obj, self._method_name)

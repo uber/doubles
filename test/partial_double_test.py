@@ -1,5 +1,6 @@
 from pytest import raises
 
+from doubles.exceptions import VerifyingDoubleError
 from doubles.lifecycle import teardown
 from doubles.targets.allowance_target import allow
 from doubles.testing import User
@@ -28,21 +29,11 @@ class TestInstanceMethods(object):
 
         assert user.age == 25
 
-    def test_stubs_nonexistent_instance_methods(self):
+    def test_raises_when_stubbing_nonexistent_methods(self):
         user = User('Alice', 25)
 
-        allow(user).gender.and_return('Female')
-
-        assert user.gender() == 'Female'
-
-    def test_removes_nonexistent_instance_methods_on_teardown(self):
-        user = User('Alice', 25)
-        allow(user).gender.and_return('Female')
-
-        teardown()
-
-        with raises(AttributeError):
-            user.gender()
+        with raises(VerifyingDoubleError):
+            allow(user).gender
 
 
 class TestClassMethods(object):
@@ -73,27 +64,10 @@ class TestClassMethods(object):
 
         assert User.class_method() == 'class method'
 
-    def test_stubs_class_attributes(self):
-        allow(User).class_attribute.and_return('bar')
+    def test_raises_when_stubbing_noncallable_attributes(self):
+        with raises(VerifyingDoubleError):
+            allow(User).class_attribute
 
-        assert User.class_attribute() == 'bar'
-
-    def test_restores_class_attributes_on_teardown(self):
-        allow(User).class_attribute.and_return('bar')
-
-        teardown()
-
-        assert User.class_attribute == 'foo'
-
-    def test_stubs_nonexistent_class_methods(self):
-        allow(User).nonexistent_method.and_return('bar')
-
-        assert User.nonexistent_method() == 'bar'
-
-    def test_removes_nonexistent_class_methods_on_teardown(self):
-        allow(User).nonexistent_method.and_return('bar')
-
-        teardown()
-
-        with raises(AttributeError):
-            User.nonexistent_method()
+    def test_raises_when_stubbing_nonexistent_class_methods(self):
+        with raises(VerifyingDoubleError):
+            allow(User).nonexistent_method
