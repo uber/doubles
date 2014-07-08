@@ -1,17 +1,10 @@
-from inspect import isfunction, ismethod, getcallargs
+from inspect import ismethod, getcallargs
 
 from doubles.exceptions import VerifyingDoubleError
 
 
-def _is_callable_without_instance(callable_obj, owner):
-    if isfunction(callable_obj):
-        return True
-
-    if ismethod(callable_obj):
-        if callable_obj.__self__ is owner:
-            return True
-
-    return False
+def _is_instance_method(callable_obj, owner):
+    return ismethod(callable_obj) and callable_obj.__self__ is not owner
 
 
 def verify_method(target, method_name, class_level=False):
@@ -23,7 +16,7 @@ def verify_method(target, method_name, class_level=False):
     if not callable(attr):
         raise VerifyingDoubleError('not callable')
 
-    if class_level and not _is_callable_without_instance(attr, target):
+    if class_level and _is_instance_method(attr, target):
         raise VerifyingDoubleError('not a class method')
 
 

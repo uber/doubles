@@ -3,7 +3,7 @@ from inspect import isclass, ismethod
 from doubles.allowance import Allowance
 from doubles.exceptions import UnallowedMethodCallError
 from doubles.expectation import Expectation
-from doubles.object_double import ObjectDouble
+from doubles.verification import verify_method
 
 
 class MethodDouble(object):
@@ -81,11 +81,12 @@ class MethodDouble(object):
         if not isclass(self._obj):
             return False
 
-        try:
-            return ismethod(self._original_method) and self._original_method.__self__ is self._obj
-        except AttributeError:
-            return True
+        return ismethod(self._original_method) and self._original_method.__self__ is self._obj
 
     def _verify_method_name(self):
-        if isinstance(self._obj, ObjectDouble):
+        if hasattr(self._obj, '_doubles_verify_method_name'):
             self._obj._doubles_verify_method_name(self._method_name)
+        elif isclass(self._obj):
+            verify_method(self._obj, self._method_name, class_level=True)
+        else:
+            verify_method(self._obj, self._method_name)
