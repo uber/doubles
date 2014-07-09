@@ -1,33 +1,33 @@
-from inspect import isclass
-
 from doubles.allowance import Allowance
+from doubles.class_double import ClassDouble
 from doubles.expectation import Expectation
+from doubles.instance_double import InstanceDouble
 from doubles.proxy_method import ProxyMethod
 from doubles.verification import verify_method
 
 
 class MethodDouble(object):
-    def __init__(self, method_name, obj):
+    def __init__(self, method_name, target):
         self._method_name = method_name
-        self._obj = obj
+        self._target = target
 
-        self._verify_method_name()
+        self._verify_method()
 
         self._expectations = []
 
         self._proxy_method = ProxyMethod(
-            obj,
+            target,
             method_name,
             lambda args, kwargs: self._find_matching_expectation(args, kwargs)
         )
 
     def add_allowance(self):
-        allowance = Allowance(self._obj, self._method_name)
+        allowance = Allowance(self._target, self._method_name)
         self._expectations.append(allowance)
         return allowance
 
     def add_expectation(self):
-        expectation = Expectation(self._obj, self._method_name)
+        expectation = Expectation(self._target, self._method_name)
         self._expectations.append(expectation)
         return expectation
 
@@ -48,10 +48,13 @@ class MethodDouble(object):
             if expectation.satisfy_any_args_match():
                 return expectation
 
-    def _verify_method_name(self):
-        if hasattr(self._obj, '_doubles_verify_method_name'):
-            self._obj._doubles_verify_method_name(self._method_name)
-        elif isclass(self._obj):
-            verify_method(self._obj, self._method_name, class_level=True)
+    def _verify_method(self):
+        # TODO: Find a way to set class_level without manual type checking.
+        if isinstance(self._target.obj, ClassDouble):
+            class_level = True
+        elif isinstance(self._target.obj, InstanceDouble):
+            class_level = False
         else:
-            verify_method(self._obj, self._method_name)
+            class_level = self._target.is_class()
+
+        verify_method(self._target, self._method_name, class_level=class_level)

@@ -35,6 +35,13 @@ class TestInstanceMethods(object):
         with raises(VerifyingDoubleError):
             allow(user).gender
 
+    def test_stubs_properties(self):
+        user = User('Alice', 25)
+
+        allow(user).some_property.and_return('foo')
+
+        assert user.some_property == 'foo'
+
 
 class TestClassMethods(object):
     def test_stubs_constructors(self):
@@ -62,7 +69,7 @@ class TestClassMethods(object):
 
         teardown()
 
-        assert User.class_method() == 'class method'
+        assert User.class_method() == 'class_method return value'
 
     def test_raises_when_stubbing_noncallable_attributes(self):
         with raises(VerifyingDoubleError):

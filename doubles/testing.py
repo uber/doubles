@@ -32,3 +32,7 @@ class User(object):
 
     def method_with_positional_arguments(self, foo):
         return 'method_with_positional_arguments return value'
+
+    @property
+    def some_property(self):
+        return 'some_property return value'

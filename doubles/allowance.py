@@ -1,11 +1,12 @@
 from doubles.exceptions import MockExpectationError
+from doubles.verification import verify_arguments
 
 _any = object()
 
 
 class Allowance(object):
-    def __init__(self, obj, method_name):
-        self._obj = obj
+    def __init__(self, target, method_name):
+        self._target = target
         self._method_name = method_name
         self.args = _any
         self.kwargs = _any
@@ -47,7 +48,7 @@ class Allowance(object):
         raise MockExpectationError(
             "Expected '{}' to be called on {!r} with {}, but was not.".format(
                 self._method_name,
-                self._obj,
+                self._target.obj,
                 self._expected_argument_string()
             )
         )
@@ -69,4 +70,4 @@ class Allowance(object):
             return '(args={!r}, kwargs={!r})'.format(self.args, self.kwargs)
 
     def _verify_arguments(self):
-        self._obj._doubles_verify_arguments(self._method_name, self.args, self.kwargs)
+        verify_arguments(self._target, self._method_name, self.args, self.kwargs)

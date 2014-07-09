@@ -1,26 +1,28 @@
-from inspect import ismethod, getcallargs
+from inspect import isbuiltin, getcallargs
 
 from doubles.exceptions import VerifyingDoubleError
 
 
-def _is_instance_method(callable_obj, owner):
-    return ismethod(callable_obj) and callable_obj.__self__ is not owner
-
-
 def verify_method(target, method_name, class_level=False):
-    if not hasattr(target, method_name):
+    attr = target.attrs.get(method_name)
+
+    if not attr:
         raise VerifyingDoubleError('no matching method')
 
-    attr = getattr(target, method_name)
-
-    if not callable(attr):
+    if attr.kind == 'data' and not isbuiltin(attr.object):
         raise VerifyingDoubleError('not callable')
 
-    if class_level and _is_instance_method(attr, target):
+    if class_level and attr.kind == 'method':
         raise VerifyingDoubleError('not a class method')
 
 
-def verify_arguments(method, args, kwargs):
+def verify_arguments(target, method_name, args, kwargs):
+    attr = target.attrs[method_name]
+    method = attr.object
+
+    if attr.kind != 'static method':
+        args = ['self_or_cls'] + list(args)
+
     try:
         getcallargs(method, *args, **kwargs)
     except TypeError as e:

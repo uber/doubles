@@ -1,9 +1,10 @@
 from doubles.method_double import MethodDouble
+from doubles.target import Target
 
 
 class Proxy(object):
     def __init__(self, obj):
-        self._obj = obj
+        self._target = Target(obj)
         self._method_doubles = {}
 
     def add_allowance(self, method_name):
