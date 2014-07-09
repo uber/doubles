@@ -5,11 +5,11 @@ class User(object):
 
     @staticmethod
     def static_method():
-        pass
+        return 'static_method return value'
 
     @classmethod
     def class_method(cls):
-        return 'class method'
+        return 'class_method return value'
 
     def __init__(self, name, age):
         self.name = name
@@ -19,16 +19,16 @@ class User(object):
         return self.name
 
     def instance_method(self):
-        pass
+        return 'instance_method return value'
 
     def method_with_varargs(self, *args):
-        pass
+        return 'method_with_varargs return value'
 
     def method_with_default_args(self, foo, bar='baz'):
-        pass
+        return 'method_with_default_args return value'
 
     def method_with_varkwargs(self, **kwargs):
-        pass
+        return 'method_with_varkwargs return value'
 
     def method_with_positional_arguments(self, foo):
-        pass
+        return 'method_with_positional_arguments return value'
