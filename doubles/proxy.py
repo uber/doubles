@@ -21,8 +21,7 @@ class Proxy(object):
             method_double.verify()
 
     def method_double_for(self, method_name):
-        if method_name in self._method_doubles:
-            return self._method_doubles[method_name]
-        else:
-            method_double = self._method_doubles[method_name] = MethodDouble(method_name, self._obj)
-            return method_double
+        if method_name not in self._method_doubles:
+            self._method_doubles[method_name] = MethodDouble(method_name, self._target)
+
+        return self._method_doubles[method_name]

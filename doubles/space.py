@@ -7,7 +7,12 @@ class Space(object):
         self._is_verified = False
 
     def proxy_for(self, obj):
-        return self._proxies.setdefault(id(obj), Proxy(obj))
+        obj_id = id(obj)
+
+        if obj_id not in self._proxies:
+            self._proxies[obj_id] = Proxy(obj)
+
+        return self._proxies[obj_id]
 
     def teardown(self):
         for proxy in self._proxies.values():
