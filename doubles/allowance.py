@@ -1,4 +1,3 @@
-from doubles.exceptions import MockExpectationError
 from doubles.verification import verify_arguments
 
 _any = object()
@@ -43,15 +42,6 @@ class Allowance(object):
         self.kwargs = {}
         self._verify_arguments()
         return self
-
-    def raise_failure_exception(self):
-        raise MockExpectationError(
-            "Expected '{}' to be called on {!r} with {}, but was not.".format(
-                self._method_name,
-                self._target.obj,
-                self._expected_argument_string()
-            )
-        )
 
     def satisfy_any_args_match(self):
         return self.args is _any and self.kwargs is _any
