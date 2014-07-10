@@ -26,8 +26,8 @@ class MethodDouble(object):
         self._expectations.append(allowance)
         return allowance
 
-    def add_expectation(self):
-        expectation = Expectation(self._target, self._method_name)
+    def add_expectation(self, caller):
+        expectation = Expectation(self._target, self._method_name, caller)
         self._expectations.append(expectation)
         return expectation
 
