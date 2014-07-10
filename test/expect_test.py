@@ -21,7 +21,7 @@ class TestExpect(object):
             r"Expected 'instance_method' to be called on "
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
-            r"\(.*doubles/test/expect_test.py:\d+\)",
+            r" \(.*doubles/test/expect_test.py:\d+\)",
             e.value.message
         )
 
@@ -37,7 +37,7 @@ class TestExpect(object):
             r"Expected 'method_with_varargs' to be called on "
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with \(args=\('bar',\), kwargs={}\), but was not."
-            r"\(.*doubles/test/expect_test.py:\d+\)",
+            r" \(.*doubles/test/expect_test.py:\d+\)",
             e.value.message
         )
 
