@@ -1,27 +1,26 @@
+from threading import local
+
 from doubles.exceptions import NoSpaceError
 from doubles.space import Space
 
 
-_current_space = None
+_thread_local_data = local()
 
 
 def current_space():
-    return _current_space
+    if hasattr(_thread_local_data, 'current_space'):
+        return _thread_local_data.current_space
 
 
 def setup():
-    global _current_space
-
-    _current_space = Space()
+    _thread_local_data.current_space = Space()
 
 
 def teardown():
-    global _current_space
-
     if current_space():
         current_space().teardown()
 
-    _current_space = None
+    _thread_local_data.current_space = None
 
 
 def verify():
