@@ -56,3 +56,53 @@ class TestExpect(object):
         expect(subject).method_with_default_args.with_args('one', bar='two')
 
         assert subject.method_with_default_args('one', bar='two') is None
+
+    def test_raises_if_method_is_called_when_expected_to_never_be_called(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        expect(subject).instance_method.never()
+        subject.instance_method()
+
+        with raises(MockExpectationError) as e:
+            verify()
+
+        assert re.match(
+            r"Expected 'instance_method' to be called 0 times but was called 1 time on "
+            r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
+            r"with any args, but was not."
+            r" \(.*doubles/test/expect_test.py:\d+\)",
+            e.value.message
+        )
+
+    def test_passes_if_an_expected_method_is_called_exactly_n_times(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        expect(subject).instance_method.exactly_times(2)
+
+        subject.instance_method()
+        subject.instance_method()
+
+    def test_passes_if_an_expected_method_is_called_exactly_once(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        expect(subject).instance_method.once()
+
+        subject.instance_method()
+
+    def test_raises_if_method_is_called_twice_when_expected_to_be_called_once(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        expect(subject).instance_method.once()
+        subject.instance_method()
+        subject.instance_method()
+
+        with raises(MockExpectationError) as e:
+            verify()
+
+        assert re.match(
+            r"Expected 'instance_method' to be called 1 time but was called 2 times on "
+            r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
+            r"with any args, but was not."
+            r" \(.*doubles/test/expect_test.py:\d+\)",
+            e.value.message
+        )
