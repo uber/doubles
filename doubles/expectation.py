@@ -1,9 +1,4 @@
 from doubles.allowance import Allowance
-from doubles.exceptions import MockExpectationError
-
-
-def pluralize(word, n):
-    return word if n == 1 else word + 's'
 
 
 class Expectation(Allowance):
@@ -15,11 +10,9 @@ class Expectation(Allowance):
         :param str method_name: The name of the method to mock.
         :param tuple caller: Details of the stack frame where the expectation was made.
         """
-        super(Expectation, self).__init__(target, method_name)
+
+        super(Expectation, self).__init__(obj, method_name, caller)
         self._is_satisfied = False
-        self._caller = caller
-        self._expected_call_count = None
-        self._call_count = 0
 
     def satisfy_any_args_match(self):
         """
@@ -58,6 +51,9 @@ class Expectation(Allowance):
 
         self._call_count += 1
         self._is_satisfied = True
+
+    def raise_failure_exception(self):
+        super(Expectation, self).raise_failure_exception('Expected')
 
     def is_satisfied(self):
         if self._expected_call_count is None or self._expected_call_count == self._call_count:

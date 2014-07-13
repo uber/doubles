@@ -1,12 +1,14 @@
+from doubles.exceptions import MockExpectationError
 from doubles.verification import verify_arguments
 
 _any = object()
+pluralize = lambda w, n: w if n == 1 else w + 's'
 
 
 class Allowance(object):
     """An individual method allowance (stub)."""
 
-    def __init__(self, target, method_name):
+    def __init__(self, target, method_name, caller):
         """
         :param Target target: The object owning the method to stub.
         :param str method_name: The name of the method to stub.
@@ -14,9 +16,12 @@ class Allowance(object):
 
         self._target = target
         self._method_name = method_name
+        self._caller = caller
         self.args = _any
         self.kwargs = _any
         self._is_satisfied = True
+        self._expected_call_count = None
+        self._call_count = 0
 
         self.and_return(None)
 
@@ -124,6 +129,7 @@ class Allowance(object):
         :return: The value the double should return when called.
         """
 
+        self._called()
         return self._return_value()
 
     def _expected_argument_string(self):
@@ -147,3 +153,43 @@ class Allowance(object):
         """
 
         verify_arguments(self._target, self._method_name, self.args, self.kwargs)
+
+    def call_count(self, n):
+        self._expected_call_count = n
+
+    def never(self):
+        self.call_count(0)
+
+    def once(self):
+        self.call_count(1)
+
+    def _expected_call_count_string(self):
+        if self._expected_call_count is None:
+            return ''
+
+        return '{} {} but was called {} {} '.format(
+            self._expected_call_count,
+            pluralize('time', self._expected_call_count),
+            self._call_count,
+            pluralize('time', self._call_count)
+        )
+
+    def _called(self):
+        if self._expected_call_count is None:
+            return
+        self._call_count += 1
+        if self._call_count > self._expected_call_count:
+            self.raise_failure_exception()
+
+    def raise_failure_exception(self, expect_or_allow='Allowed'):
+        raise MockExpectationError(
+            "{} '{}' to be called {}on {!r} with {}, but was not. ({}:{})".format(
+                expect_or_allow,
+                self._method_name,
+                self._expected_call_count_string(),
+                self._target.obj,
+                self._expected_argument_string(),
+                self._caller[1],
+                self._caller[2]
+            )
+        )

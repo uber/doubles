@@ -15,16 +15,17 @@ class Proxy(object):
         self._target = Target(obj)
         self._method_doubles = {}
 
-    def add_allowance(self, method_name):
+    def add_allowance(self, method_name, caller):
         """
         Adds a new allowance for the given method name.
 
         :param str method_name: The name of the method to allow.
+        :param tuple caller: A tuple indicating where the allowance was added
         :return: The new ``Allowance``.
         :rtype: Allowance
         """
 
-        return self.method_double_for(method_name).add_allowance()
+        return self.method_double_for(method_name).add_allowance(caller)
 
     def add_expectation(self, method_name, caller):
         """

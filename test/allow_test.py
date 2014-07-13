@@ -2,9 +2,10 @@ import re
 
 from pytest import raises
 
-from doubles.exceptions import UnallowedMethodCallError
+from doubles.exceptions import UnallowedMethodCallError, MockExpectationError
 from doubles.instance_double import InstanceDouble
 from doubles.targets.allowance_target import allow
+from doubles.lifecycle import teardown
 
 
 class UserDefinedException(Exception):
@@ -156,3 +157,37 @@ class TestWithNoArgs(object):
         allow(subject).instance_method.with_no_args().and_return('bar')
 
         assert subject.instance_method() == 'bar'
+
+
+class TestCallCount(object):
+    def test_passes_if_an_allowed_method_is_called_less_than_call_count_times(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.call_count(2)
+
+        subject.instance_method()
+
+    def test_passes_if_an_allowed_method_is_called_call_count_times(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.call_count(2)
+
+        subject.instance_method()
+        subject.instance_method()
+
+    def test_raises_if_an_allowed_method_is_called_more_than_call_count_times(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.once()
+        subject.instance_method()
+        with raises(MockExpectationError) as e:
+            subject.instance_method()
+        teardown()
+
+        assert re.match(
+            r"Allowed 'instance_method' to be called 1 time but was called 2 times on "
+            r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
+            r"with any args, but was not."
+            r" \(.*doubles/test/allow_test.py:\d+\)",
+            e.value.message
+        )

@@ -1,3 +1,5 @@
+from inspect import stack
+
 from doubles.lifecycle import current_space
 
 
@@ -43,4 +45,5 @@ class AllowanceTarget(object):
         if __dict__ and attr_name in __dict__:
             return __dict__[attr_name]
 
-        return self._proxy.add_allowance(attr_name)
+        caller = stack()[1]
+        return self._proxy.add_allowance(attr_name, caller)
