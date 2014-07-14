@@ -84,7 +84,7 @@ class TestWithArgs(object):
 
         assert re.match(
             r"Received unexpected call to 'method_with_default_args' on "
-            r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
+            r"<InstanceDouble of <class '?doubles.testing.User'?(?: at 0x[0-9a-f]{9})?> object at .+> "  # noqa
             r"with \(args=\(\), kwargs={}\).",
             e.value.message
         )
@@ -116,7 +116,7 @@ class TestWithNoArgs(object):
 
         assert re.match(
             r"Received unexpected call to 'instance_method' on "
-            r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
+            r"<InstanceDouble of <class '?doubles.testing.User'?(?: at 0x[0-9a-f]{9})?> object at .+> "  # noqa
             r"with \(args=\('bar',\), kwargs={}\).",
             e.value.message
         )

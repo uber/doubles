@@ -21,7 +21,7 @@ class Target(object):
         if isclass(self.doubled_obj):
             return self.doubled_obj
 
-        return type(self.doubled_obj)
+        return self.doubled_obj.__class__
 
     def _generate_attrs(self):
         attrs = {}
