@@ -1,59 +1,32 @@
 Integration with test frameworks
 ================================
 
-Doubles includes a class for integrating with the standard unittest test framework. Other test frameworks currently require manual integration.
+Doubles includes plugins for automatic integration with popular test runners.
 
-If you're not using unittest, you'll need to add a few calls to your suite's setup and teardown hooks. There are three methods from Doubles that must be invoked:
+Pytest
+------
 
-1. ``doubles.setup`` must be called before each test.
-2. ``doubles.verify`` must be called after each test, but can be skipped if the test has already failed.
-3. ``doubles.teardown`` must be called after each test and after the call to ``doubles.verify``.
+Pytest integration will automatically be loaded and activated via setuptools entry points. To disable Doubles for a particular test run, run Pytest as::
 
-If your test framework does not provide setup and teardown hooks that apply to all tests it runs, you might want to consolidate Doubles integration code in a shared base class.
+    $ py.test -p no:doubles file_or_directory
 
+Nose
+----
+
+Nose integration will be loaded and activated by running Nose as::
+
+    $ nosetests --with-doubles file_or_directory
 
 unittest
 --------
 
-Inherit from ``doubles.unittest.TestCase`` in your test case classes and the Doubles lifecycle will be managed automatically, including automatic verification of expectations for each test.
+Inherit from ``doubles.unittest.TestCase`` in your test case classes and the Doubles lifecycle will be managed automatically.
 
-pytest
-------
+Manual integration
+------------------
 
-In your ``conftest.py`` file::
+If you are using another test runner or need manual control of the Doubles lifecycle, these are the three methods you'll need to use:
 
-    import doubles
-
-
-    def pytest_runtest_setup(item):
-        doubles.setup()
-
-
-    def pytest_runtest_teardown(item, nextitem):
-        doubles.verify()
-        doubles.teardown()
-
-
-nose
-----
-
-::
-
-    from nose import with_setup
-    import doubles
-
-
-    def setup():
-        doubles.setup()
-
-
-    def teardown():
-        doubles.verify()
-        doubles.teardown()
-
-
-    @with_setup(setup, teardown)
-    def test_example():
-        """Your test case goes here."""
-
-        pass
+1. ``doubles.setup`` must be called before each test.
+2. ``doubles.verify`` must be called after each test, but can be skipped if the test has already failed.
+3. ``doubles.teardown`` must be called after each test and after the call to ``doubles.verify``.
