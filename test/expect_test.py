@@ -19,7 +19,8 @@ class TestExpect(object):
 
         assert re.match(
             r"Expected 'instance_method' to be called on "
-            r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
+            r"<InstanceDouble of <class '?doubles.testing.User'?"
+            r"(?: at 0x[0-9a-f]{9})?> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/expect_test.py:\d+\)",
             e.value.message
@@ -35,7 +36,8 @@ class TestExpect(object):
 
         assert re.match(
             r"Expected 'method_with_varargs' to be called on "
-            r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
+            r"<InstanceDouble of <class '?doubles.testing.User'?"
+            r"(?: at 0x[0-9a-f]{9})?> object at .+> "
             r"with \(args=\('bar',\), kwargs={}\), but was not."
             r" \(.*doubles/test/expect_test.py:\d+\)",
             e.value.message

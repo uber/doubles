@@ -1,49 +1,73 @@
-from pytest import raises
+from pytest import raises, mark
 
 from doubles.exceptions import VerifyingDoubleError
 from doubles.lifecycle import teardown
 from doubles.targets.allowance_target import allow
-from doubles.testing import User
+from doubles.testing import User, OldStyleUser
 
 
+@mark.parametrize('test_class', [User, OldStyleUser])
 class TestInstanceMethods(object):
-    def test_stubs_instance_methods(self):
-        user = User('Alice', 25)
+    def test_stubs_instance_methods(self, test_class):
+        user = test_class('Alice', 25)
 
         allow(user).get_name.and_return('Bob')
 
         assert user.get_name() == 'Bob'
 
-    def test_restores_instance_methods_on_teardown(self):
-        user = User('Alice', 25)
+    def test_restores_instance_methods_on_teardown(self, test_class):
+        user = test_class('Alice', 25)
         allow(user).get_name.and_return('Bob')
 
         teardown()
 
         assert user.get_name() == 'Alice'
 
-    def test_only_affects_stubbed_method(self):
-        user = User('Alice', 25)
+    def test_only_affects_stubbed_method(self, test_class):
+        user = test_class('Alice', 25)
 
         allow(user).get_name.and_return('Bob')
 
         assert user.age == 25
 
-    def test_raises_when_stubbing_nonexistent_methods(self):
-        user = User('Alice', 25)
+    def test_raises_when_stubbing_nonexistent_methods(self, test_class):
+        user = test_class('Alice', 25)
 
         with raises(VerifyingDoubleError):
             allow(user).gender
 
-    def test_stubs_properties(self):
-        user = User('Alice', 25)
+    def test_stubs_properties(self, test_class):
+        user = test_class('Alice', 25)
 
         allow(user).some_property.and_return('foo')
 
         assert user.some_property == 'foo'
 
 
+@mark.parametrize('test_class', [User, OldStyleUser])
 class TestClassMethods(object):
+    def test_stubs_class_methods(self, test_class):
+        allow(test_class).class_method.and_return('overridden value')
+
+        assert test_class.class_method() == 'overridden value'
+
+    def test_restores_class_methods_on_teardown(self, test_class):
+        allow(test_class).class_method.and_return('overridden value')
+
+        teardown()
+
+        assert test_class.class_method() == 'class_method return value'
+
+    def test_raises_when_stubbing_noncallable_attributes(self, test_class):
+        with raises(VerifyingDoubleError):
+            allow(test_class).class_attribute
+
+    def test_raises_when_stubbing_nonexistent_class_methods(self, test_class):
+        with raises(VerifyingDoubleError):
+            allow(test_class).nonexistent_method
+
+
+class TestConstructorMethods(object):
     def test_stubs_constructors(self):
         user = object()
 
@@ -58,23 +82,3 @@ class TestClassMethods(object):
         teardown()
 
         assert User('Alice', 25) is not user
-
-    def test_stubs_class_methods(self):
-        allow(User).class_method.and_return('overridden value')
-
-        assert User.class_method() == 'overridden value'
-
-    def test_restores_class_methods_on_teardown(self):
-        allow(User).class_method.and_return('overridden value')
-
-        teardown()
-
-        assert User.class_method() == 'class_method return value'
-
-    def test_raises_when_stubbing_noncallable_attributes(self):
-        with raises(VerifyingDoubleError):
-            allow(User).class_attribute
-
-    def test_raises_when_stubbing_nonexistent_class_methods(self):
-        with raises(VerifyingDoubleError):
-            allow(User).nonexistent_method

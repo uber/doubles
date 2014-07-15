@@ -1,4 +1,4 @@
-class User(object):
+class OldStyleUser():
     """An importable dummy class used for testing purposes."""
 
     class_attribute = 'foo'
@@ -36,3 +36,7 @@ class User(object):
     @property
     def some_property(self):
         return 'some_property return value'
+
+
+class User(OldStyleUser, object):
+    pass
