@@ -50,7 +50,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'doubles'
-copyright = u'2014, Jimmy Cuadra'
+copyright = u'2014, Uber Technologies, Inc.'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
