@@ -8,6 +8,13 @@ _thread_local_data = local()
 
 
 def current_space():
+    """
+    An accessor for the current thread's active ``Space``.
+
+    :return: The active ``Space``.
+    :rtype: Space
+    """
+
     if hasattr(_thread_local_data, 'current_space'):
         return _thread_local_data.current_space
 

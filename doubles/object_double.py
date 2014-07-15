@@ -6,13 +6,20 @@ class ObjectDouble(object):
 
         dummy_user = ObjectDouble(user)
 
-    :param target: The object the newly created ObjectDouble will verify against.
-    :type target: any object
+    :param object target: The object the newly created ObjectDouble will verify against.
     """
     def __init__(self, target):
         self._doubles_target = target
 
     def __repr__(self):
+        """
+        Provides a string representation of the double, including the memory address and the
+        name of the object being doubled.
+
+        :return: A string representation of the double.
+        :rtype: str
+        """
+
         address = hex(id(self))
         class_name = self.__class__.__name__
 

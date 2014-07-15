@@ -11,8 +11,7 @@ def allow(target):
     Accessing the ``bar`` attribute will return an ``Allowance`` which provides additional methods
     to configure the stub.
 
-    :param target: The object that will be stubbed.
-    :type target: any object
+    :param object target: The object that will be stubbed.
     :return: An ``AllowanceTarget`` for the target object.
     """
 
@@ -20,10 +19,25 @@ def allow(target):
 
 
 class AllowanceTarget(object):
+    """A wrapper around a target object that creates new allowances on attribute access."""
+
     def __init__(self, target):
+        """
+        :param object target: The object to wrap.
+        """
+
         self._proxy = current_space().proxy_for(target)
 
     def __getattribute__(self, attr_name):
+        """
+        Returns the value of existing attributes, and returns a new allowance for any attribute
+        that doesn't yet exist.
+
+        :param str attr_name: The name of the attribute to look up.
+        :return: The existing value or a new ``Allowance``.
+        :rtype: object, Allowance
+        """
+
         __dict__ = object.__getattribute__(self, '__dict__')
 
         if __dict__ and attr_name in __dict__:

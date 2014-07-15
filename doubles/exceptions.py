@@ -18,5 +18,6 @@ class UnallowedMethodCallError(AssertionError):
 
 class VerifyingDoubleError(AssertionError):
     """
-    An exception raised when attempting to double a method that does not exist on the real object.
+    An exception raised when attempting to double a method that does not exist on the real object
+    or with arguments that do not match the signature of the real method.
     """
