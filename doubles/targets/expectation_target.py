@@ -4,6 +4,20 @@ from doubles.lifecycle import current_space
 
 
 def expect(target):
+    """
+    Prepares a target object for a method call expectation (mock). The name of the method to expect
+    should be called as a method on the return value of this function::
+
+        expect(foo).bar
+
+    Accessing the ``bar`` attribute will return an ``Expectation`` which provides additional methods
+    to configure the mock.
+
+    :param target: The object that will be mocked.
+    :type target: any object
+    :return: An ``ExpectationTarget`` for the target object.
+    """
+
     return ExpectationTarget(target)
 
 

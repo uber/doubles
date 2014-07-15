@@ -4,6 +4,8 @@ _any = object()
 
 
 class Allowance(object):
+    """An individual method allowance (stub)."""
+
     def __init__(self, target, method_name):
         self._target = target
         self._method_name = method_name
@@ -14,6 +16,11 @@ class Allowance(object):
         self.and_return(None)
 
     def and_raise(self, exception):
+        """
+        Causes the stub to raise the provided exception when called.
+
+        :param Exception exception: The exception to raise.
+        """
         def proxy_exception():
             raise exception
 
@@ -21,10 +28,24 @@ class Allowance(object):
         return self
 
     def and_return(self, return_value):
+        """
+        Causes the stub to return the provided value.
+
+        :param return_value: The value the stub will return when called.
+        :type return_value: any object
+        """
+
         self._return_value = lambda: return_value
         return self
 
     def and_return_result_of(self, return_value):
+        """
+        Causes the stub to return the result of calling the provided value.
+
+        :param return_value: A callable that will be invoked to determine the stub's return value.
+        :type return_value: any callable object
+        """
+
         self._return_value = return_value
         return self
 
@@ -32,12 +53,23 @@ class Allowance(object):
         return self._is_satisfied
 
     def with_args(self, *args, **kwargs):
+        """
+        Declares that the stub can only be called with the provided arguments.
+
+        :param args: Any positional arguments required for invocation.
+        :param kwargs: Any keyword arguments required for invocation.
+        """
+
         self.args = args
         self.kwargs = kwargs
         self._verify_arguments()
         return self
 
     def with_no_args(self):
+        """
+        Declares that the stub can only be called with no arguments.
+        """
+
         self.args = ()
         self.kwargs = {}
         self._verify_arguments()

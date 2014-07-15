@@ -3,6 +3,8 @@ from doubles.exceptions import MockExpectationError
 
 
 class Expectation(Allowance):
+    """An individual method expectation (mock). Provides the same interface as ``Allowance``."""
+
     def __init__(self, obj, method_name, caller):
         super(Expectation, self).__init__(obj, method_name)
         self._is_satisfied = False
