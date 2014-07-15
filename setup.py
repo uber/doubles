@@ -29,7 +29,7 @@ setup(
     author_email='jimmy@uber.com',
     url='https://github.com/uber/doubles',
     license='MIT',
-    packages=['doubles'],
+    packages=['doubles', 'doubles.targets'],
     tests_require=['pytest'],
     cmdclass={'test': PyTest},
     entry_points = {
