@@ -68,6 +68,5 @@ class Expectation(Allowance):
         :return: Whether or not the double is satisfied.
         :rtype: bool
         """
-        if self._has_too_few_calls() or self._has_too_many_calls():
-            return False
-        return self._is_satisfied
+
+        return self._call_counter.has_correct_call_count() and self._is_satisfied
