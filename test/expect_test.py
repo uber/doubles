@@ -57,23 +57,25 @@ class TestExpect(object):
 
         assert subject.method_with_default_args('one', bar='two') is None
 
-    def test_passes_if_an_expected_method_is_called_call_count_times(self):
+
+class TestTwice(object):
+    def test_passes_when_called_twice(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        expect(subject).instance_method.exactly(2).times
+        expect(subject).instance_method.twice()
 
         subject.instance_method()
         subject.instance_method()
 
-    def test_raises_if_an_expected_method_is_called_less_than_call_count_times(self):
+    def test_fails_when_called_once(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        expect(subject).instance_method.exactly(2).times
+        expect(subject).instance_method.twice()
 
         subject.instance_method()
-
         with raises(MockExpectationError) as e:
             verify()
+        teardown()
 
         assert re.match(
             r"Expected 'instance_method' to be called 2 times but was called 1 time on "
@@ -83,17 +85,92 @@ class TestExpect(object):
             e.value.message
         )
 
-    def test_passes_if_an_expected_method_is_called_exactly_once(self):
+    def test_fails_when_called_three_times(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        expect(subject).instance_method.twice()
+
+        subject.instance_method()
+        subject.instance_method()
+        with raises(MockExpectationError) as e:
+            subject.instance_method()
+        teardown()
+
+        assert re.match(
+            r"Expected 'instance_method' to be called 2 times but was called 3 times on "
+            r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
+            r"with any args, but was not."
+            r" \(.*doubles/test/expect_test.py:\d+\)",
+            e.value.message
+        )
+
+
+class TestOnce(object):
+    def test_passes_when_called_once(self):
         subject = InstanceDouble('doubles.testing.User')
 
         expect(subject).instance_method.once()
 
         subject.instance_method()
 
-    def test_raises_if_an_expected_method_is_called_more_than_call_count_times(self):
+    def test_fails_when_called_two_times(self):
         subject = InstanceDouble('doubles.testing.User')
 
         expect(subject).instance_method.once()
+
+        subject.instance_method()
+        with raises(MockExpectationError) as e:
+            subject.instance_method()
+        teardown()
+
+        assert re.match(
+            r"Expected 'instance_method' to be called 1 time but was called 2 times on "
+            r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
+            r"with any args, but was not."
+            r" \(.*doubles/test/expect_test.py:\d+\)",
+            e.value.message
+        )
+
+
+class TestExactly(object):
+    def test_calls_are_chainable(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        expect(subject).instance_method.exactly(1).times.exactly(2).times
+
+        subject.instance_method()
+        subject.instance_method()
+
+    def test_fails_when_called_less_than_expected_times(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        expect(subject).instance_method.exactly(2).times
+
+        subject.instance_method()
+        with raises(MockExpectationError) as e:
+            verify()
+        teardown()
+
+        assert re.match(
+            r"Expected 'instance_method' to be called 2 times but was called 1 time on "
+            r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
+            r"with any args, but was not."
+            r" \(.*doubles/test/expect_test.py:\d+\)",
+            e.value.message
+        )
+
+    def test_passes_when_called_exactly_expected_times(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        expect(subject).instance_method.exactly(1).times
+
+        subject.instance_method()
+
+    def test_fails_when_called_more_than_expected_times(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        expect(subject).instance_method.exactly(1).times
+
         subject.instance_method()
         with raises(MockExpectationError) as e:
             subject.instance_method()
