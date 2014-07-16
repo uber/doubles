@@ -163,14 +163,14 @@ class TestCallCount(object):
     def test_passes_if_an_allowed_method_is_called_less_than_call_count_times(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).instance_method.call_count(2)
+        allow(subject).instance_method.exactly(2)
 
         subject.instance_method()
 
     def test_passes_if_an_allowed_method_is_called_call_count_times(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).instance_method.call_count(2)
+        allow(subject).instance_method.exactly(2)
 
         subject.instance_method()
         subject.instance_method()

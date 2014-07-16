@@ -57,27 +57,10 @@ class TestExpect(object):
 
         assert subject.method_with_default_args('one', bar='two') is None
 
-    def test_raises_if_method_is_called_when_expected_to_never_be_called(self):
-        subject = InstanceDouble('doubles.testing.User')
-
-        expect(subject).instance_method.never()
-
-        with raises(MockExpectationError) as e:
-            subject.instance_method()
-        teardown()
-
-        assert re.match(
-            r"Expected 'instance_method' to be called 0 times but was called 1 time on "
-            r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
-            r"with any args, but was not."
-            r" \(.*doubles/test/expect_test.py:\d+\)",
-            e.value.message
-        )
-
     def test_passes_if_an_expected_method_is_called_call_count_times(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        expect(subject).instance_method.call_count(2)
+        expect(subject).instance_method.exactly(2).times
 
         subject.instance_method()
         subject.instance_method()
@@ -85,7 +68,7 @@ class TestExpect(object):
     def test_raises_if_an_expected_method_is_called_less_than_call_count_times(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        expect(subject).instance_method.call_count(2)
+        expect(subject).instance_method.exactly(2).times
 
         subject.instance_method()
 

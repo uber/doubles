@@ -1,8 +1,11 @@
+from collections import namedtuple
+
 from doubles.exceptions import MockExpectationError
 from doubles.verification import verify_arguments
 
 _any = object()
 pluralize = lambda w, n: w if n == 1 else w + 's'
+ExactlyTimes = namedtuple('ExactlyTimes', ['times'])
 
 
 class Allowance(object):
@@ -154,14 +157,17 @@ class Allowance(object):
 
         verify_arguments(self._target, self._method_name, self.args, self.kwargs)
 
-    def call_count(self, n):
+    def exactly(self, n):
         self._expected_call_count = n
-
-    def never(self):
-        self.call_count(0)
+        return ExactlyTimes(self)
 
     def once(self):
-        self.call_count(1)
+        self.exactly(1)
+        return self
+
+    def twice(self):
+        self.exactly(2)
+        return self
 
     def _expected_call_count_string(self):
         if self._expected_call_count is None:
