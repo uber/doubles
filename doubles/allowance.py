@@ -182,6 +182,12 @@ class Allowance(object):
             self.raise_failure_exception()
 
     def raise_failure_exception(self, expect_or_allow='Allowed'):
+        """
+        Raises a ``MockExpectationError`` with a useful message.
+
+        :raise: ``MockExpectationError``
+        """
+
         raise MockExpectationError(
             "{} '{}' to be called {}on {!r} with {}, but was not. ({}:{})".format(
                 expect_or_allow,
