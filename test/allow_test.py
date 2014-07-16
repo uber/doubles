@@ -263,3 +263,77 @@ class TestExactly(object):
             r" \(.*doubles/test/allow_test.py:\d+\)",
             e.value.message
         )
+
+
+class TestAtLeast(object):
+    def test_calls_are_chainable(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.at_least(2).times.at_least(1).times
+
+        subject.instance_method()
+
+    def test_passes_when_called_less_than_at_least_times(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.at_least(2).times
+
+        subject.instance_method()
+
+    def test_passes_when_called_exactly_at_least_times(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.at_least(1).times
+
+        subject.instance_method()
+        subject.instance_method()
+
+    def test_passes_when_called_more_than_at_least_times(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.at_least(1).times
+
+        subject.instance_method()
+        subject.instance_method()
+
+
+class TestAtMost(object):
+    def test_calls_are_chainable(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.at_most(1).times.at_most(2).times
+
+        subject.instance_method()
+        subject.instance_method()
+
+    def test_passes_when_called_exactly_at_most_times(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.at_most(1).times
+
+        subject.instance_method()
+
+    def test_passes_when_called_less_than_at_most_times(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.at_most(2).times
+
+        subject.instance_method()
+
+    def test_fails_when_called_more_than_at_most_times(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.at_most(1).times
+
+        subject.instance_method()
+        with raises(MockExpectationError) as e:
+            subject.instance_method()
+        teardown()
+
+        assert re.match(
+            r"Allowed 'instance_method' to be called at most 1 time but was called 2 times on "
+            r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
+            r"with any args, but was not."
+            r" \(.*doubles/test/allow_test.py:\d+\)",
+            e.value.message
+        )

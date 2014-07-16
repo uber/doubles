@@ -5,7 +5,7 @@ from doubles.verification import verify_arguments
 
 _any = object()
 pluralize = lambda w, n: w if n == 1 else w + 's'
-ExactlyTimes = namedtuple('ExactlyTimes', ['times'])
+Times = namedtuple('Times', ['times'])
 
 
 class Allowance(object):
@@ -23,7 +23,9 @@ class Allowance(object):
         self.args = _any
         self.kwargs = _any
         self._is_satisfied = True
-        self._expected_call_count = None
+        self._exact_call_count = None
+        self._minimum_call_count = None
+        self._maximum_call_count = None
         self._call_count = 0
 
         self.and_return(None)
@@ -158,8 +160,16 @@ class Allowance(object):
         verify_arguments(self._target, self._method_name, self.args, self.kwargs)
 
     def exactly(self, n):
-        self._expected_call_count = n
-        return ExactlyTimes(self)
+        self._exact_call_count = n
+        return Times(self)
+
+    def at_least(self, n):
+        self._minimum_call_count = n
+        return Times(self)
+
+    def at_most(self, n):
+        self._maximum_call_count = n
+        return Times(self)
 
     def once(self):
         self.exactly(1)
@@ -169,23 +179,27 @@ class Allowance(object):
         self.exactly(2)
         return self
 
-    def _expected_call_count_string(self):
-        if self._expected_call_count is None:
-            return ''
-
-        return '{} {} but was called {} {} '.format(
-            self._expected_call_count,
-            pluralize('time', self._expected_call_count),
-            self._call_count,
-            pluralize('time', self._call_count)
-        )
-
     def _called(self):
-        if self._expected_call_count is None:
-            return
         self._call_count += 1
-        if self._call_count > self._expected_call_count:
+        if self._has_too_many_calls():
             self.raise_failure_exception()
+
+    def _has_too_many_calls(self):
+        if self._exact_call_count is not None and self._call_count > self._exact_call_count:
+            return True
+        if self._maximum_call_count is not None and self._call_count > self._maximum_call_count:
+            return True
+        return False
+
+    def _has_too_few_calls(self):
+        if self._exact_call_count is not None and self._call_count < self._exact_call_count:
+            return True
+        if self._minimum_call_count is not None and self._call_count < self._minimum_call_count:
+            return True
+        return False
+
+    def _has_incorrect_call_count(self):
+        return self._has_too_few_calls() or self._has_too_many_calls()
 
     def raise_failure_exception(self, expect_or_allow='Allowed'):
         """
@@ -198,10 +212,35 @@ class Allowance(object):
             "{} '{}' to be called {}on {!r} with {}, but was not. ({}:{})".format(
                 expect_or_allow,
                 self._method_name,
-                self._expected_call_count_string(),
+                self._call_count_string(),
                 self._target.obj,
                 self._expected_argument_string(),
                 self._caller[1],
                 self._caller[2]
             )
+        )
+
+    def _call_count_string(self):
+        if not self._has_incorrect_call_count():
+            return ''
+
+        return '{} but was called {} {} '.format(
+            self._call_count_restriction_string(),
+            self._call_count,
+            pluralize('time', self._call_count)
+        )
+
+    def _call_count_restriction_string(self):
+        string = ''
+        value = self._exact_call_count
+        if self._minimum_call_count is not None:
+            string = 'at least '
+            value = self._minimum_call_count
+        elif self._maximum_call_count is not None:
+            string = 'at most '
+            value = self._maximum_call_count
+
+        return (string + '{} {}').format(
+            value,
+            pluralize('time', value)
         )
