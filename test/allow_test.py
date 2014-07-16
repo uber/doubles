@@ -27,13 +27,6 @@ class TestBasicAllowance(object):
 
 
 class TestReturnValues(object):
-    def test_returns_specified_value(self):
-        subject = InstanceDouble('doubles.testing.User')
-
-        allow(subject).instance_method.and_return('bar')
-
-        assert subject.instance_method() == 'bar'
-
     def test_returns_result_of_a_callable(self):
         subject = InstanceDouble('doubles.testing.User')
 
@@ -57,6 +50,40 @@ class TestReturnValues(object):
         ).and_raise(UserDefinedException).and_return('final')
 
         assert subject.instance_method() == 'final'
+
+
+class TestAndReturn(object):
+    def test_raises_if_no_arguments_supplied(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        with raises(TypeError) as e:
+            allow(subject).instance_method.and_return()
+
+        assert e.value.message == 'and_return() expected at least 1 return value'
+
+    def test_returns_specified_value(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.and_return('bar')
+
+        assert subject.instance_method() == 'bar'
+
+    def test_returns_specified_values_in_order(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.and_return('bar', 'bazz')
+
+        assert subject.instance_method() == 'bar'
+        assert subject.instance_method() == 'bazz'
+
+    def test_returns_the_last_specified_value_multiple_times(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.and_return('bar', 'bazz')
+
+        assert subject.instance_method() == 'bar'
+        assert subject.instance_method() == 'bazz'
+        assert subject.instance_method() == 'bazz'
 
 
 class TestWithArgs(object):

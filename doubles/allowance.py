@@ -32,14 +32,24 @@ class Allowance(object):
         self._return_value = proxy_exception
         return self
 
-    def and_return(self, return_value):
+    def and_return(self, *return_values):
         """
-        Causes the double to return the provided value.
+        Causes the double to return the provided values in order.  if multiple
+        values are provided, they are returned one at a time in sequence as the double is called.
+        If the double is called more times than there are return values, it should continue to
+        return the last value in the list.
 
-        :param object return_value: The value the double will return when called.
+
+        :param object return_values: The values the double will return when called,
         """
 
-        self._return_value = lambda: return_value
+        if not return_values:
+            raise TypeError('and_return() expected at least 1 return value')
+
+        return_values = list(return_values)
+        final_value = return_values.pop()
+
+        self._return_value = lambda: return_values.pop(0) if return_values else final_value
         return self
 
     def and_return_result_of(self, return_value):
