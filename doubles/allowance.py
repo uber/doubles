@@ -34,7 +34,7 @@ class Allowance(object):
 
     def and_return(self, *return_values):
         """
-        Causes the double to return the provided values in order.  if multiple
+        Causes the double to return the provided values in order.  If multiple
         values are provided, they are returned one at a time in sequence as the double is called.
         If the double is called more times than there are return values, it should continue to
         return the last value in the list.
