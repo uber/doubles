@@ -1,7 +1,7 @@
 from pytest import raises
 
 from doubles import allow, InstanceDouble
-from doubles.exceptions import VerifyingDoubleError
+from doubles.exceptions import VerifyingDoubleArgumentError, VerifyingDoubleError
 
 
 class TestInstanceDouble(object):
@@ -27,7 +27,7 @@ class TestInstanceDouble(object):
     def test_raises_when_argspec_does_not_match(self):
         date = InstanceDouble('datetime.date')
 
-        with raises(VerifyingDoubleError):
+        with raises(VerifyingDoubleArgumentError):
             allow(date).ctime.with_args('foo')
 
     def test_allows_stubs_on_existing_class_methods(self):

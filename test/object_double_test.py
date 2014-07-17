@@ -2,7 +2,7 @@ import re
 
 from pytest import raises, mark
 
-from doubles.exceptions import VerifyingDoubleError
+from doubles.exceptions import VerifyingDoubleArgumentError, VerifyingDoubleError
 from doubles.object_double import ObjectDouble
 from doubles.targets.allowance_target import allow
 from doubles.testing import User, OldStyleUser
@@ -36,19 +36,23 @@ class TestObjectDouble(object):
     def test_raises_when_stubbing_nonexistent_methods(self, test_object):
         doubled_user = ObjectDouble(test_object)
 
-        with raises(VerifyingDoubleError):
+        with raises(VerifyingDoubleError) as e:
             allow(doubled_user).foo
+
+        assert re.search(r"does not implement it", str(e))
 
     def test_raises_when_stubbing_noncallable_attributes(self, test_object):
         doubled_user = ObjectDouble(test_object)
 
-        with raises(VerifyingDoubleError):
+        with raises(VerifyingDoubleError) as e:
             allow(doubled_user).class_attribute
+
+        assert re.search(r"not a callable attribute", str(e))
 
     def test_raises_when_specifying_different_arity(self, test_object):
         doubled_user = ObjectDouble(test_object)
 
-        with raises(VerifyingDoubleError):
+        with raises(VerifyingDoubleArgumentError):
             allow(doubled_user).get_name.with_args('foo', 'bar')
 
     def test_allows_varargs_if_specified(self, test_object):
@@ -82,13 +86,13 @@ class TestObjectDouble(object):
     def test_raises_when_specifying_higher_arity_to_method_with_default_arguments(self, test_object):  # noqa
         doubled_user = ObjectDouble(test_object)
 
-        with raises(VerifyingDoubleError):
+        with raises(VerifyingDoubleArgumentError):
             allow(doubled_user).method_with_default_args.with_args(1, 2, 3)
 
     def test_raises_when_specifying_extra_keyword_arguments(self, test_object):
         doubled_user = ObjectDouble(test_object)
 
-        with raises(VerifyingDoubleError):
+        with raises(VerifyingDoubleArgumentError):
             allow(doubled_user).method_with_default_args.with_args(1, moo='woof')
 
     def test_allows_varkwargs_if_specified(self, test_object):

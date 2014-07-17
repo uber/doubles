@@ -1,7 +1,9 @@
+import re
+
 from pytest import raises
 
 from doubles import allow, ClassDouble
-from doubles.exceptions import VerifyingDoubleError
+from doubles.exceptions import VerifyingDoubleArgumentError, VerifyingDoubleError
 
 
 class TestClassDouble(object):
@@ -34,11 +36,13 @@ class TestClassDouble(object):
     def test_raises_when_argspec_does_not_match(self):
         User = ClassDouble('doubles.testing.User')
 
-        with raises(VerifyingDoubleError):
+        with raises(VerifyingDoubleArgumentError):
             allow(User).class_method.with_args('foo')
 
     def test_raises_when_stubbing_instance_methods(self):
         User = ClassDouble('doubles.testing.User')
 
-        with raises(VerifyingDoubleError):
+        with raises(VerifyingDoubleError) as e:
             allow(User).instance_method
+
+        assert re.search(r"not callable directly on", str(e))
