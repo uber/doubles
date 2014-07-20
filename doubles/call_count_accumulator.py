@@ -124,26 +124,7 @@ class CallCountAccumulator(object):
 
         return getattr(self, '_exact', None) is not None
 
-    def error_string(self):
-        """
-        Get a string explaining the different between the expected and
-        actual call count.
-
-        e.g at least 5 times but was called 4 times
-
-        :rtype string
-        """
-
-        if self.has_correct_call_count():
-            return ''
-
-        return '{} but was called {} {} '.format(
-            self._call_count_restriction_string(),
-            self.count,
-            pluralize('time', self.count)
-        )
-
-    def _call_count_restriction_string(self):
+    def restriction_string(self):
         """
         Get a string explaining the expectation currently set
 

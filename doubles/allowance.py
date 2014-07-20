@@ -6,6 +6,7 @@ from doubles.call_count_accumulator import CallCountAccumulator
 
 _any = object()
 Times = namedtuple('Times', ['times'])
+pluralize = lambda w, n: w if n == 1 else w + 's'
 
 
 class Allowance(object):
@@ -134,19 +135,6 @@ class Allowance(object):
         self._called()
         return self._return_value()
 
-    def _expected_argument_string(self):
-        """
-        Generates a string describing what arguments the double expected.
-
-        :return: A string describing expected arguments.
-        :rtype: str
-        """
-
-        if self.args is _any and self.kwargs is _any:
-            return 'any args'
-        else:
-            return '(args={!r}, kwargs={!r})'.format(self.args, self.kwargs)
-
     def _verify_arguments(self):
         """
         Ensures that the arguments specified match the signature of the real method.
@@ -226,10 +214,42 @@ class Allowance(object):
             "{} '{}' to be called {}on {!r} with {}, but was not. ({}:{})".format(
                 expect_or_allow,
                 self._method_name,
-                self._call_counter.error_string(),
+                self._call_count_error_string(),
                 self._target.obj,
                 self._expected_argument_string(),
                 self._caller[1],
                 self._caller[2]
             )
+        )
+
+    def _expected_argument_string(self):
+        """
+        Generates a string describing what arguments the double expected.
+
+        :return: A string describing expected arguments.
+        :rtype: str
+        """
+
+        if self.args is _any and self.kwargs is _any:
+            return 'any args'
+        else:
+            return '(args={!r}, kwargs={!r})'.format(self.args, self.kwargs)
+
+    def _call_count_error_string(self):
+        """
+        Get a string explaining the difference between the expected and
+        actual call count.
+
+        e.g at least 5 times but was called 4 times
+
+        :rtype string
+        """
+
+        if self._call_counter.has_correct_call_count():
+            return ''
+
+        return '{} but was called {} {} '.format(
+            self._call_counter.restriction_string(),
+            self._call_counter.count,
+            pluralize('time', self._call_counter.count)
         )
