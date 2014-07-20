@@ -157,26 +157,61 @@ class Allowance(object):
         verify_arguments(self._target, self._method_name, self.args, self.kwargs)
 
     def exactly(self, n):
+        """
+        Set an exact call count allowance
+
+        :param integer n:
+        :rtype object, Times
+        """
+
         self._call_counter.set_exact(n)
         return Times(self)
 
     def at_least(self, n):
+        """
+        Set a minimum call count allowance
+
+        :param integer n:
+        :rtype object, Times
+        """
+
         self._call_counter.set_minimum(n)
         return Times(self)
 
     def at_most(self, n):
+        """
+        Set a maximum call count allowance
+
+        :param integer n:
+        :rtype object, Times
+        """
+
         self._call_counter.set_maximum(n)
         return Times(self)
 
     def once(self):
+        """
+        Set an expected call count allowance of 1
+        """
+
         self.exactly(1)
         return self
 
     def twice(self):
+        """
+        Set an expected call count allowance of 2
+        """
+
         self.exactly(2)
         return self
 
     def _called(self):
+        """
+        Indicate that the allowance was called
+
+        :raise MockExpectationError if the allowance has been called too many times
+        """
+
         if self._call_counter.called().has_too_many_calls():
             self.raise_failure_exception()
 
