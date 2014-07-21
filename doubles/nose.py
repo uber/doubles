@@ -4,7 +4,7 @@ import sys
 
 from nose.plugins.base import Plugin
 
-from doubles.lifecycle import setup, verify, teardown
+from doubles.lifecycle import setup, verify, teardown, current_space
 from doubles.exceptions import MockExpectationError
 
 
@@ -15,7 +15,8 @@ class NoseIntegration(Plugin):
         setup()
 
     def afterTest(self, test):
-        teardown()
+        if current_space():
+            teardown()
 
     def prepareTestCase(self, test):
         def wrapped(result):
@@ -23,7 +24,8 @@ class NoseIntegration(Plugin):
             if result.failures or result.errors:
                 return
             try:
-                verify()
+                if current_space():
+                    verify()
             except MockExpectationError:
                 result.addFailure(test.test,  sys.exc_info())
         return wrapped
