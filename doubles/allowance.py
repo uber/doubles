@@ -1,4 +1,5 @@
 from collections import namedtuple
+from functools import wraps
 
 from doubles.exceptions import MockExpectationError
 from doubles.verification import verify_arguments
@@ -7,6 +8,15 @@ from doubles.call_count_accumulator import CallCountAccumulator
 _any = object()
 Times = namedtuple('Times', ['times'])
 pluralize = lambda w, n: w if n == 1 else w + 's'
+
+
+def verify_count_is_positive(func):
+    @wraps(func)
+    def inner(self, arg):
+        if arg < 0:
+            raise TypeError(func.__name__ + ' requires one positive integer argument')
+        return func(self, arg)
+    return inner
 
 
 class Allowance(object):
@@ -144,6 +154,7 @@ class Allowance(object):
 
         verify_arguments(self._target, self._method_name, self.args, self.kwargs)
 
+    @verify_count_is_positive
     def exactly(self, n):
         """
         Set an exact call count allowance
@@ -155,6 +166,7 @@ class Allowance(object):
         self._call_counter.set_exact(n)
         return Times(self)
 
+    @verify_count_is_positive
     def at_least(self, n):
         """
         Set a minimum call count allowance
@@ -166,6 +178,7 @@ class Allowance(object):
         self._call_counter.set_minimum(n)
         return Times(self)
 
+    @verify_count_is_positive
     def at_most(self, n):
         """
         Set a maximum call count allowance

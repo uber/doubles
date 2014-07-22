@@ -224,6 +224,18 @@ class TestOnce(object):
 
 
 class TestExactly(object):
+    def test_raises_if_called_with_negative_value(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        with raises(TypeError) as e:
+            allow(subject).instance_method.exactly(-1).times
+        teardown()
+
+        assert re.match(
+            r"exactly requires one positive integer argument",
+            e.value.message
+        )
+
     def test_calls_are_chainable(self):
         subject = InstanceDouble('doubles.testing.User')
 
@@ -266,6 +278,18 @@ class TestExactly(object):
 
 
 class TestAtLeast(object):
+    def test_raises_if_called_with_negative_value(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        with raises(TypeError) as e:
+            allow(subject).instance_method.at_least(-1).times
+        teardown()
+
+        assert re.match(
+            r"at_least requires one positive integer argument",
+            e.value.message
+        )
+
     def test_calls_are_chainable(self):
         subject = InstanceDouble('doubles.testing.User')
 
@@ -298,6 +322,18 @@ class TestAtLeast(object):
 
 
 class TestAtMost(object):
+    def test_raises_if_called_with_negative_value(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        with raises(TypeError) as e:
+            allow(subject).instance_method.at_most(-1).times
+        teardown()
+
+        assert re.match(
+            r"at_most requires one positive integer argument",
+            e.value.message
+        )
+
     def test_calls_are_chainable(self):
         subject = InstanceDouble('doubles.testing.User')
 
