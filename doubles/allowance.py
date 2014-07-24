@@ -1,4 +1,3 @@
-from collections import namedtuple
 from functools import wraps
 
 from doubles.exceptions import MockExpectationError
@@ -6,8 +5,6 @@ from doubles.verification import verify_arguments
 from doubles.call_count_accumulator import CallCountAccumulator
 
 _any = object()
-Times = namedtuple('Times', ['times'])
-pluralize = lambda w, n: w if n == 1 else w + 's'
 
 
 def verify_count_is_positive(func):
@@ -160,11 +157,10 @@ class Allowance(object):
         Set an exact call count allowance
 
         :param integer n:
-        :rtype object, Times
         """
 
         self._call_counter.set_exact(n)
-        return Times(self)
+        return self
 
     @verify_count_is_positive
     def at_least(self, n):
@@ -172,11 +168,10 @@ class Allowance(object):
         Set a minimum call count allowance
 
         :param integer n:
-        :rtype object, Times
         """
 
         self._call_counter.set_minimum(n)
-        return Times(self)
+        return self
 
     @verify_count_is_positive
     def at_most(self, n):
@@ -184,11 +179,10 @@ class Allowance(object):
         Set a maximum call count allowance
 
         :param integer n:
-        :rtype object, Times
         """
 
         self._call_counter.set_maximum(n)
-        return Times(self)
+        return self
 
     def once(self):
         """
@@ -205,6 +199,11 @@ class Allowance(object):
 
         self.exactly(2)
         return self
+
+    @property
+    def times(self):
+        return self
+    time = times
 
     def _called(self):
         """
@@ -227,7 +226,7 @@ class Allowance(object):
             "{} '{}' to be called {}on {!r} with {}, but was not. ({}:{})".format(
                 expect_or_allow,
                 self._method_name,
-                self._call_count_error_string(),
+                self._call_counter.error_string(),
                 self._target.obj,
                 self._expected_argument_string(),
                 self._caller[1],
@@ -247,22 +246,3 @@ class Allowance(object):
             return 'any args'
         else:
             return '(args={!r}, kwargs={!r})'.format(self.args, self.kwargs)
-
-    def _call_count_error_string(self):
-        """
-        Get a string explaining the difference between the expected and
-        actual call count.
-
-        e.g at least 5 times but was called 4 times
-
-        :rtype string
-        """
-
-        if self._call_counter.has_correct_call_count():
-            return ''
-
-        return '{} but was called {} {} '.format(
-            self._call_counter.restriction_string(),
-            self._call_counter.count,
-            pluralize('time', self._call_counter.count)
-        )

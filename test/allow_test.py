@@ -174,7 +174,6 @@ class TestTwice(object):
         allow(subject).instance_method.twice()
 
         subject.instance_method()
-        subject.instance_method()
 
     def test_fails_when_called_three_times(self):
         subject = InstanceDouble('doubles.testing.User')
@@ -239,7 +238,7 @@ class TestExactly(object):
     def test_calls_are_chainable(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).instance_method.exactly(1).times.exactly(2).times
+        allow(subject).instance_method.exactly(1).time.exactly(2).times
 
         subject.instance_method()
         subject.instance_method()
