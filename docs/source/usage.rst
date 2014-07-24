@@ -50,7 +50,7 @@ The examples shown so far will allow the stubbed method to be called with any ar
     from myapp import User
 
 
-    def test_allows_set_age_with_args():
+    def test_allows_set_name_with_args():
         user = User('Carl')
 
         allow(user).set_name.with_args('Henry')
@@ -58,7 +58,22 @@ The examples shown so far will allow the stubbed method to be called with any ar
         user.set_name('Henry')  # Returns None
         user.set_name('Teddy')  # Raises an UnallowedMethodCallError
 
-Multiple allowances can be specified for the same method with different arguments and return values. To specify that a method can only be called *with no arguments*, use ``with_no_args``::
+Multiple allowances can be specified for the same method with different arguments and return values::
+
+    from doubles import allow
+
+    from myapp import User
+
+    def test_returns_different_values_for_different_arguments():
+        user = User('Carl')
+
+        allow(user).speak('hello').and_return('Carl says hello')
+        allow(user).speak('thanks').and_return('Carl says thanks')
+
+        assert user.speak('hello') == 'Carl says hello'
+        assert user.speak('thanks') == 'Carl says thanks'
+
+To specify that a method can only be called *with no arguments*, use ``with_no_args``::
 
     from doubles import allow
 
@@ -179,7 +194,7 @@ After a test has run, all partial doubles will be restored to their pristine, un
 Verifying doubles
 -----------------
 
-One of the dangers of using test doubles is that production code may change after tests are written, and the doubles may no longer match the interface of the real object they are doubling. This is known as "API drift" and is the cause of the situation where a test suite is passing but the production code is broken. The potential for API drift is often used as an argument against using test doubles. Doubles provides a feature called verifying doubles to help address API drift and to increase confidence in test suites.
+One of the trade offs of using test doubles is that production code may change after tests are written, and the doubles may no longer match the interface of the real object they are doubling. This is known as "API drift" and is one possible cause of the situation where a test suite is passing but the production code is broken. The potential for API drift is often used as an argument against using test doubles. **Doubles** provides a feature called verifying doubles to help address API drift and to increase confidence in test suites.
 
 All test doubles created by **Doubles** are verifying doubles. They will cause the test to fail by raising a ``VerifyingDoubleError`` if an allowance or expectation is declared for a method that does not exist on the real object. In addition, the test will fail if the method exists but is specified with arguments that don't match the real method's signature.
 
@@ -205,7 +220,7 @@ Similarly, we cannot declare an allowance or expectation with arguments that don
     def test_verification_of_arguments():
         user = User('Carl')
 
-        # Raises a VerifyingDoubleError, because set_name accepts only one argument
+        # Raises a VerifyingDoubleArgumentError, because set_name accepts only one argument
         allow(user).set_name.with_args('Henry', 'Teddy')
 
 Pure doubles
