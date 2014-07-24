@@ -28,15 +28,16 @@ class MethodDouble(object):
             lambda args, kwargs: self._find_matching_expectation(args, kwargs)
         )
 
-    def add_allowance(self):
+    def add_allowance(self, caller):
         """
         Adds a new allowance for the method.
 
+        :param: tuple caller: A tuple indicating where the method was called
         :return: The new ``Allowance``.
         :rtype: Allowance
         """
 
-        allowance = Allowance(self._target, self._method_name)
+        allowance = Allowance(self._target, self._method_name, caller)
         self._expectations.append(allowance)
         return allowance
 

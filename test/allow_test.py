@@ -2,9 +2,10 @@ import re
 
 from pytest import raises
 
-from doubles.exceptions import UnallowedMethodCallError
+from doubles.exceptions import UnallowedMethodCallError, MockExpectationError
 from doubles.instance_double import InstanceDouble
 from doubles.targets.allowance_target import allow
+from doubles.lifecycle import teardown
 
 
 class UserDefinedException(Exception):
@@ -156,3 +157,218 @@ class TestWithNoArgs(object):
         allow(subject).instance_method.with_no_args().and_return('bar')
 
         assert subject.instance_method() == 'bar'
+
+
+class TestTwice(object):
+    def test_passes_when_called_twice(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.twice()
+
+        subject.instance_method()
+        subject.instance_method()
+
+    def test_passes_when_called_once(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.twice()
+
+        subject.instance_method()
+
+    def test_fails_when_called_three_times(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.twice()
+
+        subject.instance_method()
+        subject.instance_method()
+        with raises(MockExpectationError) as e:
+            subject.instance_method()
+        teardown()
+
+        assert re.match(
+            r"Allowed 'instance_method' to be called 2 times but was called 3 times on "
+            r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
+            r"with any args, but was not."
+            r" \(.*doubles/test/allow_test.py:\d+\)",
+            e.value.message
+        )
+
+
+class TestOnce(object):
+    def test_passes_when_called_once(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.once()
+
+        subject.instance_method()
+
+    def test_fails_when_called_two_times(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.once()
+
+        subject.instance_method()
+        with raises(MockExpectationError) as e:
+            subject.instance_method()
+        teardown()
+
+        assert re.match(
+            r"Allowed 'instance_method' to be called 1 time but was called 2 times on "
+            r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
+            r"with any args, but was not."
+            r" \(.*doubles/test/allow_test.py:\d+\)",
+            e.value.message
+        )
+
+
+class TestExactly(object):
+    def test_raises_if_called_with_negative_value(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        with raises(TypeError) as e:
+            allow(subject).instance_method.exactly(-1).times
+        teardown()
+
+        assert re.match(
+            r"exactly requires one positive integer argument",
+            e.value.message
+        )
+
+    def test_calls_are_chainable(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.exactly(1).time.exactly(2).times
+
+        subject.instance_method()
+        subject.instance_method()
+
+    def test_passes_when_called_less_than_expected_times(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.exactly(2).times
+
+        subject.instance_method()
+
+    def test_passes_when_called_exactly_expected_times(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.exactly(1).times
+
+        subject.instance_method()
+
+    def test_fails_when_called_more_than_expected_times(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.exactly(1).times
+
+        subject.instance_method()
+        with raises(MockExpectationError) as e:
+            subject.instance_method()
+        teardown()
+
+        assert re.match(
+            r"Allowed 'instance_method' to be called 1 time but was called 2 times on "
+            r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
+            r"with any args, but was not."
+            r" \(.*doubles/test/allow_test.py:\d+\)",
+            e.value.message
+        )
+
+
+class TestAtLeast(object):
+    def test_raises_if_called_with_negative_value(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        with raises(TypeError) as e:
+            allow(subject).instance_method.at_least(-1).times
+        teardown()
+
+        assert re.match(
+            r"at_least requires one positive integer argument",
+            e.value.message
+        )
+
+    def test_calls_are_chainable(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.at_least(2).times.at_least(1).times
+
+        subject.instance_method()
+
+    def test_passes_when_called_less_than_at_least_times(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.at_least(2).times
+
+        subject.instance_method()
+
+    def test_passes_when_called_exactly_at_least_times(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.at_least(1).times
+
+        subject.instance_method()
+        subject.instance_method()
+
+    def test_passes_when_called_more_than_at_least_times(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.at_least(1).times
+
+        subject.instance_method()
+        subject.instance_method()
+
+
+class TestAtMost(object):
+    def test_raises_if_called_with_negative_value(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        with raises(TypeError) as e:
+            allow(subject).instance_method.at_most(-1).times
+        teardown()
+
+        assert re.match(
+            r"at_most requires one positive integer argument",
+            e.value.message
+        )
+
+    def test_calls_are_chainable(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.at_most(1).times.at_most(2).times
+
+        subject.instance_method()
+        subject.instance_method()
+
+    def test_passes_when_called_exactly_at_most_times(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.at_most(1).times
+
+        subject.instance_method()
+
+    def test_passes_when_called_less_than_at_most_times(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.at_most(2).times
+
+        subject.instance_method()
+
+    def test_fails_when_called_more_than_at_most_times(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.at_most(1).times
+
+        subject.instance_method()
+        with raises(MockExpectationError) as e:
+            subject.instance_method()
+        teardown()
+
+        assert re.match(
+            r"Allowed 'instance_method' to be called at most 1 time but was called 2 times on "
+            r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
+            r"with any args, but was not."
+            r" \(.*doubles/test/allow_test.py:\d+\)",
+            e.value.message
+        )

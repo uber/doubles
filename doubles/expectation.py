@@ -1,5 +1,4 @@
 from doubles.allowance import Allowance
-from doubles.exceptions import MockExpectationError
 
 
 class Expectation(Allowance):
@@ -11,9 +10,9 @@ class Expectation(Allowance):
         :param str method_name: The name of the method to mock.
         :param tuple caller: Details of the stack frame where the expectation was made.
         """
-        super(Expectation, self).__init__(target, method_name)
+
+        super(Expectation, self).__init__(target, method_name, caller)
         self._is_satisfied = False
-        self._caller = caller
 
     def satisfy_any_args_match(self):
         """
@@ -59,12 +58,15 @@ class Expectation(Allowance):
         :raise: ``MockExpectationError``
         """
 
-        raise MockExpectationError(
-            "Expected '{}' to be called on {!r} with {}, but was not. ({}:{})".format(
-                self._method_name,
-                self._target.obj,
-                self._expected_argument_string(),
-                self._caller[1],
-                self._caller[2]
-            )
-        )
+        super(Expectation, self).raise_failure_exception('Expected')
+
+    def is_satisfied(self):
+        """
+        Returns a boolean indicating whether or not the double has been satisfied. Stubs are
+        always satisfied, but mocks are only satisifed if they've been called as was declared.
+
+        :return: Whether or not the double is satisfied.
+        :rtype: bool
+        """
+
+        return self._call_counter.has_correct_call_count() and self._is_satisfied

@@ -1,12 +1,25 @@
+from functools import wraps
+
+from doubles.exceptions import MockExpectationError
 from doubles.verification import verify_arguments
+from doubles.call_count_accumulator import CallCountAccumulator
 
 _any = object()
+
+
+def verify_count_is_positive(func):
+    @wraps(func)
+    def inner(self, arg):
+        if arg < 0:
+            raise TypeError(func.__name__ + ' requires one positive integer argument')
+        return func(self, arg)
+    return inner
 
 
 class Allowance(object):
     """An individual method allowance (stub)."""
 
-    def __init__(self, target, method_name):
+    def __init__(self, target, method_name, caller):
         """
         :param Target target: The object owning the method to stub.
         :param str method_name: The name of the method to stub.
@@ -14,9 +27,11 @@ class Allowance(object):
 
         self._target = target
         self._method_name = method_name
+        self._caller = caller
         self.args = _any
         self.kwargs = _any
         self._is_satisfied = True
+        self._call_counter = CallCountAccumulator()
 
         self.and_return(None)
 
@@ -124,7 +139,100 @@ class Allowance(object):
         :return: The value the double should return when called.
         """
 
+        self._called()
         return self._return_value()
+
+    def _verify_arguments(self):
+        """
+        Ensures that the arguments specified match the signature of the real method.
+
+        :raise: ``VerifyingDoubleError`` if the arguments do not match.
+        """
+
+        verify_arguments(self._target, self._method_name, self.args, self.kwargs)
+
+    @verify_count_is_positive
+    def exactly(self, n):
+        """
+        Set an exact call count allowance
+
+        :param integer n:
+        """
+
+        self._call_counter.set_exact(n)
+        return self
+
+    @verify_count_is_positive
+    def at_least(self, n):
+        """
+        Set a minimum call count allowance
+
+        :param integer n:
+        """
+
+        self._call_counter.set_minimum(n)
+        return self
+
+    @verify_count_is_positive
+    def at_most(self, n):
+        """
+        Set a maximum call count allowance
+
+        :param integer n:
+        """
+
+        self._call_counter.set_maximum(n)
+        return self
+
+    def once(self):
+        """
+        Set an expected call count allowance of 1
+        """
+
+        self.exactly(1)
+        return self
+
+    def twice(self):
+        """
+        Set an expected call count allowance of 2
+        """
+
+        self.exactly(2)
+        return self
+
+    @property
+    def times(self):
+        return self
+    time = times
+
+    def _called(self):
+        """
+        Indicate that the allowance was called
+
+        :raise MockExpectationError if the allowance has been called too many times
+        """
+
+        if self._call_counter.called().has_too_many_calls():
+            self.raise_failure_exception()
+
+    def raise_failure_exception(self, expect_or_allow='Allowed'):
+        """
+        Raises a ``MockExpectationError`` with a useful message.
+
+        :raise: ``MockExpectationError``
+        """
+
+        raise MockExpectationError(
+            "{} '{}' to be called {}on {!r} with {}, but was not. ({}:{})".format(
+                expect_or_allow,
+                self._method_name,
+                self._call_counter.error_string(),
+                self._target.obj,
+                self._expected_argument_string(),
+                self._caller[1],
+                self._caller[2]
+            )
+        )
 
     def _expected_argument_string(self):
         """
@@ -138,12 +246,3 @@ class Allowance(object):
             return 'any args'
         else:
             return '(args={!r}, kwargs={!r})'.format(self.args, self.kwargs)
-
-    def _verify_arguments(self):
-        """
-        Ensures that the arguments specified match the signature of the real method.
-
-        :raise: ``VerifyingDoubleError`` if the arguments do not match.
-        """
-
-        verify_arguments(self._target, self._method_name, self.args, self.kwargs)
