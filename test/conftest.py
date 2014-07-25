@@ -8,6 +8,7 @@ from doubles.pytest import pytest_runtest_call  # noqa
 
 def pytest_sessionfinish(session, exitstatus):
     cov.stop()
+    cov.save()
 
 
 def pytest_terminal_summary(terminalreporter):
