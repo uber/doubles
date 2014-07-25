@@ -258,3 +258,38 @@ ObjectDouble
       allow(something).to_call('foo')
 
 There is a subtle distinction between a pure test double created with ``ObjectDouble`` and a partial double created by passing a non-double object to ``allow`` or ``expect``. The former creates an object that does not accept any method calls which are not explicitly allowed, but verifies any that are against the real object. A partial double modifies parts of the real object itself, allowing some methods to be doubled and others to retain their real implementation.
+
+Call Count Expectations
++++++++++++++++++++++++
+
+Call Count Expectations can be added to any allowance or expectations.  They set limitations and expectations on the number of times a mocked method should be called.  The available expectations are: ``exactly``, ``once``, ``twice``, ``at_most``, and ``at_least``.  For allowances call count expectations only set an upper bound, they will not fail if the method is called fewer than the allowed times (this makes at_least a noop for allowances).  To improve syntax ``time`` and ``times`` are properties on allowances/expectations, this allows us to say ``allow(something).method_name.exactly(5).times`` or ``expect(something).method_name.at_least(1).time``.
+
+``exactly`` sets an expectation for the mocked method to be called exactly n times::
+
+    from doubles import allow
+
+    from myapp import User
+
+
+    def test_allows_get_name():
+        user = User('Carl')
+
+        allow(user).get_name.exactly(1).time
+
+        assert user.get_name() is None
+        assert user.get_name() is None  # raises a MockExpectationError because it should only be called once
+
+``once`` sets an expectation for the mocked method to be called exactly 1 time::
+
+    from doubles import allow
+
+    from myapp import User
+
+
+    def test_allows_get_name():
+        user = User('Carl')
+
+        allow(user).get_name.once()
+
+        assert user.get_name() is None
+        assert user.get_name() is None  # raises a MockExpectationError because it should only be called once
