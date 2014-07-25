@@ -124,7 +124,7 @@ class CallCountAccumulator(object):
 
         return getattr(self, '_exact', None) is not None
 
-    def restriction_string(self):
+    def _restriction_string(self):
         """
         Get a string explaining the expectation currently set
 
@@ -142,8 +142,6 @@ class CallCountAccumulator(object):
         elif self.has_exact:
             string = ''
             value = self._exact
-        else:
-            return ''
 
         return (string + '{} {}').format(
             value,
@@ -164,7 +162,7 @@ class CallCountAccumulator(object):
             return ''
 
         return '{} but was called {} {} '.format(
-            self.restriction_string(),
+            self._restriction_string(),
             self.count,
             pluralize('time', self.count)
         )
