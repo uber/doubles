@@ -9,7 +9,7 @@ class ClassDouble(InstanceDouble):
 
         User = ClassDouble('myapp.User')
 
-    :param str target: The absolute module path to the class.
+    :param str path: The absolute module path to the class.
     """
 
     pass

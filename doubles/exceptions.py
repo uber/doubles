@@ -58,3 +58,9 @@ class VerifyingDoubleArgumentError(AssertionError):
     """
 
     pass
+
+
+class VerifyingDoubleImportError(AssertionError):
+    """
+    An exception raised when attempting to create a verifying double from an invalid module path.
+    """
