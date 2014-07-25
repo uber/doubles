@@ -18,8 +18,8 @@ class TestRepr(object):
 
         assert re.match(
             r"<ObjectDouble of <doubles.testing.(?:OldStyle)?User "
-            r"(?:instance|object) at 0x[0-9a-f]{9}> object "
-            r"at 0x[0-9a-f]{9}>",
+            r"(?:instance|object) at 0x[0-9a-f]+> object "
+            r"at 0x[0-9a-f]+>",
             repr(subject)
         )
 
