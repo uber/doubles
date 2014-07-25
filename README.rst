@@ -1,6 +1,16 @@
 doubles
 =======
 
+.. image:: https://badge.fury.io/py/doubles.svg
+    :target: http://badge.fury.io/py/doubles
+
+.. image:: https://travis-ci.org/uber/doubles.svg?branch=master
+    :target: https://travis-ci.org/uber/doubles
+
+.. image:: https://coveralls.io/repos/uber/doubles/badge.png
+  :target: https://coveralls.io/r/uber/doubles
+
+
 **Doubles** is a Python package that provides test doubles for use in automated tests.
 
 It provides functionality for stubbing, mocking, and verification of test doubles against the real objects they double. In contrast to the Mock package, it provides a clear, expressive syntax and better safety guarantees to prevent API drift and to improve confidence in tests using doubles. It comes with drop-in support for test suites run by Pytest, Nose, or standard unittest.
