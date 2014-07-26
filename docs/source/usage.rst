@@ -165,37 +165,54 @@ Both stubs and mocks allow a method call to raise an exception instead of return
 Call counts
 -----------
 
-Call Count Expectations can be added to any allowance or expectations.  They set limitations and expectations on the number of times a mocked method should be called.  The available expectations are: ``exactly``, ``once``, ``twice``, ``at_most``, and ``at_least``.  For allowances call count expectations only set an upper bound, they will not fail if the method is called fewer than the allowed times (this makes at_least a noop for allowances).  To improve syntax ``time`` and ``times`` are properties on allowances/expectations, this allows us to say ``allow(something).method_name.exactly(5).times`` or ``expect(something).method_name.at_least(1).time``.
+Limits can be set on how many times a doubled method can be called. In most cases, you'll specify an exact call count with the syntax ``exactly(n).times``, which will cause the test to fail if the doubled method is called fewer or more times than you declared::
 
-``exactly`` sets an expectation for the mocked method to be called exactly n times::
-
-    from doubles import allow
+    from doubles import expect
 
     from myapp import User
 
-
-    def test_allows_get_name():
+    def test_expect_one_call():
         user = User('Carl')
 
-        allow(user).get_name.exactly(1).time
+        expect(user).get_name.exactly(1).time
 
-        assert user.get_name() is None
-        assert user.get_name() is None  # raises a MockExpectationError because it should only be called once
+        user.get_name()
+        user.get_name()  # Raises a MockExpectationError because it should only be called once
 
-``once`` sets an expectation for the mocked method to be called exactly 1 time::
+The convenience methods ``once`` and ``twice`` are provided for the most common use cases. The following test will pass::
 
-    from doubles import allow
+    from doubles import expect
 
     from myapp import User
 
-
-    def test_allows_get_name():
+    def test_call_counts():
         user = User('Carl')
 
-        allow(user).get_name.once()
+        expect(user).get_name.once()
+        expect(user).speak.twice()
 
-        assert user.get_name() is None
-        assert user.get_name() is None  # raises a MockExpectationError because it should only be called once
+        user.get_name()
+        user.speak('hello')
+        user.speak('good bye')
+
+To specify lower or upper bounds on call count instead of an exact number, use ``at_least`` and ``at_most``::
+
+    from doubles import expect
+
+    from myapp import User
+
+    def test_bounded_call_counts():
+        user = User('Carl')
+
+        expect(user).get_name.at_least(1).time
+        expect(user).speak.at_most(2).times
+
+        user.get_name  # The test would fail if this wasn't called at least once
+        user.speak('hello')
+        user.speak('good bye')
+        user.speak('oops')  # Raises a MockExpectationError because we expected at most two calls
+
+Call counts can be specified for allowances in addition to expectations, with the caveat that only upper bounds are enforced for allowances, making ``at_least`` a no-op.
 
 Partial doubles
 ---------------
