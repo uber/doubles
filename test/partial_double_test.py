@@ -47,16 +47,16 @@ class TestInstanceMethods(object):
 @mark.parametrize('test_class', [User, OldStyleUser])
 class TestClassMethods(object):
     def test_stubs_class_methods(self, test_class):
-        allow(test_class).class_method.and_return('overridden value')
+        allow(test_class).class_method.with_args('foo').and_return('overridden value')
 
-        assert test_class.class_method() == 'overridden value'
+        assert test_class.class_method('foo') == 'overridden value'
 
     def test_restores_class_methods_on_teardown(self, test_class):
         allow(test_class).class_method.and_return('overridden value')
 
         teardown()
 
-        assert test_class.class_method() == 'class_method return value'
+        assert test_class.class_method('foo') == 'class_method return value: foo'
 
     def test_raises_when_stubbing_noncallable_attributes(self, test_class):
         with raises(VerifyingDoubleError):

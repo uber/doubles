@@ -4,12 +4,12 @@ class OldStyleUser():
     class_attribute = 'foo'
 
     @staticmethod
-    def static_method():
-        return 'static_method return value'
+    def static_method(arg):
+        return 'static_method return value: {}'.format(arg)
 
     @classmethod
-    def class_method(cls):
-        return 'class_method return value'
+    def class_method(cls, arg):
+        return 'class_method return value: {}'.format(arg)
 
     def __init__(self, name, age):
         self.name = name

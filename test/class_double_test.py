@@ -37,7 +37,7 @@ class TestClassDouble(object):
         User = ClassDouble('doubles.testing.User')
 
         with raises(VerifyingDoubleArgumentError):
-            allow(User).class_method.with_args('foo')
+            allow(User).class_method.with_no_args()
 
     def test_raises_when_stubbing_instance_methods(self):
         User = ClassDouble('doubles.testing.User')
