@@ -10,6 +10,7 @@ It provides functionality for stubbing, mocking, and verification of test double
 
    installation
    Integration with test frameworks <integration>
+   Differences from Mock <mock>
    terminology
    usage
    api
