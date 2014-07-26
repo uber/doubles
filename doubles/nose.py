@@ -21,11 +21,11 @@ class NoseIntegration(Plugin):
     def prepareTestCase(self, test):
         def wrapped(result):
             test.test.run()
-            if result.failures or result.errors:
-                return
+
             try:
                 if current_space():
                     verify()
             except MockExpectationError:
                 result.addFailure(test.test,  sys.exc_info())
+
         return wrapped
