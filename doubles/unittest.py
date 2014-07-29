@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 import unittest
 
-from doubles.lifecycle import setup, verify, teardown
+from doubles.lifecycle import teardown, verify
 
 
 def wrap_test(test_func):
@@ -19,5 +19,4 @@ class TestCase(unittest.TestCase):
         setattr(self, self._testMethodName, wrap_test(getattr(self, self._testMethodName)))
 
     def setUp(self):
-        setup()
         self.addCleanup(teardown)

@@ -4,12 +4,6 @@ class MockExpectationError(AssertionError):
     pass
 
 
-class NoSpaceError(Exception):
-    """An exception raised when attempting to verify the lifecycle after it's been torn down."""
-
-    pass
-
-
 class UnallowedMethodCallError(AssertionError):
     """An exception raised when an unallowed method call is made on a double."""
 

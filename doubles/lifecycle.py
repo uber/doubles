@@ -1,6 +1,5 @@
 from threading import local
 
-from doubles.exceptions import NoSpaceError
 from doubles.space import Space
 
 
@@ -15,22 +14,17 @@ def current_space():
     :rtype: Space
     """
 
-    if hasattr(_thread_local_data, 'current_space'):
-        return _thread_local_data.current_space
+    if not hasattr(_thread_local_data, 'current_space'):
+        _thread_local_data.current_space = Space()
 
-
-def setup():
-    """Sets up the Doubles environment. Must be called before each test case."""
-
-    _thread_local_data.current_space = Space()
+    return _thread_local_data.current_space
 
 
 def teardown():
     """Tears down the current Doubles environment. Must be called after each test case."""
-    if current_space():
-        current_space().teardown()
-
-    _thread_local_data.current_space = None
+    if hasattr(_thread_local_data, 'current_space'):
+        _thread_local_data.current_space.teardown()
+        del _thread_local_data.current_space
 
 
 def verify():
@@ -39,7 +33,5 @@ def verify():
     test case, but before teardown.
     """
 
-    if current_space():
-        current_space().verify()
-    else:
-        raise NoSpaceError('Verification can only occur between calls to setup and teardown.')
+    if hasattr(_thread_local_data, 'current_space'):
+        _thread_local_data.current_space.verify()

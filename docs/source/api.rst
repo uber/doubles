@@ -25,7 +25,6 @@ Pure doubles
 
 Test lifecycle
 --------------
-.. autofunction:: doubles.setup
 .. autofunction:: doubles.verify
 .. autofunction:: doubles.teardown
 
