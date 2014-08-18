@@ -16,6 +16,7 @@ class TestExpect(object):
 
         with raises(MockExpectationError) as e:
             verify()
+        teardown()
 
         assert re.match(
             r"Expected 'instance_method' to be called on "
@@ -33,6 +34,7 @@ class TestExpect(object):
 
         with raises(MockExpectationError) as e:
             verify()
+        teardown()
 
         assert re.match(
             r"Expected 'method_with_varargs' to be called on "

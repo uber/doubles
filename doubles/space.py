@@ -44,7 +44,7 @@ class Space(object):
         if self._is_verified:
             return
 
-        self._is_verified = True
-
         for proxy in self._proxies.values():
             proxy.verify()
+
+        self._is_verified = True
