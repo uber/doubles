@@ -28,12 +28,18 @@ def test_failed_expections_do_not_leak_between_tests(testdir, capsys):
         from doubles.testing import User
 
         def test_that_fails_for_not_satisfying_expectation():
-            expect(User).class_method.with_args(1).once()
+            expect(User).class_method.with_args('test_one').once()
 
         def test_that_should_fail_for_not_satisfying_expection():
-            expect(User).class_method.with_args('bob').once()
+            expect(User).class_method.with_args('test_two').once()
 
     """)
     result = testdir.runpytest()
     outcomes = result.parseoutcomes()
     assert outcomes['failed'] == 2
+    expected_error = (
+        "*Expected 'class_method' to be called 1 time but was called 0 times on"
+        " <class 'doubles.testing.User'> with (args=('{arg_value}',), kwargs={{}})*"
+    )
+    result.stdout.fnmatch_lines([expected_error.format(arg_value="test_one")])
+    result.stdout.fnmatch_lines([expected_error.format(arg_value="test_two")])
