@@ -118,6 +118,22 @@ class TestWithArgs(object):
             e.value.message
         )
 
+    def test_raises_if_method_is_called_with_wrong_arguments(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).method_with_varargs.with_args('bar')
+
+        with raises(UnallowedMethodCallError) as e:
+            subject.method_with_varargs('baz')
+
+        assert re.match(
+            r"Received unexpected call to 'method_with_varargs' on "
+            r"<InstanceDouble of <class '?doubles.testing.User'?"
+            r"(?: at 0x[0-9a-f]{9})?> object at .+> "
+            r"with \(args=\('baz',\), kwargs={}\).",
+            e.value.message
+        )
+
     def test_matches_most_specific_allowance(self):
         subject = InstanceDouble('doubles.testing.User')
 

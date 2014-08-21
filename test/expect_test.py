@@ -9,7 +9,7 @@ from doubles.targets.expectation_target import expect
 
 
 class TestExpect(object):
-    def test_raises_if_an_expected_method_call_is_not_made(self):
+    def test_raises_if_an_expected_method_call_without_args_is_not_made(self):
         subject = InstanceDouble('doubles.testing.User')
 
         expect(subject).instance_method
@@ -27,7 +27,7 @@ class TestExpect(object):
             e.value.message
         )
 
-    def test_raises_if_method_is_called_with_wrong_arguments(self):
+    def test_raises_if_an_expected_method_call_with_args_is_not_made(self):
         subject = InstanceDouble('doubles.testing.User')
 
         expect(subject).method_with_varargs.with_args('bar')
