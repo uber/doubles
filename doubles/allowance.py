@@ -10,7 +10,7 @@ _any = object()
 def verify_count_is_positive(func):
     @wraps(func)
     def inner(self, arg):
-        if arg < 0:
+        if arg <= 0:
             raise TypeError(func.__name__ + ' requires one positive integer argument')
         return func(self, arg)
     return inner
