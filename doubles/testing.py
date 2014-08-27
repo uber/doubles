@@ -40,3 +40,10 @@ class OldStyleUser():
 
 class User(OldStyleUser, object):
     pass
+
+
+def top_level_function(arg1, arg2='default'):
+    return "{arg1} -- {arg2}".format(
+        arg1=arg1,
+        arg2=arg2
+    )
