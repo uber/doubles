@@ -1,9 +1,10 @@
 from pytest import raises, mark
 
-from doubles.exceptions import VerifyingDoubleError
+from doubles.exceptions import VerifyingDoubleError, VerifyingDoubleArgumentError
 from doubles.lifecycle import teardown
 from doubles.targets.allowance_target import allow
 from doubles.testing import User, OldStyleUser
+import doubles.testing
 
 
 @mark.parametrize('test_class', [User, OldStyleUser])
@@ -82,3 +83,27 @@ class TestConstructorMethods(object):
         teardown()
 
         assert User('Alice', 25) is not user
+
+
+class TestTopLevelFunctions(object):
+    def test_stubs_method(self):
+        allow(doubles.testing).top_level_function.and_return('foo')
+
+        assert doubles.testing.top_level_function() == 'foo'
+
+    def test_restores_the_orignal_method(self):
+        allow(doubles.testing).top_level_function.and_return('foo')
+        teardown()
+        assert doubles.testing.top_level_function('foo', 'bar') == 'foo -- bar'
+
+    def test_verifies_arguments(self):
+        with raises(VerifyingDoubleArgumentError):
+            allow(doubles.testing).top_level_function.with_args(
+                'bob',
+                'barker',
+                'is_great'
+            )
+
+    def test_verifies_the_function_exists(self):
+        with raises(VerifyingDoubleError):
+            allow(doubles.testing).fake_function

@@ -1,4 +1,7 @@
-from inspect import classify_class_attrs, isclass
+from inspect import classify_class_attrs, isclass, ismodule, isfunction, getmembers
+from collections import namedtuple
+
+ModuleAttribute = namedtuple('ModuleAttribute', ['object', 'kind'])
 
 
 class Target(object):
@@ -50,7 +53,7 @@ class Target(object):
         :rtype: type, classobj
         """
 
-        if isclass(self.doubled_obj):
+        if isclass(self.doubled_obj) or ismodule(self.doubled_obj):
             return self.doubled_obj
 
         return self.doubled_obj.__class__
@@ -65,7 +68,11 @@ class Target(object):
         """
         attrs = {}
 
-        for attr in classify_class_attrs(self.doubled_obj_type):
-            attrs[attr.name] = attr
+        if ismodule(self.doubled_obj):
+            for name, func in getmembers(self.doubled_obj, isfunction):
+                attrs[name] = ModuleAttribute(func, 'toplevel')
+        else:
+            for attr in classify_class_attrs(self.doubled_obj_type):
+                attrs[attr.name] = attr
 
         return attrs
