@@ -96,13 +96,20 @@ class TestTopLevelFunctions(object):
         teardown()
         assert doubles.testing.top_level_function('foo', 'bar') == 'foo -- bar'
 
-    def test_verifies_arguments(self):
+    def test_raises_if_incorrect_call_signature_used(self):
         with raises(VerifyingDoubleArgumentError):
             allow(doubles.testing).top_level_function.with_args(
                 'bob',
                 'barker',
                 'is_great'
             )
+
+    def test_allows_correct_call_signature(self):
+        allow(doubles.testing).top_level_function.with_args(
+            'bob',
+            'barker',
+        ).and_return('bar')
+        assert doubles.testing.top_level_function('bob', 'barker') == 'bar'
 
     def test_verifies_the_function_exists(self):
         with raises(VerifyingDoubleError):
