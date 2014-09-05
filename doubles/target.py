@@ -1,7 +1,7 @@
 from inspect import classify_class_attrs, isclass, ismodule, isfunction, getmembers
 from collections import namedtuple
 
-ModuleAttribute = namedtuple('ModuleAttribute', ['object', 'kind'])
+ModuleAttribute = namedtuple('ModuleAttribute', ['object', 'kind', 'defining_class'])
 
 
 class Target(object):
@@ -70,7 +70,7 @@ class Target(object):
 
         if ismodule(self.doubled_obj):
             for name, func in getmembers(self.doubled_obj, isfunction):
-                attrs[name] = ModuleAttribute(func, 'toplevel')
+                attrs[name] = ModuleAttribute(func, 'toplevel', self.doubled_obj)
         else:
             for attr in classify_class_attrs(self.doubled_obj_type):
                 attrs[attr.name] = attr

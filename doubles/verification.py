@@ -39,7 +39,7 @@ def verify_arguments(target, method_name, args, kwargs):
     attr = target.attrs[method_name]
     method = attr.object
 
-    if attr.kind in ('class method', 'static method'):
+    if attr.kind in ('toplevel', 'class method', 'static method'):
         method = attr.object.__get__(None, attr.defining_class)
     else:
         args = ['self_or_cls'] + list(args)
