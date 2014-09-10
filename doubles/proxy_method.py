@@ -42,7 +42,7 @@ class ProxyMethod(object):
         if not expectation:
             self._raise_exception(args, kwargs)
 
-        return expectation.return_value
+        return expectation.return_value(*args, **kwargs)
 
     def __get__(self, instance, owner):
         """

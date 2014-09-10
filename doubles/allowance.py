@@ -1,4 +1,5 @@
 from functools import wraps
+from inspect import getargspec
 
 from doubles.exceptions import MockExpectationError
 from doubles.verification import verify_arguments
@@ -14,6 +15,11 @@ def verify_count_is_positive(func):
             raise TypeError(func.__name__ + ' requires one positive integer argument')
         return func(self, arg)
     return inner
+
+
+def check_func_takes_args(func):
+    arg_spec = getargspec(func)
+    return arg_spec.args or arg_spec.varargs or arg_spec.keywords or arg_spec.defaults
 
 
 class Allowance(object):
@@ -41,7 +47,7 @@ class Allowance(object):
 
         :param Exception exception: The exception to raise.
         """
-        def proxy_exception():
+        def proxy_exception(*args, **kwargs):
             raise exception
 
         self._return_value = proxy_exception
@@ -64,7 +70,9 @@ class Allowance(object):
         return_values = list(return_values)
         final_value = return_values.pop()
 
-        self._return_value = lambda: return_values.pop(0) if return_values else final_value
+        self.and_return_result_of(
+            lambda: return_values.pop(0) if return_values else final_value
+        )
         return self
 
     def and_return_result_of(self, return_value):
@@ -74,8 +82,11 @@ class Allowance(object):
         :param return_value: A callable that will be invoked to determine the double's return value.
         :type return_value: any callable object
         """
+        if not check_func_takes_args(return_value):
+            self._return_value = lambda *args, **kwargs: return_value()
+        else:
+            self._return_value = return_value
 
-        self._return_value = return_value
         return self
 
     def is_satisfied(self):
@@ -131,8 +142,7 @@ class Allowance(object):
 
         return self.args == args and self.kwargs == kwargs
 
-    @property
-    def return_value(self):
+    def return_value(self, *args, **kwargs):
         """
         Extracts the real value to be returned from the wrapping callable.
 
@@ -140,7 +150,7 @@ class Allowance(object):
         """
 
         self._called()
-        return self._return_value()
+        return self._return_value(*args, **kwargs)
 
     def _verify_arguments(self):
         """
