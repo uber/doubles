@@ -12,7 +12,7 @@ class TestClassDouble(object):
 
         allow(User).class_method
 
-        assert User.class_method() is None
+        assert User.class_method('arg') is None
 
     def test_raises_when_stubbing_nonexistent_methods(self):
         User = ClassDouble('doubles.testing.User')
@@ -25,7 +25,7 @@ class TestClassDouble(object):
 
         allow(User).static_method
 
-        assert User.static_method() is None
+        assert User.static_method('arg') is None
 
     def test_raises_when_stubbing_noncallable_class_attributes(self):
         User = ClassDouble('doubles.testing.User')

@@ -1,6 +1,7 @@
 from inspect import isdatadescriptor
 
 from doubles.exceptions import UnallowedMethodCallError
+from doubles.verification import verify_arguments
 
 
 class ProxyMethod(object):
@@ -41,6 +42,8 @@ class ProxyMethod(object):
 
         if not expectation:
             self._raise_exception(args, kwargs)
+
+        verify_arguments(self._target, self._method_name, args, kwargs)
 
         return expectation.return_value(*args, **kwargs)
 

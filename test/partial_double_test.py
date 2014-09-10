@@ -149,7 +149,7 @@ class TestTopLevelFunctions(object):
     def test_stubs_method(self):
         allow(doubles.testing).top_level_function.and_return('foo')
 
-        assert doubles.testing.top_level_function() == 'foo'
+        assert doubles.testing.top_level_function('bob barker') == 'foo'
 
     def test_restores_the_orignal_method(self):
         allow(doubles.testing).top_level_function.and_return('foo')

@@ -2,7 +2,11 @@ import re
 
 from pytest import raises
 
-from doubles.exceptions import UnallowedMethodCallError, MockExpectationError
+from doubles.exceptions import (
+    UnallowedMethodCallError,
+    MockExpectationError,
+    VerifyingDoubleArgumentError
+)
 from doubles.instance_double import InstanceDouble
 from doubles.targets.allowance_target import allow
 from doubles.lifecycle import teardown
@@ -25,6 +29,13 @@ class TestBasicAllowance(object):
 
         with raises(AttributeError):
             subject.instance_method
+
+    def test_raises_if_called_with_args_that_do_not_match_signature(self):
+        subject = InstanceDouble('doubles.testing.User')
+        allow(subject).instance_method
+
+        with raises(VerifyingDoubleArgumentError):
+            subject.instance_method('bar')
 
 
 class TestReturnValues(object):
@@ -119,9 +130,9 @@ class TestWithArgs(object):
     def test_allows_any_arguments_if_none_are_specified(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).instance_method.and_return('bar')
+        allow(subject).method_with_positional_arguments.and_return('bar')
 
-        assert subject.instance_method('unspecified argument') == 'bar'
+        assert subject.method_with_positional_arguments('unspecified argument') == 'bar'
 
     def test_allows_specification_of_arguments(self):
         subject = InstanceDouble('doubles.testing.User')

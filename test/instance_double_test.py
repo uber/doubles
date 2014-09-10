@@ -37,7 +37,7 @@ class TestInstanceDouble(object):
     def test_allows_stubs_on_existing_class_methods(self):
         date = InstanceDouble('datetime.date')
 
-        allow(date).today
+        allow(date).today.with_args()
 
         assert date.today() is None
 
