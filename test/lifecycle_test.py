@@ -8,10 +8,10 @@ class TestLifecycle(object):
     def test_stores_a_space_per_thread(self):
         queue = Queue()
 
-        queue.put(lifecycle.current_space())
-
         def push_thread_space_to_queue(queue):
             queue.put(lifecycle.current_space())
+
+        push_thread_space_to_queue(queue)
 
         thread = Thread(target=push_thread_space_to_queue, args=(queue,))
         thread.start()
