@@ -37,7 +37,7 @@ class OldStyleUser():
     def some_property(self):
         return 'some_property return value'
 
-    def __call__(self):
+    def __call__(self, *args):
         return 'user was called'
 
 

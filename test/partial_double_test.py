@@ -1,6 +1,10 @@
 from pytest import raises, mark
 
-from doubles.exceptions import VerifyingDoubleError, VerifyingDoubleArgumentError
+from doubles.exceptions import (
+    VerifyingDoubleError,
+    VerifyingDoubleArgumentError,
+    UnallowedMethodCallError,
+)
 from doubles.lifecycle import teardown
 from doubles.targets.allowance_target import allow
 from doubles.testing import User, OldStyleUser
@@ -81,6 +85,24 @@ class Test__call__(object):
         teardown()
 
         assert user() == 'user was called'
+
+    def test_works_with_arguments(self, test_class):
+        user = test_class('Alice', 25)
+        allow(user).__call__.with_args(1, 2).and_return('bob barker')
+
+        assert user(1, 2) == 'bob barker'
+
+    def test_raises_when_called_with_invalid_args(self, test_class):
+        user = test_class('Alice', 25)
+        allow(user).__call__.with_args(1, 2).and_return('bob barker')
+
+        with raises(UnallowedMethodCallError):
+            user(1, 2, 3)
+
+    def test_raises_when_mocked_with_invalid_call_signature(self, test_class):
+        user = test_class('Alice', 25)
+        with raises(VerifyingDoubleArgumentError):
+            allow(user).__call__.with_args(1, 2, bob='barker')
 
 
 @mark.parametrize('test_class', [User, OldStyleUser])

@@ -8,6 +8,8 @@ def _wrap__call__(original):
         if '__call__' in instance.__dict__:
             return instance.__dict__['__call__'](*args, **kwargs)
         return original(instance, *args, **kwargs)
+
+    func._doubles__call___proxy = True
     return func
 
 
@@ -77,7 +79,8 @@ class ProxyMethod(object):
             del self._target.obj.__dict__[self._method_name]
 
         if self._method_name == '__call__':
-            self._target.obj.__class__.__call__ = self._original__call__
+            if not getattr(self._original__call__, '_doubles__call___proxy', False):
+                self._target.obj.__class__.__call__ = self._original__call__
 
     def _capture_original_method(self):
         """Saves a reference to the original value of the method to be doubled."""
