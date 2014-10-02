@@ -6,6 +6,16 @@ from doubles.object_double import ObjectDouble
 ModuleAttribute = namedtuple('ModuleAttribute', ['object', 'kind', 'defining_class'])
 
 
+def _proxy_class_method_to_instance(original, name):
+    def func(instance, *args, **kwargs):
+        if name in instance.__dict__:
+            return instance.__dict__[name](*args, **kwargs)
+        return original(instance, *args, **kwargs)
+
+    func._doubles_target_method = original
+    return func
+
+
 class Target(object):
     """
     A wrapper around an object that owns methods to be doubled. Provides additional introspection
@@ -81,3 +91,33 @@ class Target(object):
                 attrs[attr.name] = attr
 
         return attrs
+
+    def hijack__call__(self):
+        """
+        Hijack __call__ on the target object, this updates the underlying class
+        and delegates the call to the instance.  This allows __call__ to be mocked
+        on a per instance basis.
+        """
+        if not self._original__call__:
+            self.obj.__class__.__call__ = _proxy_class_method_to_instance(
+                self.obj.__class__.__call__,
+                '__call__',
+            )
+
+    def restore__call__(self):
+        """
+        Restore __call__ on the target object
+        """
+        if self._original__call__:
+            self.obj.__class__.__call__ = self._original__call__
+
+    @property
+    def _original__call__(self):
+        """
+        Return the original __call__method off of the proxy on the target obj
+
+        :return: Func or None.
+        :rtype: func
+        """
+
+        return getattr(self.obj.__class__.__call__, '_doubles_target_method', None)
