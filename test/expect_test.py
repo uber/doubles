@@ -270,3 +270,29 @@ class TestAtMost(object):
             r" \(.*doubles/test/expect_test.py:\d+\)",
             e.value.message
         )
+
+
+class Test__call__(object):
+    def test_satisfied_expectation(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        expect(subject).__call__.once()
+
+        subject()
+
+    def test_unsatisfied_expectation(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        expect(subject).__call__.once()
+
+        with raises(MockExpectationError) as e:
+            verify()
+        teardown()
+
+        assert re.match(
+            r"Expected '__call__' to be called 1 time but was called 0 times on "
+            r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
+            r"with any args, but was not."
+            r" \(.*doubles/test/expect_test.py:\d+\)",
+            e.value.message
+        )
