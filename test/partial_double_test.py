@@ -46,6 +46,44 @@ class TestInstanceMethods(object):
 
 
 @mark.parametrize('test_class', [User, OldStyleUser])
+class Test__call__(object):
+    def test_basic_usage(self, test_class):
+        user = test_class('Alice', 25)
+        allow(user).__call__.and_return('bob barker')
+
+        assert user() == 'bob barker'
+
+    def test_stubbing_two_objects_does_not_interfere(self, test_class):
+        alice = test_class('Alice', 25)
+        peter = test_class('Peter', 25)
+
+        allow(alice).__call__.and_return('alice')
+        allow(peter).__call__.and_return('peter')
+
+        assert alice() == 'alice'
+        assert peter() == 'peter'
+
+    def test_does_not_intefere_with_unstubbed_objects(self, test_class):
+        alice = test_class('Alice', 25)
+        peter = test_class('Peter', 25)
+
+        allow(alice).__call__.and_return('alice')
+
+        assert alice() == 'alice'
+        assert peter() == 'user was called'
+
+    def test_teardown_restores_previous_functionality(self, test_class):
+        user = test_class('Alice', 25)
+        allow(user).__call__.and_return('bob barker')
+
+        assert user() == 'bob barker'
+
+        teardown()
+
+        assert user() == 'user was called'
+
+
+@mark.parametrize('test_class', [User, OldStyleUser])
 class TestClassMethods(object):
     def test_stubs_class_methods(self, test_class):
         allow(test_class).class_method.with_args('foo').and_return('overridden value')

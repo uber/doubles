@@ -3,6 +3,14 @@ from inspect import isdatadescriptor
 from doubles.exceptions import UnallowedMethodCallError
 
 
+def _wrap__call__(original):
+    def func(instance, *args, **kwargs):
+        if '__call__' in instance.__dict__:
+            return instance.__dict__['__call__'](*args, **kwargs)
+        return original(instance, *args, **kwargs)
+    return func
+
+
 class ProxyMethod(object):
     """
     The object that replaces the real value of a doubled method. Responsible for hijacking the
@@ -68,10 +76,15 @@ class ProxyMethod(object):
             # TODO: Could there ever have been a value here that needs to be restored?
             del self._target.obj.__dict__[self._method_name]
 
+        if self._method_name == '__call__':
+            self._target.obj.__class__.__call__ = self._original__call__
+
     def _capture_original_method(self):
         """Saves a reference to the original value of the method to be doubled."""
 
         self._original_method = self._attr.object
+        if self._method_name == '__call__':
+            self._original__call__ = self._target.obj.__class__.__call__
 
     def _hijack_target(self):
         """Replaces the target method on the target object with the proxy method."""
@@ -82,6 +95,11 @@ class ProxyMethod(object):
             setattr(self._target.obj.__class__, self._method_name, self)
         else:
             self._target.obj.__dict__[self._method_name] = self
+
+        if self._method_name == '__call__':
+            self._target.obj.__class__.__call__ = _wrap__call__(
+                self._target.obj.__class__.__call__
+            )
 
     def _raise_exception(self, args, kwargs):
         """

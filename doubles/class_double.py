@@ -12,4 +12,4 @@ class ClassDouble(InstanceDouble):
     :param str path: The absolute module path to the class.
     """
 
-    pass
+    is_class = True

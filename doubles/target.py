@@ -1,6 +1,8 @@
 from inspect import classify_class_attrs, isclass, ismodule, isfunction, getmembers
 from collections import namedtuple
 
+from doubles.object_double import ObjectDouble
+
 ModuleAttribute = namedtuple('ModuleAttribute', ['object', 'kind', 'defining_class'])
 
 
@@ -27,6 +29,9 @@ class Target(object):
         :return: True if the object is a class, False otherwise.
         :rtype: bool
         """
+
+        if isinstance(self.obj, ObjectDouble):
+            return self.obj.is_class
 
         return self.doubled_obj == self.doubled_obj_type
 
