@@ -1,6 +1,16 @@
-from inspect import isbuiltin, getcallargs
+from inspect import isbuiltin, getcallargs, isfunction, ismethod
 
-from doubles.exceptions import VerifyingDoubleArgumentError, VerifyingDoubleError
+from doubles.exceptions import (
+    VerifyingDoubleArgumentError,
+    VerifyingBuiltinDoubleArgumentError,
+    VerifyingDoubleError,
+)
+
+
+def _is_python_function(func):
+    if ismethod(func):
+        func = func.im_func
+    return isfunction(func)
 
 
 def verify_method(target, method_name, class_level=False):
@@ -51,4 +61,6 @@ def verify_arguments(target, method_name, args, kwargs):
     try:
         getcallargs(method, *args, **kwargs)
     except TypeError as e:
+        if not _is_python_function(method):
+            raise VerifyingBuiltinDoubleArgumentError(str(e))
         raise VerifyingDoubleArgumentError(str(e))

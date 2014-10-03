@@ -1,9 +1,10 @@
 from functools import wraps
 from inspect import getargspec
 
-from doubles.exceptions import MockExpectationError
+from doubles.exceptions import MockExpectationError, VerifyingBuiltinDoubleArgumentError
 from doubles.verification import verify_arguments
 from doubles.call_count_accumulator import CallCountAccumulator
+import doubles.lifecycle
 
 _any = object()
 
@@ -109,7 +110,7 @@ class Allowance(object):
 
         self.args = args
         self.kwargs = kwargs
-        self._verify_arguments()
+        self.verify_arguments()
         return self
 
     def with_no_args(self):
@@ -117,7 +118,7 @@ class Allowance(object):
 
         self.args = ()
         self.kwargs = {}
-        self._verify_arguments()
+        self.verify_arguments()
         return self
 
     def satisfy_any_args_match(self):
@@ -152,14 +153,21 @@ class Allowance(object):
         self._called()
         return self._return_value(*args, **kwargs)
 
-    def _verify_arguments(self):
+    def verify_arguments(self, args=None, kwargs=None):
         """
         Ensures that the arguments specified match the signature of the real method.
 
         :raise: ``VerifyingDoubleError`` if the arguments do not match.
         """
 
-        verify_arguments(self._target, self._method_name, self.args, self.kwargs)
+        args = self.args if args is None else args
+        kwargs = self.kwargs if kwargs is None else kwargs
+
+        try:
+            verify_arguments(self._target, self._method_name, args, kwargs)
+        except VerifyingBuiltinDoubleArgumentError:
+            if not doubles.lifecycle.current_space()._skip_builtin_verification:
+                raise
 
     @verify_count_is_positive
     def exactly(self, n):

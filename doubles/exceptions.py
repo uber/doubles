@@ -54,6 +54,14 @@ class VerifyingDoubleArgumentError(AssertionError):
     pass
 
 
+class VerifyingBuiltinDoubleArgumentError(VerifyingDoubleArgumentError):
+    """
+    An exception raised when attempting to validate arguments of a builtin
+    """
+
+    pass
+
+
 class VerifyingDoubleImportError(AssertionError):
     """
     An exception raised when attempting to create a verifying double from an invalid module path.

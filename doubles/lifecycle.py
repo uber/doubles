@@ -1,4 +1,5 @@
 from threading import local
+from contextlib import contextmanager
 
 from doubles.space import Space
 
@@ -35,3 +36,10 @@ def verify():
 
     if hasattr(_thread_local_data, 'current_space'):
         _thread_local_data.current_space.verify()
+
+
+@contextmanager
+def skip_builtin_verification():
+    current_space()._skip_builtin_verification = True
+    yield
+    current_space()._skip_builtin_verification = False
