@@ -8,6 +8,8 @@ class ObjectDouble(object):
 
     :param object target: The object the newly created ObjectDouble will verify against.
     """
+    is_class = False
+
     def __init__(self, target):
         self._doubles_target = target
 

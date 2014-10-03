@@ -101,3 +101,10 @@ class TestObjectDouble(object):
         allow(doubled_user).method_with_varkwargs.with_args(foo='bar')
 
         assert doubled_user.method_with_varkwargs(foo='bar') is None
+
+    def test_mocking__call__works(self, test_object):
+        doubled_user = ObjectDouble(test_object)
+
+        allow(doubled_user).__call__.and_return('bob barker')
+
+        assert doubled_user() == 'bob barker'

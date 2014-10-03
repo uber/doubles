@@ -1,6 +1,10 @@
 from pytest import raises, mark
 
-from doubles.exceptions import VerifyingDoubleError, VerifyingDoubleArgumentError
+from doubles.exceptions import (
+    VerifyingDoubleError,
+    VerifyingDoubleArgumentError,
+    UnallowedMethodCallError,
+)
 from doubles.lifecycle import teardown
 from doubles.targets.allowance_target import allow
 from doubles.testing import User, OldStyleUser
@@ -43,6 +47,62 @@ class TestInstanceMethods(object):
         allow(user).some_property.and_return('foo')
 
         assert user.some_property == 'foo'
+
+
+@mark.parametrize('test_class', [User, OldStyleUser])
+class Test__call__(object):
+    def test_basic_usage(self, test_class):
+        user = test_class('Alice', 25)
+        allow(user).__call__.and_return('bob barker')
+
+        assert user() == 'bob barker'
+
+    def test_stubbing_two_objects_does_not_interfere(self, test_class):
+        alice = test_class('Alice', 25)
+        peter = test_class('Peter', 25)
+
+        allow(alice).__call__.and_return('alice')
+        allow(peter).__call__.and_return('peter')
+
+        assert alice() == 'alice'
+        assert peter() == 'peter'
+
+    def test_does_not_intefere_with_unstubbed_objects(self, test_class):
+        alice = test_class('Alice', 25)
+        peter = test_class('Peter', 25)
+
+        allow(alice).__call__.and_return('alice')
+
+        assert alice() == 'alice'
+        assert peter() == 'user was called'
+
+    def test_teardown_restores_previous_functionality(self, test_class):
+        user = test_class('Alice', 25)
+        allow(user).__call__.and_return('bob barker')
+
+        assert user() == 'bob barker'
+
+        teardown()
+
+        assert user() == 'user was called'
+
+    def test_works_with_arguments(self, test_class):
+        user = test_class('Alice', 25)
+        allow(user).__call__.with_args(1, 2).and_return('bob barker')
+
+        assert user(1, 2) == 'bob barker'
+
+    def test_raises_when_called_with_invalid_args(self, test_class):
+        user = test_class('Alice', 25)
+        allow(user).__call__.with_args(1, 2).and_return('bob barker')
+
+        with raises(UnallowedMethodCallError):
+            user(1, 2, 3)
+
+    def test_raises_when_mocked_with_invalid_call_signature(self, test_class):
+        user = test_class('Alice', 25)
+        with raises(VerifyingDoubleArgumentError):
+            allow(user).__call__.with_args(1, 2, bob='barker')
 
 
 @mark.parametrize('test_class', [User, OldStyleUser])

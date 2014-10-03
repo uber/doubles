@@ -64,3 +64,8 @@ class TestInstanceDouble(object):
             InstanceDouble('unittest.foo')
 
         assert e.value.message == 'No object at path: unittest.foo.'
+
+    def test_mocking__call__works(self):
+        user = InstanceDouble('doubles.testing.User')
+        allow(user).__call__.and_return('bob barker')
+        assert user() == 'bob barker'

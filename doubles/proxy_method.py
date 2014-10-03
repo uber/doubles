@@ -68,6 +68,9 @@ class ProxyMethod(object):
             # TODO: Could there ever have been a value here that needs to be restored?
             del self._target.obj.__dict__[self._method_name]
 
+        if self._method_name == '__call__':
+            self._target.restore__call__()
+
     def _capture_original_method(self):
         """Saves a reference to the original value of the method to be doubled."""
 
@@ -82,6 +85,9 @@ class ProxyMethod(object):
             setattr(self._target.obj.__class__, self._method_name, self)
         else:
             self._target.obj.__dict__[self._method_name] = self
+
+        if self._method_name == '__call__':
+            self._target.hijack__call__()
 
     def _raise_exception(self, args, kwargs):
         """
