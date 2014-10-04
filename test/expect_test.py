@@ -2,7 +2,7 @@ import re
 
 from pytest import raises
 
-from doubles.exceptions import MockExpectationError
+from doubles.exceptions import MockExpectationError, UnsupportedMethodError
 from doubles.instance_double import InstanceDouble
 from doubles.lifecycle import verify, teardown
 from doubles.targets.expectation_target import expect
@@ -58,6 +58,36 @@ class TestExpect(object):
         expect(subject).method_with_default_args.with_args('one', bar='two')
 
         assert subject.method_with_default_args('one', bar='two') is None
+
+    def test_does_not_support_and_raise(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        with raises(UnsupportedMethodError) as e:
+            expect(subject).instance_method.and_raise(Exception)
+
+        assert re.match(r"`expect` does not support and_raise\.", e.value.message)
+
+        teardown()
+
+    def test_does_not_support_and_return(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        with raises(UnsupportedMethodError) as e:
+            expect(subject).instance_method.and_return('foo')
+
+        assert re.match(r"`expect` does not support and_return\.", e.value.message)
+
+        teardown()
+
+    def test_does_not_support_and_return_result_of(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        with raises(UnsupportedMethodError) as e:
+            expect(subject).instance_method.and_return_result_of(lambda: 'foo')
+
+        assert re.match(r"`expect` does not support and_return_result_of\.", e.value.message)
+
+        teardown()
 
 
 class TestTwice(object):

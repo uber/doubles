@@ -10,7 +10,7 @@ Stubs and mocks
 .. autoclass:: doubles.allowance.Allowance
     :members: and_raise, and_return, and_return_result_of, with_args, with_no_args
 .. autoclass:: doubles.expectation.Expectation
-    :members: and_raise, and_return, and_return_result_of, with_args, with_no_args
+    :members: with_args, with_no_args
 
 Pure doubles
 ------------

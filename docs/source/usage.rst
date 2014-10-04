@@ -119,7 +119,7 @@ The above test will fail with a ``MockExpectationError`` exception, because we e
 
         user.get_name()
 
-Mocks support the same interface for specifying arguments and return values that stubs do.
+Mocks support the same interface for specifying arguments that stubs do. Mocks do not, however, support specification of return values or exceptions. If you want a test double to return a value or raise an exception, use a stub. Mocks are intended for verifying calls to methods that do not return a meaningful value. If the method does return a value, write an assertion about that value instead of using a mock.
 
 Fakes
 -----

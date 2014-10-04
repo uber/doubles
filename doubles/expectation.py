@@ -1,4 +1,5 @@
 from doubles.allowance import Allowance
+from doubles.exceptions import UnsupportedMethodError
 
 
 class Expectation(Allowance):
@@ -13,6 +14,30 @@ class Expectation(Allowance):
 
         super(Expectation, self).__init__(target, method_name, caller)
         self._is_satisfied = False
+
+    def and_raise(self, *args):
+        """Not supported for expectations."""
+
+        raise UnsupportedMethodError(
+            '`expect` does not support and_raise. '
+            'Use `allow` and assert that an exception is raised instead.'
+        )
+
+    def and_return(self, *return_values):
+        """Not supported for expectations."""
+
+        raise UnsupportedMethodError(
+            '`expect` does not support and_return. '
+            'Use `allow` and assert that an exception is raised instead.'
+        )
+
+    def and_return_result_of(self, return_value):
+        """Not supported for expectations."""
+
+        raise UnsupportedMethodError(
+            '`expect` does not support and_return_result_of. '
+            'Use `allow` and assert that an exception is raised instead.'
+        )
 
     def satisfy_any_args_match(self):
         """

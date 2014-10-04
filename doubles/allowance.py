@@ -40,7 +40,7 @@ class Allowance(object):
         self._is_satisfied = True
         self._call_counter = CallCountAccumulator()
 
-        self.and_return(None)
+        self._return_value = lambda *args, **kwargs: None
 
     def and_raise(self, exception):
         """
