@@ -5,8 +5,8 @@ from doubles.exceptions import (
     VerifyingDoubleArgumentError,
     UnallowedMethodCallError,
 )
-from doubles.lifecycle import teardown, skip_builtin_verification
-from doubles.targets.allowance_target import allow
+from doubles.lifecycle import teardown
+from doubles import allow, no_builtin_verification
 from doubles.testing import User, OldStyleUser
 import doubles.testing
 
@@ -130,7 +130,7 @@ class TestClassMethods(object):
 
 class TestConstructorMethods(object):
     def test_stubs_constructors(self):
-        with skip_builtin_verification():
+        with no_builtin_verification():
             user = object()
 
             allow(User).__new__.and_return(user)

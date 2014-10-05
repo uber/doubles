@@ -1,7 +1,6 @@
 from pytest import raises
 
-from doubles import allow, InstanceDouble
-from doubles.lifecycle import skip_builtin_verification
+from doubles import allow, InstanceDouble, no_builtin_verification
 from doubles.exceptions import (
     VerifyingDoubleArgumentError,
     VerifyingDoubleError,
@@ -11,7 +10,7 @@ from doubles.exceptions import (
 
 class TestInstanceDouble(object):
     def test_allows_stubs_on_existing_methods(self):
-        with skip_builtin_verification():
+        with no_builtin_verification():
             date = InstanceDouble('datetime.date')
 
             allow(date).ctime
@@ -37,7 +36,7 @@ class TestInstanceDouble(object):
             allow(date).ctime.with_args('foo')
 
     def test_allows_stubs_on_existing_class_methods(self):
-        with skip_builtin_verification():
+        with no_builtin_verification():
             date = InstanceDouble('datetime.date')
 
             allow(date).today.with_args()

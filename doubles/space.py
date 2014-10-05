@@ -11,7 +11,7 @@ class Space(object):
     def __init__(self):
         self._proxies = {}
         self._is_verified = False
-        self._skip_builtin_verification = False
+        self.skip_builtin_verification = False
 
     def proxy_for(self, obj):
         """

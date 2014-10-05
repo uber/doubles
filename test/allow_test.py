@@ -8,8 +8,8 @@ from doubles.exceptions import (
     VerifyingDoubleArgumentError
 )
 from doubles.instance_double import InstanceDouble
-from doubles.targets.allowance_target import allow
-from doubles.lifecycle import teardown, skip_builtin_verification
+from doubles import allow, no_builtin_verification
+from doubles.lifecycle import teardown
 
 
 class UserDefinedException(Exception):
@@ -38,7 +38,7 @@ class TestBasicAllowance(object):
             subject.instance_method('bar')
 
     def test_skip_builtin_verification_does_not_affect_non_builtins(self):
-        with skip_builtin_verification():
+        with no_builtin_verification():
             subject = InstanceDouble('doubles.testing.User')
             allow(subject).instance_method
 

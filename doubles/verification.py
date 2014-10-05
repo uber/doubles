@@ -53,7 +53,7 @@ def verify_arguments(target, method_name, args, kwargs):
         method = attr.object.__get__(None, attr.defining_class)
     elif attr.kind == 'property':
         if args or kwargs:
-            raise VerifyingDoubleArgumentError("Properties to not accept arguments")
+            raise VerifyingDoubleArgumentError("Properties do not accept arguments.")
         return
     else:
         args = ['self_or_cls'] + list(args)

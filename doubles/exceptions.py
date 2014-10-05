@@ -56,7 +56,7 @@ class VerifyingDoubleArgumentError(AssertionError):
 
 class VerifyingBuiltinDoubleArgumentError(VerifyingDoubleArgumentError):
     """
-    An exception raised when attempting to validate arguments of a builtin
+    An exception raised when attempting to validate arguments of a builtin.
     """
 
     pass

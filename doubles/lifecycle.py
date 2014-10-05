@@ -39,7 +39,23 @@ def verify():
 
 
 @contextmanager
-def skip_builtin_verification():
-    current_space()._skip_builtin_verification = True
+def no_builtin_verification():
+    """
+    While inside this context we will ignore errors raised while verifying the
+    arguments of builtins.
+
+    Note: It is impossible to verify the expected arugments of built in functions
+    """
+    current_space().skip_builtin_verification = True
     yield
-    current_space()._skip_builtin_verification = False
+    current_space().skip_builtin_verification = False
+
+
+def ignore_builtin_verification():
+    """
+    Check if we ignoring builtin argument verification errors.
+
+    :return: True if we are ignoring errors.
+    :rtype: bool
+    """
+    return not current_space().skip_builtin_verification

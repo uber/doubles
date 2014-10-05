@@ -166,7 +166,7 @@ class Allowance(object):
         try:
             verify_arguments(self._target, self._method_name, args, kwargs)
         except VerifyingBuiltinDoubleArgumentError:
-            if not doubles.lifecycle.current_space()._skip_builtin_verification:
+            if doubles.lifecycle.ignore_builtin_verification():
                 raise
 
     @verify_count_is_positive
