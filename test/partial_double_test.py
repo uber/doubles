@@ -48,6 +48,20 @@ class TestInstanceMethods(object):
 
         assert user.some_property == 'foo'
 
+    def test_stubing_property_with_args_raises(self, test_class):
+        user = test_class('Alice', 25)
+
+        with raises(VerifyingDoubleArgumentError) as e:
+            allow(user).some_property.with_args(1)
+
+        assert e.value.message == 'Properties do not accept arguments.'
+
+    def test_calling_stubbed_property_with_args_works(self, test_class):
+        user = test_class('Alice', 25)
+        allow(user).some_property.and_return(lambda x: x)
+
+        assert user.some_property('bob') == 'bob'
+
 
 @mark.parametrize('test_class', [User, OldStyleUser])
 class Test__call__(object):
