@@ -38,7 +38,7 @@ class MethodDouble(object):
         """
 
         allowance = Allowance(self._target, self._method_name, caller)
-        self._expectations.append(allowance)
+        self._expectations.insert(0, allowance)
         return allowance
 
     def add_expectation(self, caller):

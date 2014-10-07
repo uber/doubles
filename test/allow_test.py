@@ -127,6 +127,14 @@ class TestAndReturn(object):
         assert subject.instance_method() == 'bazz'
         assert subject.instance_method() == 'bazz'
 
+    def test_subsequent_allowances_override_previous_ones(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.and_return('bar')
+        allow(subject).instance_method.and_return('baz')
+
+        assert subject.instance_method() == 'baz'
+
 
 class TestWithArgs(object):
     def test_allows_any_arguments_if_none_are_specified(self):
