@@ -2,9 +2,13 @@ import re
 
 from pytest import raises
 
-from doubles.exceptions import UnallowedMethodCallError, MockExpectationError
+from doubles.exceptions import (
+    UnallowedMethodCallError,
+    MockExpectationError,
+    VerifyingDoubleArgumentError
+)
 from doubles.instance_double import InstanceDouble
-from doubles.targets.allowance_target import allow
+from doubles import allow, no_builtin_verification
 from doubles.lifecycle import teardown
 
 
@@ -26,6 +30,21 @@ class TestBasicAllowance(object):
         with raises(AttributeError):
             subject.instance_method
 
+    def test_raises_if_called_with_args_that_do_not_match_signature(self):
+        subject = InstanceDouble('doubles.testing.User')
+        allow(subject).instance_method
+
+        with raises(VerifyingDoubleArgumentError):
+            subject.instance_method('bar')
+
+    def test_skip_builtin_verification_does_not_affect_non_builtins(self):
+        with no_builtin_verification():
+            subject = InstanceDouble('doubles.testing.User')
+            allow(subject).instance_method
+
+            with raises(VerifyingDoubleArgumentError):
+                subject.instance_method('bar')
+
 
 class TestReturnValues(object):
     def test_returns_result_of_a_callable(self):
@@ -34,6 +53,34 @@ class TestReturnValues(object):
         allow(subject).instance_method.and_return_result_of(lambda: 'bar')
 
         assert subject.instance_method() == 'bar'
+
+    def test_returns_result_of_a_callable_with_positional_arg(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject)\
+            .method_with_positional_arguments\
+            .and_return_result_of(lambda x: x)
+
+        assert subject.method_with_positional_arguments('bar') == 'bar'
+
+    def test_returns_result_of_a_callable_with_positional_vargs(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject)\
+            .method_with_varargs\
+            .and_return_result_of(lambda *x: x)
+
+        result = subject.method_with_varargs('bob', 'barker')
+        assert result == ('bob', 'barker')
+
+    def test_returns_result_of_a_callable_with_varkwargs(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject)\
+            .method_with_varkwargs\
+            .and_return_result_of(lambda **kwargs: kwargs['bob'])
+
+        assert subject.method_with_varkwargs(bob='barker') == 'barker'
 
     def test_raises_provided_exception(self):
         subject = InstanceDouble('doubles.testing.User')
@@ -91,9 +138,9 @@ class TestWithArgs(object):
     def test_allows_any_arguments_if_none_are_specified(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).instance_method.and_return('bar')
+        allow(subject).method_with_positional_arguments.and_return('bar')
 
-        assert subject.instance_method('unspecified argument') == 'bar'
+        assert subject.method_with_positional_arguments('unspecified argument') == 'bar'
 
     def test_allows_specification_of_arguments(self):
         subject = InstanceDouble('doubles.testing.User')

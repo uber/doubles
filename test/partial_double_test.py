@@ -6,7 +6,7 @@ from doubles.exceptions import (
     UnallowedMethodCallError,
 )
 from doubles.lifecycle import teardown
-from doubles.targets.allowance_target import allow
+from doubles import allow, no_builtin_verification
 from doubles.testing import User, OldStyleUser
 import doubles.testing
 
@@ -47,6 +47,20 @@ class TestInstanceMethods(object):
         allow(user).some_property.and_return('foo')
 
         assert user.some_property == 'foo'
+
+    def test_stubing_property_with_args_raises(self, test_class):
+        user = test_class('Alice', 25)
+
+        with raises(VerifyingDoubleArgumentError) as e:
+            allow(user).some_property.with_args(1)
+
+        assert e.value.message == 'Properties do not accept arguments.'
+
+    def test_calling_stubbed_property_with_args_works(self, test_class):
+        user = test_class('Alice', 25)
+        allow(user).some_property.and_return(lambda x: x)
+
+        assert user.some_property('bob') == 'bob'
 
 
 @mark.parametrize('test_class', [User, OldStyleUser])
@@ -130,11 +144,12 @@ class TestClassMethods(object):
 
 class TestConstructorMethods(object):
     def test_stubs_constructors(self):
-        user = object()
+        with no_builtin_verification():
+            user = object()
 
-        allow(User).__new__.and_return(user)
+            allow(User).__new__.and_return(user)
 
-        assert User('Alice', 25) is user
+            assert User('Alice', 25) is user
 
     def test_restores_constructor_on_teardown(self):
         user = object()
@@ -149,7 +164,7 @@ class TestTopLevelFunctions(object):
     def test_stubs_method(self):
         allow(doubles.testing).top_level_function.and_return('foo')
 
-        assert doubles.testing.top_level_function() == 'foo'
+        assert doubles.testing.top_level_function('bob barker') == 'foo'
 
     def test_restores_the_orignal_method(self):
         allow(doubles.testing).top_level_function.and_return('foo')
