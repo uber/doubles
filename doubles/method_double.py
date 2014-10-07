@@ -20,12 +20,13 @@ class MethodDouble(object):
 
         self._verify_method()
 
+        self._allowances = []
         self._expectations = []
 
         self._proxy_method = ProxyMethod(
             target,
             method_name,
-            lambda args, kwargs: self._find_matching_expectation(args, kwargs)
+            lambda args, kwargs: self._find_matching_double(args, kwargs)
         )
 
     def add_allowance(self, caller):
@@ -38,7 +39,7 @@ class MethodDouble(object):
         """
 
         allowance = Allowance(self._target, self._method_name, caller)
-        self._expectations.insert(0, allowance)
+        self._allowances.insert(0, allowance)
         return allowance
 
     def add_expectation(self, caller):
@@ -50,7 +51,7 @@ class MethodDouble(object):
         """
 
         expectation = Expectation(self._target, self._method_name, caller)
-        self._expectations.append(expectation)
+        self._expectations.insert(0, expectation)
         return expectation
 
     def restore_original_method(self):
@@ -69,13 +70,50 @@ class MethodDouble(object):
             if not expectation.is_satisfied():
                 expectation.raise_failure_exception()
 
+    def _find_matching_allowance(self, args, kwargs):
+        """
+        Returns the first allowance that matches the ones declared. Tries one with specific
+        arguments first, then falls back to an allowance that allows arbitrary arguments.
+
+        :return: The matching ``Allowance``, if one was found.
+        :rtype: Allowance, None
+        """
+
+        for allowance in self._allowances:
+            if allowance.satisfy_exact_match(args, kwargs):
+                return allowance
+
+        for allowance in self._allowances:
+            if allowance.satisfy_any_args_match():
+                return allowance
+
+    def _find_matching_double(self, args, kwargs):
+        """
+        Returns the first allowance or expectation that matches the ones declared. Tries one
+        with specific arguments first, then falls back to an expectation that allows arbitrary
+        arguments.
+
+        :return: The matching ``Allowance`` or ``Expectation``, if one was found.
+        :rtype: Allowance, Expectation, None
+        """
+
+        expectation = self._find_matching_expectation(args, kwargs)
+
+        if expectation:
+            return expectation
+
+        allowance = self._find_matching_allowance(args, kwargs)
+
+        if allowance:
+            return allowance
+
     def _find_matching_expectation(self, args, kwargs):
         """
         Returns the first expectation that matches the ones declared. Tries one with specific
         arguments first, then falls back to an expectation that allows arbitrary arguments.
 
-        :return: The matching ``Allowance`` or ``Expectation``, if one was found.
-        :rtype: Allowance, Expectation, None
+        :return: The matching ``Expectation``, if one was found.
+        :rtype: Expectation, None
         """
 
         for expectation in self._expectations:

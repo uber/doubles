@@ -5,6 +5,7 @@ from pytest import raises
 from doubles.exceptions import MockExpectationError, UnsupportedMethodError
 from doubles.instance_double import InstanceDouble
 from doubles.lifecycle import verify, teardown
+from doubles.targets.allowance_target import allow
 from doubles.targets.expectation_target import expect
 
 
@@ -86,6 +87,25 @@ class TestExpect(object):
             expect(subject).instance_method.and_return_result_of(lambda: 'foo')
 
         assert re.match(r"`expect` does not support and_return_result_of\.", e.value.message)
+
+        teardown()
+
+    def test_takes_precendence_over_previous_allowance(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.and_return('foo')
+        expect(subject).instance_method
+
+        assert subject.instance_method() is None
+
+    def test_takes_precedence_over_subsequent_allowances(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        expect(subject).instance_method
+        allow(subject).instance_method.and_return('foo')
+
+        with raises(MockExpectationError):
+            verify()
 
         teardown()
 
