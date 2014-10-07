@@ -57,18 +57,14 @@ class TestReturnValues(object):
     def test_returns_result_of_a_callable_with_positional_arg(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject)\
-            .method_with_positional_arguments\
-            .and_return_result_of(lambda x: x)
+        allow(subject).method_with_positional_arguments.and_return_result_of(lambda x: x)
 
         assert subject.method_with_positional_arguments('bar') == 'bar'
 
     def test_returns_result_of_a_callable_with_positional_vargs(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject)\
-            .method_with_varargs\
-            .and_return_result_of(lambda *x: x)
+        allow(subject).method_with_varargs.and_return_result_of(lambda *x: x)
 
         result = subject.method_with_varargs('bob', 'barker')
         assert result == ('bob', 'barker')
@@ -76,9 +72,7 @@ class TestReturnValues(object):
     def test_returns_result_of_a_callable_with_varkwargs(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject)\
-            .method_with_varkwargs\
-            .and_return_result_of(lambda **kwargs: kwargs['bob'])
+        allow(subject).method_with_varkwargs.and_return_result_of(lambda **kwargs: kwargs['bob'])
 
         assert subject.method_with_varkwargs(bob='barker') == 'barker'
 
