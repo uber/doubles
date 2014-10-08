@@ -121,6 +121,22 @@ The above test will fail with a ``MockExpectationError`` exception, because we e
 
 Mocks support the same interface for specifying arguments that stubs do. Mocks do not, however, support specification of return values or exceptions. If you want a test double to return a value or raise an exception, use a stub. Mocks are intended for verifying calls to methods that do not return a meaningful value. If the method does return a value, write an assertion about that value instead of using a mock.
 
+Doubling top-level functions
+----------------------------
+
+The previous sections have shown examples where methods on classes are stubbed or mocked. It's also possible to double a top-level function by importing the module where the function is defined into your test file. Pass the module to ``allow`` or ``expect`` and proceed as normal. In the follow example, imagine that we want to stub a function called ``generate_user_token`` in the ``myapp.util`` module::
+
+    from doubles import allow
+
+    from myapp import util, User
+
+    def test_get_token_returns_a_newly_generated_token_for_the_user():
+        user = User('Carl')
+
+        allow(util).generate_user_token.with(user).and_return('dummy user token')
+
+        assert user.get_token() == 'dummy user token'
+
 Fakes
 -----
 
