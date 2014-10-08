@@ -291,6 +291,24 @@ Similarly, we cannot declare an allowance or expectation with arguments that don
         # Raises a VerifyingDoubleArgumentError, because set_name accepts only one argument
         allow(user).set_name.with_args('Henry', 'Teddy')
 
+Disabling builtin verification
+++++++++++++++++++++++++++++++
+
+Some of the objects in Python's standard library are written in C and do not support the same introspection capabilities that user-created objects do. Because of this, the automatic verification features of **Doubles** may not work when you try to double a standard library function. There are two approaches to work around this:
+
+*Recommended*: Create a simple object that wraps the standard library you want to use. Use your wrapper object from your production code and double the wrapper in your tests. Test the wrapper itself in integration with the real standard library calls, without using test doubles, to ensure that your wrapper works as expected. Although this may seem heavy handed, it's actually a good approach, since it's a common adage of test doubles never to double objects you don't own.
+
+Alternatively, use the ``no_builtin_verification`` context manager to disable the automatic verification. This is not a recommended approach, but is available if you must use it::
+
+    from doubles import allow, InstanceDouble, no_builtin_verification
+
+    with no_builtin_verification():
+        date = InstanceDouble('datetime.date')
+
+        allow(date).ctime
+
+        assert date.ctime() is None
+
 Pure doubles
 ------------
 
