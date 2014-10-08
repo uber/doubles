@@ -1,4 +1,4 @@
-__version__ = '0.0.1.beta3'
+__version__ = '1.0.0'
 
 from doubles.class_double import ClassDouble  # noqa
 from doubles.instance_double import InstanceDouble  # noqa
