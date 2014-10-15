@@ -189,3 +189,17 @@ class TestTopLevelFunctions(object):
     def test_verifies_the_function_exists(self):
         with raises(VerifyingDoubleError):
             allow(doubles.testing).fake_function
+
+    def test_can_be_called_through_dict(self):
+        allow(doubles.testing).top_level_function.with_args(
+            'charles',
+            'barkley'
+        ).and_return('baz')
+
+        # accessing the function directly works
+        # func = doubles.testing.top_level_function
+
+        # but accessing it through a dict in another module fails
+        func = doubles.testing.func_set['top_level_function']
+
+        assert func('charles', 'barkley') == 'baz'
