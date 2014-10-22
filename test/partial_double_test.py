@@ -54,7 +54,7 @@ class TestInstanceMethods(object):
         with raises(VerifyingDoubleArgumentError) as e:
             allow(user).some_property.with_args(1)
 
-        assert e.value.message == 'Properties do not accept arguments.'
+        assert str(e.value) == 'Properties do not accept arguments.'
 
     def test_calling_stubbed_property_with_args_works(self, test_class):
         user = test_class('Alice', 25)

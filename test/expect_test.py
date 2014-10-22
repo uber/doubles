@@ -25,7 +25,7 @@ class TestExpect(object):
             r"(?: at 0x[0-9a-f]{9})?> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/expect_test.py:\d+\)",
-            e.value.message
+            str(e.value)
         )
 
     def test_raises_if_an_expected_method_call_with_args_is_not_made(self):
@@ -43,7 +43,7 @@ class TestExpect(object):
             r"(?: at 0x[0-9a-f]{9})?> object at .+> "
             r"with \(args=\('bar',\), kwargs={}\), but was not."
             r" \(.*doubles/test/expect_test.py:\d+\)",
-            e.value.message
+            str(e.value)
         )
 
     def test_passes_if_an_expected_method_call_is_made(self):
@@ -66,7 +66,7 @@ class TestExpect(object):
         with raises(UnsupportedMethodError) as e:
             expect(subject).instance_method.and_raise(Exception)
 
-        assert re.match(r"`expect` does not support and_raise\.", e.value.message)
+        assert re.match(r"`expect` does not support and_raise\.", str(e.value))
 
         teardown()
 
@@ -76,7 +76,7 @@ class TestExpect(object):
         with raises(UnsupportedMethodError) as e:
             expect(subject).instance_method.and_return('foo')
 
-        assert re.match(r"`expect` does not support and_return\.", e.value.message)
+        assert re.match(r"`expect` does not support and_return\.", str(e.value))
 
         teardown()
 
@@ -86,7 +86,7 @@ class TestExpect(object):
         with raises(UnsupportedMethodError) as e:
             expect(subject).instance_method.and_return_result_of(lambda: 'foo')
 
-        assert re.match(r"`expect` does not support and_return_result_of\.", e.value.message)
+        assert re.match(r"`expect` does not support and_return_result_of\.", str(e.value))
 
         teardown()
 
@@ -134,7 +134,7 @@ class TestTwice(object):
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/expect_test.py:\d+\)",
-            e.value.message
+            str(e.value)
         )
 
     def test_fails_when_called_three_times(self):
@@ -153,7 +153,7 @@ class TestTwice(object):
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/expect_test.py:\d+\)",
-            e.value.message
+            str(e.value)
         )
 
 
@@ -180,7 +180,7 @@ class TestOnce(object):
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/expect_test.py:\d+\)",
-            e.value.message
+            str(e.value)
         )
 
 
@@ -215,7 +215,7 @@ class TestExactly(object):
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/expect_test.py:\d+\)",
-            e.value.message
+            str(e.value)
         )
 
     def test_passes_when_called_exactly_expected_times(self):
@@ -240,7 +240,7 @@ class TestExactly(object):
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/expect_test.py:\d+\)",
-            e.value.message
+            str(e.value)
         )
 
 
@@ -267,7 +267,7 @@ class TestAtLeast(object):
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/expect_test.py:\d+\)",
-            e.value.message
+            str(e.value)
         )
 
     def test_passes_when_called_exactly_at_least_times(self):
@@ -325,7 +325,7 @@ class TestAtMost(object):
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/expect_test.py:\d+\)",
-            e.value.message
+            str(e.value)
         )
 
 
@@ -351,7 +351,7 @@ class Test__call__(object):
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/expect_test.py:\d+\)",
-            e.value.message
+            str(e.value)
         )
 
 
