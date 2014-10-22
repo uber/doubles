@@ -1,4 +1,5 @@
 from inspect import isbuiltin, getcallargs, isfunction, ismethod
+import sys
 
 from doubles.exceptions import (
     VerifyingDoubleArgumentError,
@@ -7,9 +8,15 @@ from doubles.exceptions import (
 )
 
 
+if sys.version_info >= (3, 0):
+    _get_func_object = lambda x: x.__func__
+else:
+    _get_func_object = lambda x: x.im_func
+
+
 def _is_python_function(func):
     if ismethod(func):
-        func = func.im_func
+        func = _get_func_object(func)
     return isfunction(func)
 
 
