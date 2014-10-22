@@ -71,3 +71,8 @@ class TestInstanceDouble(object):
         user = InstanceDouble('doubles.testing.User')
         allow(user).__call__.and_return('bob barker')
         assert user() == 'bob barker'
+
+    def test_passing_kwargs_assings_them_as_attrs(self):
+        user = InstanceDouble('doubles.testing.User', name='Bob Barker')
+
+        assert user.name == 'Bob Barker'
