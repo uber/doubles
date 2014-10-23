@@ -284,7 +284,10 @@ class TestBuiltInConstructorMethods(object):
 
         teardown()
 
-        assert User('Alice', 25) is not user
+        result = User('Alice', 25)
+
+        assert result is not user
+        assert result.name == 'Alice'
 
 
 class TestCustomConstructorMethods(object):
@@ -297,15 +300,16 @@ class TestCustomConstructorMethods(object):
             assert UserWithCustomNew('Alice', 25) is user
 
     def test_restores_constructor_on_teardown(self):
-        allow(UserWithCustomNew).__new__
+        user = object()
+        allow(UserWithCustomNew).__new__.and_return(user)
 
         teardown()
 
-        user = UserWithCustomNew('Alice', 25)
+        result = UserWithCustomNew('Alice', 25)
 
-        assert user is not None
-        assert user.name_set_in__new__ == 'Alice'
-        assert user.name == 'Alice'
+        assert result is not user
+        assert result.name_set_in__new__ == 'Alice'
+        assert result.name == 'Alice'
 
 
 class TestTopLevelFunctions(object):
