@@ -7,11 +7,27 @@ from doubles.proxy_property import ProxyProperty
 double_name = lambda name: 'double_of_' + name
 
 
-def _restore__new__(target, original):
-    if isbuiltin(original):
-        target.__new__ = lambda c, *a, **k: original(c)
+def _restore__new__(target, original_method):
+    """
+    Restore __new__ to original_method on the target
+
+    Python 3 does some magic to verify no arguments are sent to __new__ if it
+    is the builtin version, to work in python 3 we must handle this:
+
+        1) If original_method is the builtin version of __new__, wrap the
+        builtin __new__ in a lambda to ensure that no arguments are passed in.
+
+        2) If original_method is a custom method treat it the same as we would
+        in python2
+
+    :param class target: The class to restore __new__ on
+    :param func original_method: The method to set __new__ to
+    """
+
+    if isbuiltin(original_method) and sys.version_info >= (3, 0):
+        target.__new__ = lambda c, *a, **k: original_method(c)
     else:
-        target.__new__ = original
+        target.__new__ = original_method
 
 
 class ProxyMethod(object):
