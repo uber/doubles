@@ -1,7 +1,17 @@
+from inspect import isdatadescriptor, isbuiltin
+import sys
+
 from doubles.exceptions import UnallowedMethodCallError
 from doubles.proxy_property import ProxyProperty
 
 double_name = lambda name: 'double_of_' + name
+
+
+def _restore__new__(target, original):
+    if isbuiltin(original):
+        target.__new__ = lambda c, *a, **k: original(c)
+    else:
+        target.__new__ = original
 
 
 class ProxyMethod(object):
@@ -65,6 +75,10 @@ class ProxyMethod(object):
 
         if self._target.is_class():
             setattr(self._target.obj, self._method_name, self._original_method)
+            if self._method_name == '__new__' and sys.version_info >= (3, 0):
+                _restore__new__(self._target.obj, self._original_method)
+            else:
+                setattr(self._target.obj, self._method_name, self._original_method)
         elif self._attr.kind == 'property':
             setattr(self._target.obj.__class__, self._method_name, self._original_method)
             del self._target.obj.__dict__[double_name(self._method_name)]
