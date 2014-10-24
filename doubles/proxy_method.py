@@ -1,4 +1,5 @@
 from inspect import isdatadescriptor, isbuiltin
+from functools import wraps
 import sys
 
 from doubles.exceptions import UnallowedMethodCallError
@@ -15,7 +16,7 @@ def _restore__new__(target, original_method):
     is the builtin version, to work in python 3 we must handle this:
 
         1) If original_method is the builtin version of __new__, wrap the
-        builtin __new__ in a lambda to ensure that no arguments are passed in.
+        builtin __new__ to ensure that no arguments are passed in.
 
         2) If original_method is a custom method treat it the same as we would
         in python2
@@ -23,9 +24,12 @@ def _restore__new__(target, original_method):
     :param class target: The class to restore __new__ on
     :param func original_method: The method to set __new__ to
     """
-
     if isbuiltin(original_method) and sys.version_info >= (3, 0):
-        target.__new__ = lambda c, *a, **k: original_method(c)
+        @wraps(original_method)
+        def _new(cls, *args, **kwargs):
+            return original_method(cls)
+
+        target.__new__ = _new
     else:
         target.__new__ = original_method
 
