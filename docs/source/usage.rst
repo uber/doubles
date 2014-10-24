@@ -67,8 +67,8 @@ Multiple allowances can be specified for the same method with different argument
     def test_returns_different_values_for_different_arguments():
         user = User('Carl')
 
-        allow(user).speak('hello').and_return('Carl says hello')
-        allow(user).speak('thanks').and_return('Carl says thanks')
+        allow(user).speak.with_args('hello').and_return('Carl says hello')
+        allow(user).speak.with_args('thanks').and_return('Carl says thanks')
 
         assert user.speak('hello') == 'Carl says hello'
         assert user.speak('thanks') == 'Carl says thanks'
