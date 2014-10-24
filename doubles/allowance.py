@@ -9,10 +9,10 @@ import doubles.lifecycle
 _any = object()
 
 
-def verify_count_is_positive(func):
+def verify_count_is_non_negative(func):
     @wraps(func)
     def inner(self, arg):
-        if arg <= 0:
+        if arg < 0:
             raise TypeError(func.__name__ + ' requires one positive integer argument')
         return func(self, arg)
     return inner
@@ -169,7 +169,7 @@ class Allowance(object):
             if doubles.lifecycle.ignore_builtin_verification():
                 raise
 
-    @verify_count_is_positive
+    @verify_count_is_non_negative
     def exactly(self, n):
         """
         Set an exact call count allowance
@@ -180,7 +180,7 @@ class Allowance(object):
         self._call_counter.set_exact(n)
         return self
 
-    @verify_count_is_positive
+    @verify_count_is_non_negative
     def at_least(self, n):
         """
         Set a minimum call count allowance
@@ -191,7 +191,7 @@ class Allowance(object):
         self._call_counter.set_minimum(n)
         return self
 
-    @verify_count_is_positive
+    @verify_count_is_non_negative
     def at_most(self, n):
         """
         Set a maximum call count allowance
@@ -200,6 +200,14 @@ class Allowance(object):
         """
 
         self._call_counter.set_maximum(n)
+        return self
+
+    def zero_times(self):
+        """
+        Set an expected call count allowance of 0
+        """
+
+        self.exactly(0)
         return self
 
     def once(self):
