@@ -15,6 +15,7 @@ def test_nose_plugin():
         def test_expect(self):
             assert 'MockExpectationError' in self.output
             assert 'FAILED (failures=1)' in self.output
+            assert 'Ran 2 tests' in self.output
 
         def makeSuite(self):
             class TestCase(unittest.TestCase):
@@ -23,7 +24,10 @@ def test_nose_plugin():
 
                     expect(subject).instance_method
 
-            return [TestCase()]
+                def test2(self):
+                    pass
+
+            return [TestCase('runTest'), TestCase('test2')]
 
     result = unittest.TestResult()
     TestNosePlugin('test_expect')(result)
