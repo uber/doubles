@@ -202,7 +202,7 @@ class Allowance(object):
         self._call_counter.set_maximum(n)
         return self
 
-    def zero_times(self):
+    def never(self):
         """
         Set an expected call count allowance of 0
         """

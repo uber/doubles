@@ -288,15 +288,15 @@ class TestOnce(object):
 
 
 class TestZeroTimes(object):
-    def test_passes_when_called_zero_times(self):
+    def test_passes_when_called_never(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).instance_method.zero_times()
+        allow(subject).instance_method.never()
 
     def test_fails_when_called_once_times(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).instance_method.zero_times()
+        allow(subject).instance_method.never()
 
         with raises(MockExpectationError) as e:
             subject.instance_method()
