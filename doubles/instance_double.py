@@ -74,14 +74,19 @@ class InstanceDouble(ObjectDouble):
     """
     A pure double representing an instance of the target class.
 
+    Any kwargs supplied will be set as attributes on the instance that is
+    created.
+
     ::
 
-        user = InstanceDouble('myapp.User')
+        user = InstanceDouble('myapp.User', name='Bob Barker')
 
     :param str path: The absolute module path to the class.
     """
 
-    def __init__(self, path):
+    def __init__(self, path, **kwargs):
         module_path, class_name = _get_path_components(path)
         module = _get_module(module_path, path)
         self._doubles_target = _get_doubles_target(module, class_name, path)
+        for k, v in kwargs.items():
+            setattr(self, k, v)
