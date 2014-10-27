@@ -16,7 +16,7 @@ class NoseIntegration(Plugin):
 
     def prepareTestCase(self, test):
         def wrapped(result):
-            test.test.run()
+            test.test(result)
 
             try:
                 verify()
