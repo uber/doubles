@@ -195,7 +195,7 @@ Limits can be set on how many times a doubled method can be called. In most case
         user.get_name()
         user.get_name()  # Raises a MockExpectationError because it should only be called once
 
-The convenience methods ``once`` and ``twice`` are provided for the most common use cases. The following test will pass::
+The convenience methods ``once``, ``twice`` and ``never`` are provided for the most common use cases. The following test will pass::
 
     from doubles import expect
 
@@ -206,6 +206,7 @@ The convenience methods ``once`` and ``twice`` are provided for the most common 
 
         expect(user).get_name.once()
         expect(user).speak.twice()
+        expect(user).not_called.never()
 
         user.get_name()
         user.speak('hello')
