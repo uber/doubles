@@ -287,6 +287,30 @@ class TestOnce(object):
         )
 
 
+class TestZeroTimes(object):
+    def test_passes_when_called_never(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.never()
+
+    def test_fails_when_called_once_times(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).instance_method.never()
+
+        with raises(MockExpectationError) as e:
+            subject.instance_method()
+        teardown()
+
+        assert re.match(
+            r"Allowed 'instance_method' to be called 0 times but was called 1 "
+            r"time on <InstanceDouble of <class 'doubles.testing.User'> "
+            r"object at .+> with any args, but was not."
+            r" \(.*doubles/test/allow_test.py:\d+\)",
+            e.value.message
+        )
+
+
 class TestExactly(object):
     def test_raises_if_called_with_negative_value(self):
         subject = InstanceDouble('doubles.testing.User')
@@ -300,15 +324,20 @@ class TestExactly(object):
             e.value.message
         )
 
-    def test_raises_if_called_with_zero(self):
+    def test_called_with_zero(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        with raises(TypeError) as e:
-            allow(subject).instance_method.exactly(0).times
+        allow(subject).instance_method.exactly(0).times
+
+        with raises(MockExpectationError) as e:
+            subject.instance_method()
         teardown()
 
         assert re.match(
-            r"exactly requires one positive integer argument",
+            r"Allowed 'instance_method' to be called 0 times but was called 1 "
+            r"time on <InstanceDouble of <class 'doubles.testing.User'> "
+            r"object at .+> with any args, but was not."
+            r" \(.*doubles/test/allow_test.py:\d+\)",
             e.value.message
         )
 
@@ -366,17 +395,10 @@ class TestAtLeast(object):
             e.value.message
         )
 
-    def test_raises_if_called_with_zero(self):
+    def test_if_called_with_zero(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        with raises(TypeError) as e:
-            allow(subject).instance_method.at_least(0).times
-        teardown()
-
-        assert re.match(
-            r"at_least requires one positive integer argument",
-            e.value.message
-        )
+        allow(subject).instance_method.at_least(0).times
 
     def test_calls_are_chainable(self):
         subject = InstanceDouble('doubles.testing.User')
@@ -422,17 +444,10 @@ class TestAtMost(object):
             e.value.message
         )
 
-    def test_raises_if_called_with_zero(self):
+    def test_called_with_zero(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        with raises(TypeError) as e:
-            allow(subject).instance_method.at_most(0).times
-        teardown()
-
-        assert re.match(
-            r"at_most requires one positive integer argument",
-            e.value.message
-        )
+        allow(subject).instance_method.at_most(0).times
 
     def test_calls_are_chainable(self):
         subject = InstanceDouble('doubles.testing.User')
