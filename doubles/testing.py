@@ -50,3 +50,7 @@ def top_level_function(arg1, arg2='default'):
         arg1=arg1,
         arg2=arg2
     )
+
+func_set = {
+    'top_level_function': top_level_function
+}
