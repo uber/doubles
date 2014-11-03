@@ -189,3 +189,17 @@ class TestTopLevelFunctions(object):
     def test_verifies_the_function_exists(self):
         with raises(VerifyingDoubleError):
             allow(doubles.testing).fake_function
+
+
+class TestClassWithGetAtter(object):
+    def test_can_allow_an_existing_method(self):
+        test_obj = doubles.testing.ClassWithGetAttr()
+        allow(test_obj).method.and_return('foobar')
+
+        assert test_obj.method() == 'foobar'
+
+    def test_raises_if_method_does_not_exist(self):
+        test_obj = doubles.testing.ClassWithGetAttr()
+
+        with raises(VerifyingDoubleError):
+            allow(test_obj).fake_function
