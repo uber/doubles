@@ -221,6 +221,31 @@ class TestTopLevelFunctions(object):
         with raises(VerifyingDoubleError):
             allow(doubles.testing).fake_function
 
+    def test_callable_top_level_variable(self):
+        allow(doubles.testing).callable_variable.and_return('foo')
+
+        assert doubles.testing.callable_variable('bob barker') == 'foo'
+
+    def test_decorated_function(self):
+        allow(doubles.testing).decorated_function_callable.and_return('foo')
+
+        assert doubles.testing.decorated_function_callable('bob barker') == 'foo'
+
+    def test_decorated_function_that_returns_a_callable(self):
+        allow(doubles.testing).decorated_function.and_return('foo')
+
+        assert doubles.testing.decorated_function('bob barker') == 'foo'
+
+    def test_varibale_that_points_to_class_method(self):
+        allow(doubles.testing).class_method.and_return('foo')
+
+        assert doubles.testing.class_method('bob barker') == 'foo'
+
+    def test_varibale_that_points_to_instance_method(self):
+        allow(doubles.testing).instance_method.and_return('foo')
+
+        assert doubles.testing.instance_method() == 'foo'
+
 
 class TestClassWithGetAtter(object):
     def test_can_allow_an_existing_method(self):
