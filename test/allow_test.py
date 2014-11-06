@@ -310,7 +310,7 @@ class TestZeroTimes(object):
             r"time on <InstanceDouble of <class 'doubles.testing.User'> "
             r"object at .+> with any args, but was not."
             r" \(.*doubles/test/allow_test.py:\d+\)",
-            e.value.message
+            str(e.value)
         )
 
 

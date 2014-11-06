@@ -1,4 +1,4 @@
-from inspect import isdatadescriptor, isbuiltin
+from inspect import isbuiltin
 from functools import wraps
 import sys
 
