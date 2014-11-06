@@ -76,3 +76,8 @@ class TestInstanceDouble(object):
         user = InstanceDouble('doubles.testing.User', name='Bob Barker')
 
         assert user.name == 'Bob Barker'
+
+    def test_class_with__getattr__(self):
+        test_obj = InstanceDouble('doubles.testing.ClassWithGetAttr')
+        allow(test_obj).method.and_return('bob barker')
+        assert test_obj.method() == 'bob barker'

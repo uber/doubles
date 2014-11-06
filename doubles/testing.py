@@ -50,3 +50,14 @@ def top_level_function(arg1, arg2='default'):
         arg1=arg1,
         arg2=arg2
     )
+
+
+class ClassWithGetAttr(object):
+    def __init__(self):
+        self.attr = 'attr'
+
+    def method(self):
+        return 'method'
+
+    def __getattr__(self, name):
+        return 'attr {name}'.format(name=name)

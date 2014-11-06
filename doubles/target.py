@@ -55,7 +55,7 @@ class Target(object):
         :rtype: object
         """
 
-        if hasattr(self.obj, '_doubles_target'):
+        if isinstance(self.obj, ObjectDouble):
             return self.obj._doubles_target
         else:
             return self.obj
