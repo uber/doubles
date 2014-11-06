@@ -6,6 +6,12 @@ from doubles.object_double import ObjectDouble
 ModuleAttribute = namedtuple('ModuleAttribute', ['object', 'kind', 'defining_class'])
 
 
+def _is_callable(obj):
+    if isfunction(obj):
+        return True
+    return hasattr(obj, '__call__')
+
+
 def _proxy_class_method_to_instance(original, name):
     def func(instance, *args, **kwargs):
         if name in instance.__dict__:
@@ -84,7 +90,7 @@ class Target(object):
         attrs = {}
 
         if ismodule(self.doubled_obj):
-            for name, func in getmembers(self.doubled_obj, isfunction):
+            for name, func in getmembers(self.doubled_obj, _is_callable):
                 attrs[name] = ModuleAttribute(func, 'toplevel', self.doubled_obj)
         else:
             for attr in classify_class_attrs(self.doubled_obj_type):

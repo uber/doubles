@@ -50,7 +50,10 @@ def verify_arguments(target, method_name, args, kwargs):
     method = attr.object
 
     if attr.kind in ('toplevel', 'class method', 'static method'):
-        method = attr.object.__get__(None, attr.defining_class)
+        try:
+            method = method.__get__(None, attr.defining_class)
+        except AttributeError:
+            method = method.__call__
     elif attr.kind == 'property':
         if args or kwargs:
             raise VerifyingDoubleArgumentError("Properties do not accept arguments.")

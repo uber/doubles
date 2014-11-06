@@ -61,3 +61,34 @@ class ClassWithGetAttr(object):
 
     def __getattr__(self, name):
         return 'attr {name}'.format(name=name)
+
+
+class Callable(object):
+    def __call__(self, arg1):
+        return arg1
+
+
+def return_callable(func):
+    return Callable()
+
+
+def decorate_me(func):
+    def decorated(arg1):
+        return '{arg1} decorated'.format(arg1=arg1)
+
+    return decorated
+
+
+@return_callable
+def decorated_function_callable(arg1):
+    return arg1
+
+
+@decorate_me
+def decorated_function(arg1):
+    return arg1
+
+callable_variable = Callable()
+
+class_method = User.class_method
+instance_method = User('Bob', 25).get_name
