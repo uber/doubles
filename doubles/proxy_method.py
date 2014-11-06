@@ -1,6 +1,7 @@
-from inspect import isdatadescriptor
-
 from doubles.exceptions import UnallowedMethodCallError
+from doubles.proxy_property import ProxyProperty
+
+double_name = lambda name: 'double_of_' + name
 
 
 class ProxyMethod(object):
@@ -64,8 +65,9 @@ class ProxyMethod(object):
 
         if self._target.is_class():
             setattr(self._target.obj, self._method_name, self._original_method)
-        elif isdatadescriptor(self._attr.object):
+        elif self._attr.kind == 'property':
             setattr(self._target.obj.__class__, self._method_name, self._original_method)
+            del self._target.obj.__dict__[double_name(self._method_name)]
         else:
             # TODO: Could there ever have been a value here that needs to be restored?
             del self._target.obj.__dict__[self._method_name]
@@ -83,8 +85,13 @@ class ProxyMethod(object):
 
         if self._target.is_class():
             setattr(self._target.obj, self._method_name, self)
-        elif isdatadescriptor(self._attr.object):
-            setattr(self._target.obj.__class__, self._method_name, self)
+        elif self._attr.kind == 'property':
+            proxy_property = ProxyProperty(
+                double_name(self._method_name),
+                self._original_method,
+            )
+            setattr(self._target.obj.__class__, self._method_name, proxy_property)
+            self._target.obj.__dict__[double_name(self._method_name)] = self
         else:
             self._target.obj.__dict__[self._method_name] = self
 

@@ -62,6 +62,37 @@ class TestInstanceMethods(object):
 
         assert user.some_property('bob') == 'bob'
 
+    def test_stubbing_properties_on_multiple_instances(self, test_class):
+        user_1 = test_class('Bob', 25)
+        user_2 = test_class('Drew', 25)
+
+        allow(user_1).some_property.and_return('Barker')
+        allow(user_2).some_property.and_return('Carey')
+
+        assert user_1.some_property == 'Barker'
+        assert user_2.some_property == 'Carey'
+
+    def test_stubbing_property_does_not_affect_other_instances(self, test_class):
+        user_1 = test_class('Bob', 25)
+        user_2 = test_class('Drew', 25)
+
+        allow(user_1).some_property.and_return('Barker')
+
+        assert user_1.some_property == 'Barker'
+        assert user_2.some_property == 'some_property return value'
+
+    def test_teardown_restores_properties(self, test_class):
+        user_1 = test_class('Bob', 25)
+        user_2 = test_class('Drew', 25)
+
+        allow(user_1).some_property.and_return('Barker')
+        allow(user_2).some_property.and_return('Carey')
+
+        teardown()
+
+        assert user_1.some_property == 'some_property return value'
+        assert user_2.some_property == 'some_property return value'
+
 
 @mark.parametrize('test_class', [User, OldStyleUser])
 class Test__call__(object):
