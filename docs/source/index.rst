@@ -14,6 +14,7 @@ It provides functionality for stubbing, mocking, and verification of test double
    terminology
    usage
    api
+   faq
 
 
 
