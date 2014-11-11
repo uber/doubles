@@ -105,8 +105,12 @@ class ProxyMethod(object):
         :raise: ``UnallowedMethodCallError``
         """
 
+        error_message = (
+            "Received unexpected call to '{}' on {!r}.  The supplied arguments "
+            "(args={}, kwargs={}) do not match any available allowances."
+        )
         raise UnallowedMethodCallError(
-            "Received unexpected call to '{}' on {!r} with (args={}, kwargs={}).".format(
+            error_message.format(
                 self._method_name,
                 self._target.obj,
                 args,
