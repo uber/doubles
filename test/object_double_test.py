@@ -108,3 +108,14 @@ class TestObjectDouble(object):
         allow(doubled_user).__call__.and_return('bob barker')
 
         assert doubled_user() == 'bob barker'
+
+    def test_mocking__enter__and__exit__works(self, test_object):
+        doubled_user = ObjectDouble(test_object)
+
+        allow(doubled_user).__enter__.and_return('bob barker')
+        # Not ideal to do both in the same test case,
+        # but the with block won't execute at all unless both methods are defined.
+        allow(doubled_user).__exit__
+
+        with doubled_user as u:
+            assert u == 'bob barker'

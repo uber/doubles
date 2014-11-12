@@ -72,6 +72,14 @@ class TestInstanceDouble(object):
         allow(user).__call__.and_return('bob barker')
         assert user() == 'bob barker'
 
+    def test_mocking__enter__and__exit__works(self):
+        user = InstanceDouble('doubles.testing.User')
+        allow(user).__enter__.and_return('bob barker')
+        allow(user).__exit__
+
+        with user as u:
+            assert u == 'bob barker'
+
     def test_passing_kwargs_assings_them_as_attrs(self):
         user = InstanceDouble('doubles.testing.User', name='Bob Barker')
 

@@ -98,32 +98,25 @@ class Target(object):
 
         return attrs
 
-    def hijack__call__(self):
-        """
-        Hijack __call__ on the target object, this updates the underlying class
-        and delegates the call to the instance.  This allows __call__ to be mocked
-        on a per instance basis.
-        """
-        if not self._original__call__:
-            self.obj.__class__.__call__ = _proxy_class_method_to_instance(
-                self.obj.__class__.__call__,
-                '__call__',
+    def hijack_attr(self, attr_name):
+        if not self._original_attr(attr_name):
+            setattr(
+                self.obj.__class__,
+                attr_name,
+                _proxy_class_method_to_instance(
+                    getattr(self.obj.__class__, attr_name, None), attr_name
+                ),
             )
 
-    def restore__call__(self):
-        """
-        Restore __call__ on the target object
-        """
-        if self._original__call__:
-            self.obj.__class__.__call__ = self._original__call__
+    def restore_attr(self, attr_name):
+        original_attr = self._original_attr(attr_name)
+        if self._original_attr(attr_name):
+            setattr(self.obj.__class__, attr_name, original_attr)
 
-    @property
-    def _original__call__(self):
-        """
-        Return the original __call__method off of the proxy on the target obj
-
-        :return: Func or None.
-        :rtype: func
-        """
-
-        return getattr(self.obj.__class__.__call__, '_doubles_target_method', None)
+    def _original_attr(self, attr_name):
+        try:
+            return getattr(
+                getattr(self.obj.__class__, attr_name), '_doubles_target_method', None
+            )
+        except AttributeError:
+            return None
