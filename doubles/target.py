@@ -99,6 +99,13 @@ class Target(object):
         return attrs
 
     def hijack_attr(self, attr_name):
+        """
+        Hijack an attribute on the target object, updating the underlying class and delegating
+        the call to the instance. This allows specially-handled attributes like __call__,
+        __enter__, and __exit__ to be mocked on a per-instance basis.
+
+        :param str attr_name: the name of the attribute to hijack
+        """
         if not self._original_attr(attr_name):
             setattr(
                 self.obj.__class__,
@@ -109,11 +116,23 @@ class Target(object):
             )
 
     def restore_attr(self, attr_name):
+        """
+        Restore an attribute back onto the target object.
+
+        :param str attr_name: the name of the attribute to restore
+        """
         original_attr = self._original_attr(attr_name)
         if self._original_attr(attr_name):
             setattr(self.obj.__class__, attr_name, original_attr)
 
     def _original_attr(self, attr_name):
+        """
+        Return the original attribute off of the proxy on the target object.
+
+        :param str attr_name: the name of the original attribute to return
+        :return: Func or None.
+        :rtype: func
+        """
         try:
             return getattr(
                 getattr(self.obj.__class__, attr_name), '_doubles_target_method', None
