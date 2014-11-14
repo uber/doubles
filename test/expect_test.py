@@ -379,7 +379,7 @@ class Test__enter__(object):
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/expect_test.py:\d+\)",
-            e.value.message
+            str(e.value)
         )
 
 
@@ -407,5 +407,5 @@ class Test__exit__(object):
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/expect_test.py:\d+\)",
-            e.value.message
+            str(e.value)
         )
