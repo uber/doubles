@@ -151,6 +151,102 @@ class Test__call__(object):
 
 
 @mark.parametrize('test_class', [User, OldStyleUser])
+class Test__enter__(object):
+    def test_basic_usage(self, test_class):
+        user = test_class('Alice', 25)
+        allow(user).__enter__.and_return(user)
+
+        with user as u:
+            assert user == u
+
+    def test_stubbing_two_objects_does_not_interfere(self, test_class):
+        alice = test_class('Alice', 25)
+        bob = test_class('Bob', 25)
+
+        allow(alice).__enter__.and_return('alice')
+        allow(bob).__enter__.and_return('bob')
+
+        with alice as a:
+            assert a == 'alice'
+
+        with bob as b:
+            assert b == 'bob'
+
+    def test_does_not_intefere_with_unstubbed_objects(self, test_class):
+        alice = test_class('Alice', 25)
+        bob = test_class('Bob', 25)
+
+        allow(alice).__enter__.and_return('user')
+
+        with alice as a:
+            assert a == 'user'
+
+        with bob as b:
+            assert b == bob
+
+    def test_teardown_restores_previous_functionality(self, test_class):
+        user = test_class('Alice', 25)
+        allow(user).__enter__.and_return('bob barker')
+
+        with user as u:
+            assert u == 'bob barker'
+
+        teardown()
+
+        with user as u:
+            assert u == user
+
+    def test_raises_when_mocked_with_invalid_call_signature(self, test_class):
+        user = test_class('Alice', 25)
+        with raises(VerifyingDoubleArgumentError):
+            allow(user).__enter__.with_args(1)
+
+
+@mark.parametrize('test_class', [User, OldStyleUser])
+class Test__exit__(object):
+    def test_basic_usage(self, test_class):
+        user = test_class('Alice', 25)
+        allow(user).__exit__.with_args(None, None, None)
+
+        with user:
+            pass
+
+    def test_stubbing_two_objects_does_not_interfere(self, test_class):
+        alice = test_class('Alice', 25)
+        bob = test_class('Bob', 25)
+
+        allow(alice).__exit__.and_return('alice')
+        allow(bob).__exit__.and_return('bob')
+
+        assert alice.__exit__(None, None, None) == 'alice'
+        assert bob.__exit__(None, None, None) == 'bob'
+
+    def test_does_not_intefere_with_unstubbed_objects(self, test_class):
+        alice = test_class('Alice', 25)
+        bob = test_class('Bob', 25)
+
+        allow(alice).__exit__.and_return('user')
+
+        assert alice.__exit__(None, None, None) == 'user'
+        assert bob.__exit__(None, None, None) is None
+
+    def test_teardown_restores_previous_functionality(self, test_class):
+        user = test_class('Alice', 25)
+        allow(user).__exit__.and_return('bob barker')
+
+        assert user.__exit__(None, None, None) == 'bob barker'
+
+        teardown()
+
+        assert user.__exit__(None, None, None) is None
+
+    def test_raises_when_mocked_with_invalid_call_signature(self, test_class):
+        user = test_class('Alice', 25)
+        with raises(VerifyingDoubleArgumentError):
+            allow(user).__exit__.with_no_args()
+
+
+@mark.parametrize('test_class', [User, OldStyleUser])
 class TestClassMethods(object):
     def test_stubs_class_methods(self, test_class):
         allow(test_class).class_method.with_args('foo').and_return('overridden value')

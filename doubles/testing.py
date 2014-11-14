@@ -40,6 +40,12 @@ class OldStyleUser():
     def __call__(self, *args):
         return 'user was called'
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        pass
+
 
 class User(OldStyleUser, object):
     pass

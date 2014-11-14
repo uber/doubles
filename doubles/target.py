@@ -98,32 +98,44 @@ class Target(object):
 
         return attrs
 
-    def hijack__call__(self):
+    def hijack_attr(self, attr_name):
         """
-        Hijack __call__ on the target object, this updates the underlying class
-        and delegates the call to the instance.  This allows __call__ to be mocked
-        on a per instance basis.
+        Hijack an attribute on the target object, updating the underlying class and delegating
+        the call to the instance. This allows specially-handled attributes like __call__,
+        __enter__, and __exit__ to be mocked on a per-instance basis.
+
+        :param str attr_name: the name of the attribute to hijack
         """
-        if not self._original__call__:
-            self.obj.__class__.__call__ = _proxy_class_method_to_instance(
-                self.obj.__class__.__call__,
-                '__call__',
+        if not self._original_attr(attr_name):
+            setattr(
+                self.obj.__class__,
+                attr_name,
+                _proxy_class_method_to_instance(
+                    getattr(self.obj.__class__, attr_name, None), attr_name
+                ),
             )
 
-    def restore__call__(self):
+    def restore_attr(self, attr_name):
         """
-        Restore __call__ on the target object
-        """
-        if self._original__call__:
-            self.obj.__class__.__call__ = self._original__call__
+        Restore an attribute back onto the target object.
 
-    @property
-    def _original__call__(self):
+        :param str attr_name: the name of the attribute to restore
         """
-        Return the original __call__method off of the proxy on the target obj
+        original_attr = self._original_attr(attr_name)
+        if self._original_attr(attr_name):
+            setattr(self.obj.__class__, attr_name, original_attr)
 
+    def _original_attr(self, attr_name):
+        """
+        Return the original attribute off of the proxy on the target object.
+
+        :param str attr_name: the name of the original attribute to return
         :return: Func or None.
         :rtype: func
         """
-
-        return getattr(self.obj.__class__.__call__, '_doubles_target_method', None)
+        try:
+            return getattr(
+                getattr(self.obj.__class__, attr_name), '_doubles_target_method', None
+            )
+        except AttributeError:
+            return None
