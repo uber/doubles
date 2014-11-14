@@ -184,6 +184,13 @@ class TestOnce(object):
         )
 
 
+class TestNever(object):
+    def test_passes_when_called_never(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        expect(subject).instance_method.never()
+
+
 class TestExactly(object):
     def test_calls_are_chainable(self):
         subject = InstanceDouble('doubles.testing.User')
