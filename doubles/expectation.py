@@ -88,10 +88,12 @@ class Expectation(Allowance):
     def is_satisfied(self):
         """
         Returns a boolean indicating whether or not the double has been satisfied. Stubs are
-        always satisfied, but mocks are only satisifed if they've been called as was declared.
+        always satisfied, but mocks are only satisifed if they've been called as was declared,
+        or if call is expected not to happen.
 
         :return: Whether or not the double is satisfied.
         :rtype: bool
         """
 
-        return self._call_counter.has_correct_call_count() and self._is_satisfied
+        return self._call_counter.has_correct_call_count() and (
+            self._call_counter.never() or self._is_satisfied)

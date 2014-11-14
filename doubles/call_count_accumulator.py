@@ -76,6 +76,15 @@ class CallCountAccumulator(object):
 
         return not self.has_incorrect_call_count()
 
+    def never(self):
+        """
+        Test if the number of expect is 0
+
+        :rtype: boolean
+        """
+
+        return self.has_exact and self._exact == 0
+
     def called(self):
         """
         Increment the call count
