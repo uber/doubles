@@ -20,6 +20,18 @@ def _is_python_function(func):
     return isfunction(func)
 
 
+def _is_python_33():
+    v = sys.version_info
+    return v[0] == 3 and v[1] == 3
+
+
+def _raise_doubles_error_from_index_error(method_name):
+    # Work Around for http://bugs.python.org/issue20817
+    raise VerifyingDoubleArgumentError(
+        "{method}() missing 3 or more arguments.".format(method=method_name)
+    )
+
+
 def verify_method(target, method_name, class_level=False):
     """
     Verifies that the provided method exists on the target object.
@@ -68,9 +80,18 @@ def verify_arguments(target, method_name, args, kwargs):
     else:
         args = ['self_or_cls'] + list(args)
 
+    _verify_arguments(method, method_name, args, kwargs)
+
+
+def _verify_arguments(method, method_name, args, kwargs):
     try:
         getcallargs(method, *args, **kwargs)
     except TypeError as e:
         if not _is_python_function(method):
             raise VerifyingBuiltinDoubleArgumentError(str(e))
         raise VerifyingDoubleArgumentError(str(e))
+    except IndexError as e:
+        if _is_python_33():
+            _raise_doubles_error_from_index_error(method_name)
+        else:
+            raise e
