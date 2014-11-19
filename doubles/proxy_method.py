@@ -24,7 +24,7 @@ def _restore__new__(target, original_method):
     :param class target: The class to restore __new__ on
     :param func original_method: The method to set __new__ to
     """
-    if isbuiltin(original_method) and sys.version_info >= (3, 0):
+    if isbuiltin(original_method):
         @wraps(original_method)
         def _new(cls, *args, **kwargs):
             return original_method(cls)
