@@ -1,7 +1,37 @@
+from inspect import isbuiltin
+from functools import wraps
+import sys
+
 from doubles.exceptions import UnallowedMethodCallError
 from doubles.proxy_property import ProxyProperty
 
 double_name = lambda name: 'double_of_' + name
+
+
+def _restore__new__(target, original_method):
+    """
+    Restore __new__ to original_method on the target
+
+    Python 3 does some magic to verify no arguments are sent to __new__ if it
+    is the builtin version, to work in python 3 we must handle this:
+
+        1) If original_method is the builtin version of __new__, wrap the
+        builtin __new__ to ensure that no arguments are passed in.
+
+        2) If original_method is a custom method treat it the same as we would
+        in python2
+
+    :param class target: The class to restore __new__ on
+    :param func original_method: The method to set __new__ to
+    """
+    if isbuiltin(original_method) and sys.version_info >= (3, 0):
+        @wraps(original_method)
+        def _new(cls, *args, **kwargs):
+            return original_method(cls)
+
+        target.__new__ = _new
+    else:
+        target.__new__ = original_method
 
 
 class ProxyMethod(object):
@@ -65,6 +95,10 @@ class ProxyMethod(object):
 
         if self._target.is_class():
             setattr(self._target.obj, self._method_name, self._original_method)
+            if self._method_name == '__new__' and sys.version_info >= (3, 0):
+                _restore__new__(self._target.obj, self._original_method)
+            else:
+                setattr(self._target.obj, self._method_name, self._original_method)
         elif self._attr.kind == 'property':
             setattr(self._target.obj.__class__, self._method_name, self._original_method)
             del self._target.obj.__dict__[double_name(self._method_name)]

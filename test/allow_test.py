@@ -101,7 +101,7 @@ class TestAndReturn(object):
         with raises(TypeError) as e:
             allow(subject).instance_method.and_return()
 
-        assert e.value.message == 'and_return() expected at least 1 return value'
+        assert str(e.value) == 'and_return() expected at least 1 return value'
 
     def test_returns_specified_value(self):
         subject = InstanceDouble('doubles.testing.User')
@@ -165,7 +165,7 @@ class TestWithArgs(object):
             r"(?: at 0x[0-9a-f]{9})?> object at .+>\."
             r"  The supplied arguments \(args=\(\), kwargs={}\)"
             r" do not match any available allowances.",
-            e.value.message
+            str(e.value)
         )
 
     def test_raises_if_method_is_called_with_wrong_arguments(self):
@@ -182,7 +182,7 @@ class TestWithArgs(object):
             r"(?: at 0x[0-9a-f]{9})?> object at .+>\."
             r"  The supplied arguments \(args=\('baz',\), kwargs={}\)"
             r" do not match any available allowances.",
-            e.value.message
+            str(e.value)
         )
 
     def test_matches_most_specific_allowance(self):
@@ -216,7 +216,7 @@ class TestWithNoArgs(object):
             r"(?: at 0x[0-9a-f]{9})?> object at .+>\."
             r"  The supplied arguments \(args=\('bar',\), kwargs={}\)"
             r" do not match any available allowances.",
-            e.value.message
+            str(e.value)
         )
 
     def test_chains_with_return_values(self):
@@ -259,7 +259,7 @@ class TestTwice(object):
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/allow_test.py:\d+\)",
-            e.value.message
+            str(e.value)
         )
 
 
@@ -286,7 +286,7 @@ class TestOnce(object):
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/allow_test.py:\d+\)",
-            e.value.message
+            str(e.value)
         )
 
 
@@ -310,7 +310,7 @@ class TestZeroTimes(object):
             r"time on <InstanceDouble of <class 'doubles.testing.User'> "
             r"object at .+> with any args, but was not."
             r" \(.*doubles/test/allow_test.py:\d+\)",
-            e.value.message
+            str(e.value)
         )
 
 
@@ -324,7 +324,7 @@ class TestExactly(object):
 
         assert re.match(
             r"exactly requires one positive integer argument",
-            e.value.message
+            str(e.value)
         )
 
     def test_called_with_zero(self):
@@ -341,7 +341,7 @@ class TestExactly(object):
             r"time on <InstanceDouble of <class 'doubles.testing.User'> "
             r"object at .+> with any args, but was not."
             r" \(.*doubles/test/allow_test.py:\d+\)",
-            e.value.message
+            str(e.value)
         )
 
     def test_calls_are_chainable(self):
@@ -381,7 +381,7 @@ class TestExactly(object):
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/allow_test.py:\d+\)",
-            e.value.message
+            str(e.value)
         )
 
 
@@ -395,7 +395,7 @@ class TestAtLeast(object):
 
         assert re.match(
             r"at_least requires one positive integer argument",
-            e.value.message
+            str(e.value)
         )
 
     def test_if_called_with_zero(self):
@@ -444,7 +444,7 @@ class TestAtMost(object):
 
         assert re.match(
             r"at_most requires one positive integer argument",
-            e.value.message
+            str(e.value)
         )
 
     def test_called_with_zero(self):
@@ -489,5 +489,5 @@ class TestAtMost(object):
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/allow_test.py:\d+\)",
-            e.value.message
+            str(e.value)
         )

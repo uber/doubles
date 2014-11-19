@@ -1,5 +1,9 @@
-from StringIO import StringIO
 import unittest
+
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
 from doubles.instance_double import InstanceDouble
 from doubles.targets.expectation_target import expect

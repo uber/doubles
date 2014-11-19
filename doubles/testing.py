@@ -51,6 +51,13 @@ class User(OldStyleUser, object):
     pass
 
 
+class UserWithCustomNew(User):
+    def __new__(cls, name, age):
+        instance = User.__new__(cls)
+        instance.name_set_in__new__ = name
+        return instance
+
+
 def top_level_function(arg1, arg2='default'):
     return "{arg1} -- {arg2}".format(
         arg1=arg1,

@@ -7,7 +7,7 @@ from doubles.exceptions import (
 )
 from doubles.lifecycle import teardown
 from doubles import allow, no_builtin_verification
-from doubles.testing import User, OldStyleUser
+from doubles.testing import User, OldStyleUser, UserWithCustomNew
 import doubles.testing
 
 
@@ -54,7 +54,7 @@ class TestInstanceMethods(object):
         with raises(VerifyingDoubleArgumentError) as e:
             allow(user).some_property.with_args(1)
 
-        assert e.value.message == 'Properties do not accept arguments.'
+        assert str(e.value) == 'Properties do not accept arguments.'
 
     def test_calling_stubbed_property_with_args_works(self, test_class):
         user = test_class('Alice', 25)
@@ -269,7 +269,7 @@ class TestClassMethods(object):
             allow(test_class).nonexistent_method
 
 
-class TestConstructorMethods(object):
+class TestBuiltInConstructorMethods(object):
     def test_stubs_constructors(self):
         with no_builtin_verification():
             user = object()
@@ -284,7 +284,32 @@ class TestConstructorMethods(object):
 
         teardown()
 
-        assert User('Alice', 25) is not user
+        result = User('Alice', 25)
+
+        assert result is not user
+        assert result.name == 'Alice'
+
+
+class TestCustomConstructorMethods(object):
+    def test_stubs_constructors(self):
+        with no_builtin_verification():
+            user = object()
+
+            allow(UserWithCustomNew).__new__.and_return(user)
+
+            assert UserWithCustomNew('Alice', 25) is user
+
+    def test_restores_constructor_on_teardown(self):
+        user = object()
+        allow(UserWithCustomNew).__new__.and_return(user)
+
+        teardown()
+
+        result = UserWithCustomNew('Alice', 25)
+
+        assert result is not user
+        assert result.name_set_in__new__ == 'Alice'
+        assert result.name == 'Alice'
 
 
 class TestTopLevelFunctions(object):
