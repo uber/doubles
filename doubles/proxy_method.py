@@ -4,6 +4,7 @@ import sys
 
 from doubles.exceptions import UnallowedMethodCallError
 from doubles.proxy_property import ProxyProperty
+from doubles.allowance import build_argument_repr_string
 
 double_name = lambda name: 'double_of_' + name
 
@@ -141,13 +142,13 @@ class ProxyMethod(object):
 
         error_message = (
             "Received unexpected call to '{}' on {!r}.  The supplied arguments "
-            "(args={}, kwargs={}) do not match any available allowances."
+            "{} do not match any available allowances."
         )
+
         raise UnallowedMethodCallError(
             error_message.format(
                 self._method_name,
                 self._target.obj,
-                args,
-                kwargs
+                build_argument_repr_string(args, kwargs)
             )
         )

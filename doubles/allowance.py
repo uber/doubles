@@ -23,6 +23,12 @@ def check_func_takes_args(func):
     return arg_spec.args or arg_spec.varargs or arg_spec.keywords or arg_spec.defaults
 
 
+def build_argument_repr_string(args, kwargs):
+    args = [repr(x) for x in args]
+    kwargs = ['{}={!r}'.format(k, v) for k, v in kwargs.items()]
+    return '({})'.format(', '.join(args + kwargs))
+
+
 class Allowance(object):
     """An individual method allowance (stub)."""
 
@@ -271,4 +277,4 @@ class Allowance(object):
         if self.args is _any and self.kwargs is _any:
             return 'any args'
         else:
-            return '(args={!r}, kwargs={!r})'.format(self.args, self.kwargs)
+            return build_argument_repr_string(self.args, self.kwargs)
