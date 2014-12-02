@@ -28,7 +28,7 @@ class Expectation(Allowance):
 
         raise UnsupportedMethodError(
             '`expect` does not support and_return. '
-            'Use `allow` and assert that an exception is raised instead.'
+            'Use `allow` and assert that the value returned was used correctly.'
         )
 
     def and_return_result_of(self, return_value):
@@ -36,7 +36,7 @@ class Expectation(Allowance):
 
         raise UnsupportedMethodError(
             '`expect` does not support and_return_result_of. '
-            'Use `allow` and assert that an exception is raised instead.'
+            'Use `allow` and assert that the value returned was used correctly.'
         )
 
     def satisfy_any_args_match(self):
