@@ -163,7 +163,24 @@ class TestWithArgs(object):
             r"Received unexpected call to 'method_with_default_args' on "
             r"<InstanceDouble of <class '?doubles.testing.User'?"
             r"(?: at 0x[0-9a-f]{9})?> object at .+>\."
-            r"  The supplied arguments \(args=\(\), kwargs={}\)"
+            r"  The supplied arguments \(\)"
+            r" do not match any available allowances.",
+            str(e.value)
+        )
+
+    def test_raises_if_arguments_were_specified_but_wrong_kwarg_used_when_called(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).method_with_default_args.with_args('one', bar='two')
+
+        with raises(UnallowedMethodCallError) as e:
+            subject.method_with_default_args('one', bob='barker')
+
+        assert re.match(
+            r"Received unexpected call to 'method_with_default_args' on "
+            r"<InstanceDouble of <class '?doubles.testing.User'?"
+            r"(?: at 0x[0-9a-f]{9})?> object at .+>\."
+            r"  The supplied arguments \('one', bob='barker'\)"
             r" do not match any available allowances.",
             str(e.value)
         )
@@ -180,7 +197,7 @@ class TestWithArgs(object):
             r"Received unexpected call to 'method_with_varargs' on "
             r"<InstanceDouble of <class '?doubles.testing.User'?"
             r"(?: at 0x[0-9a-f]{9})?> object at .+>\."
-            r"  The supplied arguments \(args=\('baz',\), kwargs={}\)"
+            r"  The supplied arguments \('baz'\)"
             r" do not match any available allowances.",
             str(e.value)
         )
@@ -214,7 +231,7 @@ class TestWithNoArgs(object):
             r"Received unexpected call to 'instance_method' on "
             r"<InstanceDouble of <class '?doubles.testing.User'?"
             r"(?: at 0x[0-9a-f]{9})?> object at .+>\."
-            r"  The supplied arguments \(args=\('bar',\), kwargs={}\)"
+            r"  The supplied arguments \('bar'\)"
             r" do not match any available allowances.",
             str(e.value)
         )

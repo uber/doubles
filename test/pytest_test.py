@@ -39,7 +39,7 @@ def test_failed_expections_do_not_leak_between_tests(testdir, capsys):
     assert outcomes['failed'] == 2
     expected_error = (
         "*Expected 'class_method' to be called 1 time but was called 0 times on"
-        " <class 'doubles.testing.User'> with (args=('{arg_value}',), kwargs={{}})*"
+        " <class 'doubles.testing.User'> with ('{arg_value}')*"
     )
     result.stdout.fnmatch_lines([expected_error.format(arg_value="test_one")])
     result.stdout.fnmatch_lines([expected_error.format(arg_value="test_two")])

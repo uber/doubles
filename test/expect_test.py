@@ -41,7 +41,25 @@ class TestExpect(object):
             r"Expected 'method_with_varargs' to be called on "
             r"<InstanceDouble of <class '?doubles.testing.User'?"
             r"(?: at 0x[0-9a-f]{9})?> object at .+> "
-            r"with \(args=\('bar',\), kwargs={}\), but was not."
+            r"with \('bar'\), but was not."
+            r" \(.*doubles/test/expect_test.py:\d+\)",
+            str(e.value)
+        )
+
+    def test_raises_if_an_expected_method_call_with_default_args_is_not_made(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        expect(subject).method_with_default_args.with_args('bar', bar='barker')
+
+        with raises(MockExpectationError) as e:
+            verify()
+        teardown()
+
+        assert re.match(
+            r"Expected 'method_with_default_args' to be called on "
+            r"<InstanceDouble of <class '?doubles.testing.User'?"
+            r"(?: at 0x[0-9a-f]{9})?> object at .+> "
+            r"with \('bar', bar='barker'\), but was not."
             r" \(.*doubles/test/expect_test.py:\d+\)",
             str(e.value)
         )
