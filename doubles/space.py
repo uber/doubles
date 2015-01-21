@@ -1,4 +1,5 @@
 from doubles.proxy import Proxy
+from doubles.patch import Patch
 
 
 class Space(object):
@@ -10,8 +11,16 @@ class Space(object):
 
     def __init__(self):
         self._proxies = {}
+        self._patches = {}
         self._is_verified = False
         self.skip_builtin_verification = False
+
+    def patch_for(self, target):
+
+        if target not in self._patches:
+            self._patches[target] = Patch(target)
+
+        return self._patches[target]
 
     def proxy_for(self, obj):
         """
@@ -34,6 +43,9 @@ class Space(object):
 
         for proxy in self._proxies.values():
             proxy.restore_original_object()
+
+        for patch in self._patches.values():
+            patch.restore_original_object()
 
     def clear(self, obj):
         """Clear allowances/expectations set on an object.
