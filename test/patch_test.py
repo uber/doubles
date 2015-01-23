@@ -1,6 +1,6 @@
 import pytest
 
-from doubles import patch, patch_constructor, InstanceDoubleFactory, InstanceDouble
+from doubles import patch, patch_constructor, InstanceDoubleFactory, InstanceDouble, allow
 from doubles.lifecycle import teardown
 from doubles.exceptions import VerifyingDoubleImportError
 import doubles.testing
@@ -32,6 +32,8 @@ class TestPatch(object):
 
         assert doubles.testing.User == p.value
 
+
+class TestPatchConstructor(object):
     def test_patched_objects_constructor_returns_instance_double(self):
         patch_constructor('doubles.testing.User')
 
@@ -50,3 +52,17 @@ class TestPatch(object):
 
         assert isinstance(result_1, InstanceDouble)
         assert isinstance(result_2, InstanceDouble)
+
+    def test_with_supplied_instances(self):
+        user_1 = InstanceDouble('doubles.testing.User')
+        user_2 = InstanceDouble('doubles.testing.User')
+        patch_constructor('doubles.testing.User', user_1, user_2)
+
+        assert doubles.testing.User('Bob', 10) is user_1
+        assert doubles.testing.User('Bob', 10) is user_2
+
+    def test_class_method_foo(self):
+        factory = patch_constructor('doubles.testing.User')
+        allow(factory).class_method.and_return('Bob Barker')
+
+        assert doubles.testing.User.class_method(1) == 'Bob Barker'

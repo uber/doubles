@@ -3,7 +3,7 @@ from doubles.instance_double_factory import InstanceDoubleFactory, ClassDouble
 
 
 def patch_constructor(target, *values):
-    return patch(target, InstanceDoubleFactory(target, *values))
+    return patch(target, InstanceDoubleFactory(target, *values)).value
 
 
 def patch(target, value=None):
