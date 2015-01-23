@@ -28,6 +28,20 @@ def teardown():
         del _thread_local_data.current_space
 
 
+def clear(*objects_to_clear):
+    """Clears allowances/expectations on objects
+
+    :param object objects_to_clear: The objects to remove allowances and
+    expectations from.
+    """
+    if not hasattr(_thread_local_data, 'current_space'):
+        return
+
+    space = current_space()
+    for obj in objects_to_clear:
+        space.clear(obj)
+
+
 def verify():
     """
     Verifies any mocks that have been created during the test run. Must be called after each
