@@ -11,7 +11,7 @@ class Patch(object):
 
     def _capture_original_object(self):
         try:
-            self._original_obect = getattr(self.target, self._name)
+            self._doubles_target = getattr(self.target, self._name)
         except AttributeError:
             raise VerifyingDoubleError(self.target, self._name)
 
@@ -24,8 +24,8 @@ class Patch(object):
         return self._value
 
     @property
-    def original_obect(self):
-        return self._original_obect
+    def original_object(self):
+        return self._doubles_target
 
     def restore_original_object(self):
-        self.set_value(self._original_obect)
+        self.set_value(self._doubles_target)
