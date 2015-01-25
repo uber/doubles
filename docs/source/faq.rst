@@ -1,6 +1,22 @@
 FAQ
 ===
 
+Common Issues
++++++++++++++
+
+
+When I double __new__, it breaks other tests, why?
+--------------------------------------------------
+
+This feature is deprecated, I recommend  using the ``patch_constructor`` method, which fixes this issue and is much cleaner.
+
+
+I get a ``VerifyingDoubleError`` "Cannot double method ... does not implement it", whats going on?
+--------------------------------------------------------------------------------------------------
+
+Make sure you are using a version of doubles greater than 1.0.1.  There was a bug prior to 1.0.1 that would not allow you to mock callable objects.
+
+
 I get a ``VerifyingBuiltinDoubleArgumentError`` "... is not a Python func", what is going on?
 ---------------------------------------------------------------------------------------------
 
@@ -17,6 +33,50 @@ Python does not allow doubles to look into builtin functions and asked them what
           # The test that uses this allowance must be within the context manager.
           run_test()
 
+
+Patches
+++++++++
+
+How can I make SomeClass(args, kwargs) return my double?
+--------------------------------------------------------
+
+Use ``patch_constructor``::
+
+    from doubles import allow, patch_constructor
+
+    import myapp
+
+
+    def test_something_that_uses_user():
+        user = InstanceDouble('myapp.user.User')
+        patch_constructor('myapp.user.User', user)
+
+
+        assert myapp.user.User() is user
+
+Anytime a new instance of user is created will now return the ``InstanceDouble`` we defined.  ``patch_constructor`` returns an ``InstanceDoubleFactory``, you can set expectations/allowances on the factory, which will be validating against the underlying class.  ``InstanceDoubleFactory`` is very similar to a ``ClassDouble``, but it allows instances of the class to be created.
+
+
+How can I patch something like I do with mock?
+----------------------------------------------
+
+Doubles also has ``patch`` but it isn't a decorator::
+
+    from doubles import allow, patch
+
+    import myapp
+
+
+    def test_something_that_uses_user():
+        patch('myapp.user.User', 'Bob Barker')
+
+
+        assert myapp.user.User == 'Bob Barker'
+
+Patches do not verify against the underlying object, so use them carefully.  Patches are automatically restored at the end of the test.
+
+Expectations
++++++++++++++
 
 How can I make an expectation return a value?
 ---------------------------------------------
@@ -45,28 +105,3 @@ Here we shouldn't expect that ``api_call_to_get_emails`` is called, we should ex
         expect(myapp).send_email.with_args('drew@carey').once()
 
         func_to_test(1)
-
-
-How can I make SomeClass(args, kwargs) return my double?
---------------------------------------------------------
-
-You need to allow the __new__ method on the class you are using::
-
-    from doubles import allow, InstanceDouble, no_builtin_verification
-
-    import myapp
-
-
-    def test_something_that_uses_user():
-        user = InstanceDouble('myapp.user.User')
-
-        with no_builtin_verification():
-            allow(myapp.User).__new__.and_return(user)
-
-Anytime a new instance of user is created will now return the InstanceDouble we defined.
-
-
-I get a ``VerifyingDoubleError`` "Cannot double method ... does not implement it", whats going on?
---------------------------------------------------------------------------------------------------
-
-Make sure you are using a version of doubles greater than 1.0.1.  There was a bug prior to 1.0.1 that would not allow you to mock callable objects.
