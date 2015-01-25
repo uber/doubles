@@ -381,3 +381,45 @@ If you ever want to to clear all allowances and expectations you have set on an 
         expect(some_object).foobar
 
         clear(some_object)
+
+Patching Objects
+++++++++++++++++
+
+``patch`` is used to replace an existing object, with whatever you specify::
+
+    from doubles import patch
+    import doubles.testing
+
+    def test_patch():
+        patch('doubles.testing.User', 'Bob Barker')
+
+        assert doubles.testing.User == 'Bob Barker'
+
+Patching Constructors
++++++++++++++++++++++
+
+``patch_constructor`` patches a class such that all new instances created are what you specify or ``InstanceDoubles``.
+
+If you specify arguments to ``patch_constructor`` they will be returned when new instances are created::
+
+    from doubles import patch_constructor
+    import doubles.testing
+
+    def test_patch_constructor_with_args():
+        patch_constructor('doubles.testing.User', 'Bob Barker', 'Drew Carey')
+
+        assert doubles.testing.User() == 'Bob Barker'
+        assert doubles.testing.User() == 'Drew Carey'
+        assert doubles.testing.User() == 'Drew Carey'
+
+If more instances are created than you pass in the final value will be repeated.
+
+If you do not specify arguments to ``patch_constructor`` an ``InstanceDouble`` will be created and returned everytime a new instance is created::
+
+    from doubles import patch_constructor, InstanceDouble
+    import doubles.testing
+
+    def test_patch_constructor_with_args():
+        patch_constructor('doubles.testing.User')
+
+        assert isinstance(doubles.testing.User(), InstanceDouble)
