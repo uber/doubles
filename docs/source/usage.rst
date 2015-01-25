@@ -360,3 +360,24 @@ ObjectDouble
       allow(something).to_call('foo')
 
 There is a subtle distinction between a pure test double created with ``ObjectDouble`` and a partial double created by passing a non-double object to ``allow`` or ``expect``. The former creates an object that does not accept any method calls which are not explicitly allowed, but verifies any that are against the real object. A partial double modifies parts of the real object itself, allowing some methods to be doubled and others to retain their real implementation.
+
+Clearing Allowances
++++++++++++++++++++
+
+If you ever want to to clear all allowances and expectations you have set without verifying them, use ``teardown``::
+
+    from doubles import teardown, expect
+
+    def test_clearing_allowances():
+        expect(some_object).foobar
+
+        teardown()
+
+If you ever want to to clear all allowances and expectations you have set on an individual object  without verifying them, use ``clear``::
+
+    from doubles import clear, expect
+
+    def test_clearing_allowances():
+        expect(some_object).foobar
+
+        clear(some_object)

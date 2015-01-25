@@ -35,6 +35,14 @@ class Space(object):
         for proxy in self._proxies.values():
             proxy.restore_original_object()
 
+    def clear(self, obj):
+        """Clear allowances/expectations set on an object.
+
+        :param object obj: The object to clear.
+        """
+        self.proxy_for(obj).restore_original_object()
+        del self._proxies[id(obj)]
+
     def verify(self):
         """
         Verifies expectations on all doubled objects.
