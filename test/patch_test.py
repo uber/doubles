@@ -2,7 +2,7 @@ import pytest
 
 from doubles import patch, patch_constructor, InstanceDoubleFactory, InstanceDouble, allow
 from doubles.lifecycle import teardown
-from doubles.exceptions import VerifyingDoubleImportError
+from doubles.exceptions import VerifyingDoubleImportError, VerifyingDoubleError
 import doubles.testing
 
 
@@ -66,6 +66,11 @@ class TestPatchConstructor(object):
         allow(factory).class_method.and_return('Bob Barker')
 
         assert doubles.testing.User.class_method(1) == 'Bob Barker'
+
+    def test_allowing_non_existent_method(self):
+        factory = patch_constructor('doubles.testing.User')
+        with pytest.raises(VerifyingDoubleError):
+            allow(factory).not_a_class_method
 
     def test_unallowed_class_method(self):
         patch_constructor('doubles.testing.User')
