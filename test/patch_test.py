@@ -61,8 +61,14 @@ class TestPatchConstructor(object):
         assert doubles.testing.User('Bob', 10) is user_1
         assert doubles.testing.User('Bob', 10) is user_2
 
-    def test_class_method_foo(self):
+    def test_allowing_class_method(self):
         factory = patch_constructor('doubles.testing.User')
         allow(factory).class_method.and_return('Bob Barker')
 
         assert doubles.testing.User.class_method(1) == 'Bob Barker'
+
+    def test_unallowed_class_method(self):
+        patch_constructor('doubles.testing.User')
+
+        with pytest.raises(AttributeError):
+            doubles.testing.User.class_method(1)
