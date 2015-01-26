@@ -54,7 +54,7 @@ Use ``patch_constructor``::
 
         assert myapp.user.User() is user
 
-Anytime a new instance of user is created will now return the ``InstanceDouble`` we defined.  ``patch_constructor`` returns an ``InstanceDoubleFactory``, you can set expectations/allowances on the factory, which will be validating against the underlying class.  ``InstanceDoubleFactory`` is very similar to a ``ClassDouble``, but it allows instances of the class to be created.
+Anytime a new instance of user is created will now return the ``InstanceDouble`` we defined.  ``patch_constructor`` returns an ``ConstructorDouble``, you can set expectations/allowances on the factory, which will be validating against the underlying class.  ``ConstructorDouble`` is very similar to a ``ClassDouble``, but it allows instances of the class to be created.
 
 
 How can I patch something like I do with mock?

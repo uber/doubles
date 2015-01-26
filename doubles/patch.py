@@ -23,9 +23,5 @@ class Patch(object):
     def value(self):
         return self._value
 
-    @property
-    def original_object(self):
-        return self._doubles_target
-
     def restore_original_object(self):
         self.set_value(self._doubles_target)

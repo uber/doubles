@@ -20,6 +20,16 @@ def allow(target):
     return AllowanceTarget(target)
 
 
+def allow_constructor(patch):
+    """
+    Set an allowance on _doubles__new__
+
+    :param ClassPatcher patch:  The ClassPatcher to set the allowance on.
+    :rtype Allowance:
+    """
+    return allow(patch)._doubles__new__
+
+
 class AllowanceTarget(object):
     """A wrapper around a target object that creates new allowances on attribute access."""
 

@@ -1,5 +1,4 @@
 from importlib import import_module
-import inspect
 
 from doubles.exceptions import VerifyingDoubleImportError
 
@@ -40,8 +39,3 @@ def get_path_components(path):
     class_name = path_segments[-1]
 
     return module_path, class_name
-
-
-def current_module():
-    frame = inspect.stack()[1]
-    return inspect.getmodule(frame[0])
