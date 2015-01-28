@@ -25,6 +25,25 @@ def _is_python_33():
     return v[0] == 3 and v[1] == 3
 
 
+def _verify_arguments_of_doubles__new__(target, args, kwargs):
+    if not _is_python_function(target.doubled_obj.__init__):
+        if args or kwargs:
+            given_args_count = 1 + len(args) + len(kwargs)
+            raise VerifyingDoubleArgumentError(
+                '__init__() takes exactly 1 arguments ({} given)'.format(
+                    given_args_count,
+                )
+            )
+        return
+
+    return _verify_arguments(
+        target.doubled_obj.__init__,
+        '__init__',
+        ['self'] + list(args),
+        kwargs,
+    )
+
+
 def _raise_doubles_error_from_index_error(method_name):
     # Work Around for http://bugs.python.org/issue20817
     raise VerifyingDoubleArgumentError(
@@ -64,6 +83,9 @@ def verify_arguments(target, method_name, args, kwargs):
     :param dict kwargs: The keyword arguments the method should be called with.
     :raise: ``VerifyingDoubleError`` if the provided arguments do not match the signature.
     """
+
+    if method_name == '_doubles__new__':
+        return _verify_arguments_of_doubles__new__(target, args, kwargs)
 
     attr = target.attrs[method_name]
     method = attr.object

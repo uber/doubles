@@ -4,18 +4,13 @@ from doubles import (
     patch,
     patch_class,
     InstanceDouble,
-    allow,
     allow_constructor,
-    expect_constructor,
 )
 from doubles.exceptions import (
-    MockExpectationError,
-    UnallowedMethodCallError,
     VerifyingDoubleImportError,
     VerifyingDoubleError,
-    VerifyingDoubleArgumentError,
 )
-from doubles.lifecycle import teardown, verify
+from doubles.lifecycle import teardown
 import doubles.testing
 
 
@@ -62,77 +57,14 @@ class TestPatchClass(object):
         assert result_1 == 'result_1'
         assert result_2 == 'result_2'
 
-    def test_with_supplied_instances(self):
-        user_1 = InstanceDouble('doubles.testing.User')
-        user_2 = InstanceDouble('doubles.testing.User')
-        patch = patch_class('doubles.testing.User')
-
-        allow_constructor(patch).and_return(user_1, user_2)
-
-        assert doubles.testing.User('Bob', 10) is user_1
-        assert doubles.testing.User('Bob', 10) is user_2
-
-    def test_allowing_class_method(self):
-        factory = patch_class('doubles.testing.User')
-        allow(factory).class_method.and_return('Bob Barker')
-
-        assert doubles.testing.User.class_method(1) == 'Bob Barker'
-
-    def test_allowing_non_existent_method(self):
-        factory = patch_class('doubles.testing.User')
-        with pytest.raises(VerifyingDoubleError):
-            allow(factory).not_a_class_method
-
-    def test_unallowed_class_method(self):
+    def test_restores_original_value(self):
+        original_value = doubles.testing.User
         patch_class('doubles.testing.User')
 
-        with pytest.raises(AttributeError):
-            doubles.testing.User.class_method(1)
-
-    def test_called_with_invalid_arguments(self):
-        patch_class('doubles.testing.User')
-
-        with pytest.raises(VerifyingDoubleArgumentError):
-            doubles.testing.User()
-
-    def test_allowing_with_args(self):
-        patch = patch_class('doubles.testing.User')
-
-        allow_constructor(patch).with_args('Bob', 1).and_return('Bob Barker')
-        allow_constructor(patch).with_args('Drew', 1).and_return('Drew Carey')
-
-        assert doubles.testing.User('Bob', 1) == 'Bob Barker'
-        assert doubles.testing.User('Drew', 1) == 'Drew Carey'
-
-    def test_with_no_allowances(self):
-        patch_class('doubles.testing.User')
-
-        with pytest.raises(UnallowedMethodCallError):
-            doubles.testing.User('Bob', 1)
-
-    def test_unsatisfied_expectation(self):
-        patched_class = patch_class('doubles.testing.User')
-
-        expect_constructor(patched_class)
-        with pytest.raises(MockExpectationError):
-            verify()
         teardown()
 
-    def test_called_with_wrong_args(self):
-        patch = patch_class('doubles.testing.User')
+        assert original_value == doubles.testing.User
 
-        allow_constructor(patch).with_args('Bob', 1).and_return('Bob Barker')
-
-        with pytest.raises(UnallowedMethodCallError):
-            doubles.testing.User('Bob', 101)
-
-    def test_satisfied_exception(self):
-        patch = patch_class('doubles.testing.User')
-
-        expect_constructor(patch)
-
-        doubles.testing.User('Bob', 10)
-
-    def test_a_non_class(self):
+    def test_non_existent_class(self):
         with pytest.raises(VerifyingDoubleImportError):
-            patch_class('doubles.testing.top_level_function')
+            patch_class('doubles.testing.NotReal')

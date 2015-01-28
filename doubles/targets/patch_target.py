@@ -1,20 +1,16 @@
 from doubles.lifecycle import current_space
-from doubles.class_patcher import ClassPatcher
-from doubles.targets.allowance_target import allow_constructor
+from doubles.class_double import ClassDouble
 
 
-def patch_class(target, *values):
+def patch_class(target):
     """
-    Replace the specified class with a ClassPatcher
+    Replace the specified class with a ClassDouble
 
     :param str target: A string pointing to the target to patch.
     :param obj values: Values to return when new instances are created.
     :rtype Patch:
     """
-    output = patch(target, ClassPatcher(target)).value
-    if values:
-        allow_constructor(output).and_return(*values)
-    return output
+    return patch(target, ClassDouble(target)).value
 
 
 def patch(target, value):

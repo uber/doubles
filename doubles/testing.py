@@ -1,3 +1,11 @@
+class OldStyleEmptyClass():
+    pass
+
+
+class EmptyClass(OldStyleEmptyClass, object):
+    pass
+
+
 class OldStyleUser():
     """An importable dummy class used for testing purposes."""
 

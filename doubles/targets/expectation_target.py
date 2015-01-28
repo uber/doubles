@@ -24,7 +24,9 @@ def expect_constructor(patch):
     """
     Set an expectation on _doubles__new__
 
-    :param ClassPatcher patch:  The ClassPatcher to set the expectation on.
+    This allows the caller to control what a ClassDouble returns when a new instance is created.
+
+    :param ClassDouble patch:  The ClassDouble to set the expectation on.
     :rtype Expectation:
     """
     return expect(patch)._doubles__new__

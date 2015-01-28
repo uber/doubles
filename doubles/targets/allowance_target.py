@@ -1,6 +1,7 @@
 from inspect import stack
 
 from doubles.lifecycle import current_space
+from doubles.class_double import ClassDouble
 
 
 def allow(target):
@@ -24,7 +25,9 @@ def allow_constructor(patch):
     """
     Set an allowance on _doubles__new__
 
-    :param ClassPatcher patch:  The ClassPatcher to set the allowance on.
+    This allows the caller to control what a ClassDouble returns when a new instance is created.
+
+    :param ClassDouble patch:  The ClassDouble to set the allowance on.
     :rtype Allowance:
     """
     return allow(patch)._doubles__new__
@@ -38,6 +41,7 @@ class AllowanceTarget(object):
         :param object target: The object to wrap.
         """
 
+        self._is_class_double = isinstance(target, ClassDouble)
         self._proxy = current_space().proxy_for(target)
 
     def __getattribute__(self, attr_name):
