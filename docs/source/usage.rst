@@ -425,10 +425,10 @@ By default ``ClassDoubles`` cannot create new instances::
 
 Stubbing the constructor of a ``ClassDouble`` is very similar to using ``allow`` or ``expect`` except we use: ``allow_constructor`` or ``expect_constructor``, and don't specify a method::
 
-    from doubles import patch_constructor, ClassDouble
+    from doubles import allow_constructor, ClassDouble
     import doubles.testing
 
-    def test_patch_constructor_with_args():
+    def test_allow_constructor_with_args():
         User = ClassDouble('doubles.testing.User')
 
         allow_constructor(User).with_args('Bob', 100).and_return('Bob')
