@@ -9,6 +9,13 @@ from doubles.exceptions import (
     UnallowedMethodCallError,
     VerifyingDoubleError,
     VerifyingDoubleArgumentError,
+    ConstructorDoubleError,
+)
+from doubles.testing import (
+    User,
+    OldStyleUser,
+    EmptyClass,
+    OldStyleEmptyClass,
 )
 
 TEST_CLASSES = (
@@ -157,3 +164,14 @@ class TestStubbingConstructor(object):
             expect_constructor(TestClass).with_args(*VALID_ARGS[test_class])
 
             assert TestClass(*VALID_ARGS[test_class]) is None
+
+
+@mark.parametrize('test_class', [User, OldStyleUser, EmptyClass, OldStyleEmptyClass])
+class TestingStubbingNonClassDoubleConstructors(object):
+    def test_raises_if_you_allow_constructor(self, test_class):
+        with raises(ConstructorDoubleError):
+            allow_constructor(test_class)
+
+    def test_raises_if_you_expect_constructor(self, test_class):
+        with raises(ConstructorDoubleError):
+            expect_constructor(test_class)

@@ -344,6 +344,7 @@ ClassDouble
 
       allow(User).to_call('find_by_foo')
 
+
 ObjectDouble
 ++++++++++++
 
@@ -382,10 +383,10 @@ If you ever want to to clear all allowances and expectations you have set on an 
 
         clear(some_object)
 
-Patching Objects
-++++++++++++++++
+Patching
+--------
 
-``patch`` is used to replace an existing object, with whatever you specify::
+``patch`` is used to replace an existing object::
 
     from doubles import patch
     import doubles.testing
@@ -395,31 +396,46 @@ Patching Objects
 
         assert doubles.testing.User == 'Bob Barker'
 
-Patching Constructors
-+++++++++++++++++++++
+Patches do not verify against the underlying object, so use them carefully.  Patches are automatically restored at the end of the test.
 
-``patch_constructor`` patches a class such that all new instances created are what you specify or ``InstanceDoubles``.
+Patching Classes
+++++++++++++++++
+``patch_class`` is a wrapper on top of ``patch`` to help you patch a python class with a ``ClassDouble``.  ``patch_class`` creates a ``ClassDouble`` of the class specified, patches the original class and returns the ``ClassDouble``::
 
-If you specify arguments to ``patch_constructor`` they will be returned when new instances are created::
 
-    from doubles import patch_constructor
+    from doubles import patch_class, ClassDouble
+    import doubles.testing
+
+    def test_patch_class():
+        class_double = patch_class('doubles.testing.User')
+
+        assert doubles.testing.User is class_double
+        assert isinstance(class_double, ClassDouble)
+
+Stubbing Constructors
+---------------------
+
+By default ``ClassDoubles`` cannot create new instances::
+
+    from doubles import ClassDouble
+
+    def test_unstubbed_constructor():
+        User = ClassDouble('doubles.testing.User')
+        User('Teddy', 1901)  # Raises an UnallowedMethodCallError
+
+Stubbing the constructor of a ``ClassDouble`` is very similar to using ``allow`` or ``expect`` except we use: ``allow_constructor`` or ``expect_constructor``, and don't specify a method::
+
+    from doubles import patch_constructor, ClassDouble
     import doubles.testing
 
     def test_patch_constructor_with_args():
-        patch_constructor('doubles.testing.User', 'Bob Barker', 'Drew Carey')
+        User = ClassDouble('doubles.testing.User')
 
-        assert doubles.testing.User() == 'Bob Barker'
-        assert doubles.testing.User() == 'Drew Carey'
-        assert doubles.testing.User() == 'Drew Carey'
+        allow_constructor(User).with_args('Bob', 100).and_return('Bob')
 
-If more instances are created than you pass in the final value will be repeated.
+        assert User('Bob', 100) == 'Bob'
 
-If you do not specify arguments to ``patch_constructor`` an ``InstanceDouble`` will be created and returned everytime a new instance is created::
+The return value of ``allow_constructor`` and ``expect_constructor`` support all of the same methods as allow/expect. (e.g. ``with_args``, ``once``, ``exactly``, .etc).  As with ``expect``, ``expect_constructor`` does not support ``and_return``, ``and_return_result_of``, or ``and_raise``.
 
-    from doubles import patch_constructor, InstanceDouble
-    import doubles.testing
 
-    def test_patch_constructor_with_args():
-        patch_constructor('doubles.testing.User')
-
-        assert isinstance(doubles.testing.User(), InstanceDouble)
+*NOTE*: Currently you can only stub the constructor of ``ClassDoubles``

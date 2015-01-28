@@ -8,7 +8,7 @@ Common Issues
 When I double __new__, it breaks other tests, why?
 --------------------------------------------------
 
-This feature is deprecated, I recommend  using the ``patch_constructor`` method, which fixes this issue and is much cleaner.
+This feature is deprecated, I recommend  using the ``patch_class`` method, which fixes this issue and is much cleaner.
 
 
 I get a ``VerifyingDoubleError`` "Cannot double method ... does not implement it", whats going on?
@@ -40,21 +40,34 @@ Patches
 How can I make SomeClass(args, kwargs) return my double?
 --------------------------------------------------------
 
-Use ``patch_constructor``::
+Use ``patch_class`` and ``allow_constructor``::
 
-    from doubles import allow, patch_constructor
+    from doubles import patch_class, allow_constructor
 
     import myapp
 
+    def test_something_that_uses_user():
+        patched_class = patch_class('myapp.user.User')
+        allow_constructor(patch_class).and_return('Bob Barker')
+
+        assert myapp.user.User() == 'Bob Barker'
+
+
+``patch_class`` creates a ``ClassDouble`` of the class specified, patches the original class and returns the ``ClassDouble``.  We then stub the constructor which controls what is is returned when an instance is created.
+
+``allow_constructor`` supports all of the same functionality as ``allow``::
+
+    from doubles import patch_class, allow_constructor
+
+    import myapp
 
     def test_something_that_uses_user():
-        user = InstanceDouble('myapp.user.User')
-        patch_constructor('myapp.user.User', user)
+        bob_barker = InstanceDouble('myapp.user.User')
 
+        patched_class = patch_class('myapp.user.User')
+        allow_constructor(patched_class).with_args('Bob Barker', 100).and_return(bob_barker)
 
-        assert myapp.user.User() is user
-
-Anytime a new instance of user is created will now return the ``InstanceDouble`` we defined.  ``patch_constructor`` returns an ``ConstructorDouble``, you can set expectations/allowances on the factory, which will be validating against the underlying class.  ``ConstructorDouble`` is very similar to a ``ClassDouble``, but it allows instances of the class to be created.
+        assert myapp.user.User('Bob Barker', 100) is bob_barker
 
 
 How can I patch something like I do with mock?
@@ -66,10 +79,8 @@ Doubles also has ``patch`` but it isn't a decorator::
 
     import myapp
 
-
     def test_something_that_uses_user():
         patch('myapp.user.User', 'Bob Barker')
-
 
         assert myapp.user.User == 'Bob Barker'
 

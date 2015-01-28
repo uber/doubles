@@ -32,17 +32,11 @@ class ClassDouble(InstanceDouble):
     def __init__(self, path, *values):
         super(ClassDouble, self).__init__(path)
         self._doubles_target = patch_class(self._doubles_target)
-        self._set_target()
-
-    def __call__(self, *args, **kwargs):
-        self.verify_arguments(args, kwargs)
-        return self._doubles__new__(*args, **kwargs)
-
-    def _set_target(self):
         self._target = Target(self._doubles_target)
 
-    def verify_arguments(self, args, kwargs):
+    def __call__(self, *args, **kwargs):
         verify_arguments(self._target, '_doubles__new__', args, kwargs)
+        return self._doubles__new__(*args, **kwargs)
 
     def _doubles__new__(self, *args, **kwargs):
-        raise UnallowedMethodCallError('Foobar')
+        raise UnallowedMethodCallError('Cannot call __new__ on a ClassDouble without stubbing it')

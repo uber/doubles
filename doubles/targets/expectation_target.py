@@ -1,6 +1,8 @@
 from inspect import stack
 
 from doubles.lifecycle import current_space
+from doubles.class_double import ClassDouble
+from doubles.exceptions import ConstructorDoubleError
 
 
 def expect(target):
@@ -28,7 +30,13 @@ def expect_constructor(patch):
 
     :param ClassDouble patch:  The ClassDouble to set the expectation on.
     :rtype Expectation:
+    :raise: ``ConstructorDoubleError`` if patch is not a ClassDouble.
     """
+    if not isinstance(patch, ClassDouble):
+        raise ConstructorDoubleError(
+            'Cannot allow_constructor of {} since it is not a ClassDouble.'.format(patch),
+        )
+
     return expect(patch)._doubles__new__
 
 

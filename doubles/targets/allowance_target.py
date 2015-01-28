@@ -2,6 +2,7 @@ from inspect import stack
 
 from doubles.lifecycle import current_space
 from doubles.class_double import ClassDouble
+from doubles.exceptions import ConstructorDoubleError
 
 
 def allow(target):
@@ -29,7 +30,13 @@ def allow_constructor(patch):
 
     :param ClassDouble patch:  The ClassDouble to set the allowance on.
     :rtype Allowance:
+    :raise: ``ConstructorDoubleError`` if patch is not a ClassDouble.
     """
+    if not isinstance(patch, ClassDouble):
+        raise ConstructorDoubleError(
+            'Cannot allow_constructor of {} since it is not a ClassDouble.'.format(patch),
+        )
+
     return allow(patch)._doubles__new__
 
 
@@ -41,7 +48,6 @@ class AllowanceTarget(object):
         :param object target: The object to wrap.
         """
 
-        self._is_class_double = isinstance(target, ClassDouble)
         self._proxy = current_space().proxy_for(target)
 
     def __getattribute__(self, attr_name):
