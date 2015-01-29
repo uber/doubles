@@ -26,6 +26,13 @@ def _is_python_33():
 
 
 def _verify_arguments_of_doubles__new__(target, args, kwargs):
+    """
+    Verify arg/kwargs against a class's __init__
+
+    :param class target: The class to verify against.
+    :param tuple args:  Positional arguments.
+    :params dict kwargs: Keyword arguments.
+    """
     if not _is_python_function(target.doubled_obj.__init__):
         if args or kwargs:
             given_args_count = 1 + len(args) + len(kwargs)
