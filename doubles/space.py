@@ -15,12 +15,19 @@ class Space(object):
         self._is_verified = False
         self.skip_builtin_verification = False
 
-    def patch_for(self, target):
+    def patch_for(self, path):
+        """
+        Returns the ``Patch`` for the target path, creating it if necessary.
 
-        if target not in self._patches:
-            self._patches[target] = Patch(target)
+        :param str path: The absolute module path to the target.
+        :return: The mapped ``Patch``.
+        :rtype: Patch
+        """
 
-        return self._patches[target]
+        if path not in self._patches:
+            self._patches[path] = Patch(path)
+
+        return self._patches[path]
 
     def proxy_for(self, obj):
         """
