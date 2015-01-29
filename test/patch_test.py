@@ -28,11 +28,6 @@ class TestPatch(object):
 
         assert original_value == doubles.testing.User
 
-    def test_patch_objects_value(self):
-        p = patch('doubles.testing.User', 'Bob Barker')
-
-        assert doubles.testing.User == p.value
-
     def test_creating_instance_double_after_patching(self):
         patch('doubles.testing.User', InstanceDouble('doubles.testing.User'))
 

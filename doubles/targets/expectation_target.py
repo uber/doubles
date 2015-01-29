@@ -22,22 +22,20 @@ def expect(target):
     return ExpectationTarget(target)
 
 
-def expect_constructor(patch):
+def expect_constructor(target):
     """
-    Set an expectation on _doubles__new__
+    Set an expectation on a ``ClassDouble`` constructor
 
-    This allows the caller to control what a ClassDouble returns when a new instance is created.
-
-    :param ClassDouble patch:  The ClassDouble to set the expectation on.
-    :rtype Expectation:
-    :raise: ``ConstructorDoubleError`` if patch is not a ClassDouble.
+    :param ClassDouble target:  The ClassDouble to set the expectation on.
+    :return: an ``Expectation`` for the __new__ method.
+    :raise: ``ConstructorDoubleError`` if target is not a ClassDouble.
     """
-    if not isinstance(patch, ClassDouble):
+    if not isinstance(target, ClassDouble):
         raise ConstructorDoubleError(
-            'Cannot allow_constructor of {} since it is not a ClassDouble.'.format(patch),
+            'Cannot allow_constructor of {} since it is not a ClassDouble.'.format(target),
         )
 
-    return expect(patch)._doubles__new__
+    return expect(target)._doubles__new__
 
 
 class ExpectationTarget(object):

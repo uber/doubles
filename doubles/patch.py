@@ -33,13 +33,6 @@ class Patch(object):
         self._value = value
         setattr(self.target, self._name, value)
 
-    @property
-    def value(self):
-        """
-        Get the current value of the patch.
-        """
-        return self._value
-
     def restore_original_object(self):
         """
         Restore the target to it's original value.

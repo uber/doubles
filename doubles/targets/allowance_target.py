@@ -22,22 +22,22 @@ def allow(target):
     return AllowanceTarget(target)
 
 
-def allow_constructor(patch):
+def allow_constructor(target):
     """
-    Set an allowance on _doubles__new__
+    Set an allowance on a ``ClassDouble`` constructor
 
     This allows the caller to control what a ClassDouble returns when a new instance is created.
 
-    :param ClassDouble patch:  The ClassDouble to set the allowance on.
-    :rtype Allowance:
-    :raise: ``ConstructorDoubleError`` if patch is not a ClassDouble.
+    :param ClassDouble target:  The ClassDouble to set the allowance on.
+    :return: an ``Allowance`` for the __new__ method.
+    :raise: ``ConstructorDoubleError`` if target is not a ClassDouble.
     """
-    if not isinstance(patch, ClassDouble):
+    if not isinstance(target, ClassDouble):
         raise ConstructorDoubleError(
-            'Cannot allow_constructor of {} since it is not a ClassDouble.'.format(patch),
+            'Cannot allow_constructor of {} since it is not a ClassDouble.'.format(target),
         )
 
-    return allow(patch)._doubles__new__
+    return allow(target)._doubles__new__
 
 
 class AllowanceTarget(object):

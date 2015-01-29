@@ -8,9 +8,11 @@ def patch_class(target):
 
     :param str target: A string pointing to the target to patch.
     :param obj values: Values to return when new instances are created.
-    :rtype Patch:
+    :return: A ``ClassDouble`` object.
     """
-    return patch(target, ClassDouble(target)).value
+    class_double = ClassDouble(target)
+    patch(target, class_double)
+    return class_double
 
 
 def patch(target, value):
@@ -19,7 +21,7 @@ def patch(target, value):
 
     :param str target: A string pointing to the target to patch.
     :param object value: The value to replace the target with.
-    :rtype Patch:
+    :return: A ``Patch`` object.
     """
     patch = current_space().patch_for(target)
     patch.set_value(value)
