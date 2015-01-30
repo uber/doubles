@@ -17,7 +17,7 @@ class Patch(object):
 
     def _capture_original_object(self):
         """
-        Capture the original pythong object.
+        Capture the original python object.
         """
         try:
             self._doubles_target = getattr(self.target, self._name)

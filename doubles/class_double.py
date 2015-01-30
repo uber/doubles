@@ -42,11 +42,11 @@ class ClassDouble(InstanceDouble):
 
     def __call__(self, *args, **kwargs):
         """
-        represents __new__ for ``ClassDouble`` instances.
+        Verify arguments and proxy to _doubles__new__
 
         :rtype obj:
         :raises VerifyingDoubleArgumentError: If args/kwargs don't match the expected argumenst of
-        __init__ of the underlying class.
+            __init__ of the underlying class.
         """
         verify_arguments(self._target, '_doubles__new__', args, kwargs)
         return self._doubles__new__(*args, **kwargs)

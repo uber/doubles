@@ -48,7 +48,7 @@ Use ``patch_class`` and ``allow_constructor``::
 
     def test_something_that_uses_user():
         patched_class = patch_class('myapp.user.User')
-        allow_constructor(patch_class).and_return('Bob Barker')
+        allow_constructor(patched_class).and_return('Bob Barker')
 
         assert myapp.user.User() == 'Bob Barker'
 
@@ -89,7 +89,10 @@ Patches do not verify against the underlying object, so use them carefully.  Pat
 Expectations
 +++++++++++++
 
-How can I make an expectation return a value?
+.. _expect-return-value:
+
+
+Why can't an expectation return a value?
 ---------------------------------------------
 
 You can't.  If your function depends on the return value of the method you are mocking then you should use allow.   Then you should test that the value returned from the allow was used correctly by asserting something later on. e.g.::

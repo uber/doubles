@@ -435,7 +435,9 @@ Stubbing the constructor of a ``ClassDouble`` is very similar to using ``allow``
 
         assert User('Bob', 100) == 'Bob'
 
-The return value of ``allow_constructor`` and ``expect_constructor`` support all of the same methods as allow/expect. (e.g. ``with_args``, ``once``, ``exactly``, .etc).  As with ``expect``, ``expect_constructor`` does not support ``and_return``, ``and_return_result_of``, or ``and_raise``.
+The return value of ``allow_constructor`` and ``expect_constructor`` support all of the same methods as allow/expect. (e.g. ``with_args``, ``once``, ``exactly``, .etc).
+
+As with ``expect``, ``expect_constructor`` does not support ``and_return``, ``and_return_result_of``, or ``and_raise`` (see :ref:`expect-return-value`).
 
 
 *NOTE*: Currently you can only stub the constructor of ``ClassDoubles``
