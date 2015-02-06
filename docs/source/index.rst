@@ -15,6 +15,7 @@ It provides functionality for stubbing, mocking, and verification of test double
    usage
    api
    faq
+   changelog
 
 
 
