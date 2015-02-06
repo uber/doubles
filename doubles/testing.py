@@ -1,7 +1,19 @@
+class OldStyleEmptyClass():
+    pass
+
+
+class EmptyClass(OldStyleEmptyClass, object):
+    pass
+
+
 class OldStyleUser():
     """An importable dummy class used for testing purposes."""
 
     class_attribute = 'foo'
+
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
 
     @staticmethod
     def static_method(arg):
@@ -10,10 +22,6 @@ class OldStyleUser():
     @classmethod
     def class_method(cls, arg):
         return 'class_method return value: {}'.format(arg)
-
-    def __init__(self, name, age):
-        self.name = name
-        self.age = age
 
     def get_name(self):
         return self.name
@@ -63,6 +71,10 @@ def top_level_function(arg1, arg2='default'):
         arg1=arg1,
         arg2=arg2
     )
+
+
+def top_level_function_that_creates_an_instance():
+    return User('Bob Barker', 100), OldStyleUser('Bob Barker', 100)
 
 
 class ClassWithGetAttr(object):

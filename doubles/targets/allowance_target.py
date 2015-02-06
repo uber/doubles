@@ -1,6 +1,8 @@
 from inspect import stack
 
 from doubles.lifecycle import current_space
+from doubles.class_double import ClassDouble
+from doubles.exceptions import ConstructorDoubleError
 
 
 def allow(target):
@@ -18,6 +20,24 @@ def allow(target):
     """
 
     return AllowanceTarget(target)
+
+
+def allow_constructor(target):
+    """
+    Set an allowance on a ``ClassDouble`` constructor
+
+    This allows the caller to control what a ClassDouble returns when a new instance is created.
+
+    :param ClassDouble target:  The ClassDouble to set the allowance on.
+    :return: an ``Allowance`` for the __new__ method.
+    :raise: ``ConstructorDoubleError`` if target is not a ClassDouble.
+    """
+    if not isinstance(target, ClassDouble):
+        raise ConstructorDoubleError(
+            'Cannot allow_constructor of {} since it is not a ClassDouble.'.format(target),
+        )
+
+    return allow(target)._doubles__new__
 
 
 class AllowanceTarget(object):

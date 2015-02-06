@@ -344,6 +344,7 @@ ClassDouble
 
       allow(User).to_call('find_by_foo')
 
+
 ObjectDouble
 ++++++++++++
 
@@ -381,3 +382,62 @@ If you ever want to to clear all allowances and expectations you have set on an 
         expect(some_object).foobar
 
         clear(some_object)
+
+Patching
+--------
+
+``patch`` is used to replace an existing object::
+
+    from doubles import patch
+    import doubles.testing
+
+    def test_patch():
+        patch('doubles.testing.User', 'Bob Barker')
+
+        assert doubles.testing.User == 'Bob Barker'
+
+Patches do not verify against the underlying object, so use them carefully.  Patches are automatically restored at the end of the test.
+
+Patching Classes
+++++++++++++++++
+``patch_class`` is a wrapper on top of ``patch`` to help you patch a python class with a ``ClassDouble``.  ``patch_class`` creates a ``ClassDouble`` of the class specified, patches the original class and returns the ``ClassDouble``::
+
+
+    from doubles import patch_class, ClassDouble
+    import doubles.testing
+
+    def test_patch_class():
+        class_double = patch_class('doubles.testing.User')
+
+        assert doubles.testing.User is class_double
+        assert isinstance(class_double, ClassDouble)
+
+Stubbing Constructors
+---------------------
+
+By default ``ClassDoubles`` cannot create new instances::
+
+    from doubles import ClassDouble
+
+    def test_unstubbed_constructor():
+        User = ClassDouble('doubles.testing.User')
+        User('Teddy', 1901)  # Raises an UnallowedMethodCallError
+
+Stubbing the constructor of a ``ClassDouble`` is very similar to using ``allow`` or ``expect`` except we use: ``allow_constructor`` or ``expect_constructor``, and don't specify a method::
+
+    from doubles import allow_constructor, ClassDouble
+    import doubles.testing
+
+    def test_allow_constructor_with_args():
+        User = ClassDouble('doubles.testing.User')
+
+        allow_constructor(User).with_args('Bob', 100).and_return('Bob')
+
+        assert User('Bob', 100) == 'Bob'
+
+The return value of ``allow_constructor`` and ``expect_constructor`` support all of the same methods as allow/expect. (e.g. ``with_args``, ``once``, ``exactly``, .etc).
+
+As with ``expect``, ``expect_constructor`` does not support ``and_return``, ``and_return_result_of``, or ``and_raise`` (see :ref:`expect-return-value`).
+
+
+*NOTE*: Currently you can only stub the constructor of ``ClassDoubles``

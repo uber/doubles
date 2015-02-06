@@ -1,6 +1,8 @@
 from inspect import stack
 
 from doubles.lifecycle import current_space
+from doubles.class_double import ClassDouble
+from doubles.exceptions import ConstructorDoubleError
 
 
 def expect(target):
@@ -18,6 +20,22 @@ def expect(target):
     """
 
     return ExpectationTarget(target)
+
+
+def expect_constructor(target):
+    """
+    Set an expectation on a ``ClassDouble`` constructor
+
+    :param ClassDouble target:  The ClassDouble to set the expectation on.
+    :return: an ``Expectation`` for the __new__ method.
+    :raise: ``ConstructorDoubleError`` if target is not a ClassDouble.
+    """
+    if not isinstance(target, ClassDouble):
+        raise ConstructorDoubleError(
+            'Cannot allow_constructor of {} since it is not a ClassDouble.'.format(target),
+        )
+
+    return expect(target)._doubles__new__
 
 
 class ExpectationTarget(object):

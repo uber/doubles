@@ -72,3 +72,9 @@ class VerifyingDoubleImportError(AssertionError):
     """
     An exception raised when attempting to create a verifying double from an invalid module path.
     """
+
+
+class ConstructorDoubleError(AssertionError):
+    """
+    An exception raised when attempting to double the constructor of a non ClassDouble.
+    """
