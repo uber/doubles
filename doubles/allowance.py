@@ -119,6 +119,20 @@ class Allowance(object):
         self.verify_arguments()
         return self
 
+    def __call__(self, *args, **kwargs):
+        """
+        A short hand syntax for with_args
+
+        Allows callers to do:
+            allow(module).foo.with_args(1, 2)
+        With:
+            allow(module).foo(1, 2)
+
+        :param args: Any positional arguments required for invocation.
+        :param kwargs: Any keyword arguments required for invocation.
+        """
+        return self.with_args(*args, **kwargs)
+
     def with_no_args(self):
         """Declares that the double can only be called with no arguments."""
 

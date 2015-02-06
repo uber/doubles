@@ -58,6 +58,21 @@ The examples shown so far will allow the stubbed method to be called with any ar
         user.set_name('Henry')  # Returns None
         user.set_name('Teddy')  # Raises an UnallowedMethodCallError
 
+You do not need to specifically call ``with_args``, calling the allowance directly is the same as calling ``with_args``.  The following example is identical to the code above::
+
+    from doubles import allow
+
+    from myapp import User
+
+
+    def test_allows_set_name_with_args():
+        user = User('Carl')
+
+        allow(user).set_name('Henry')
+
+        user.set_name('Henry')  # Returns None
+        user.set_name('Teddy')  # Raises an UnallowedMethodCallError
+
 Multiple allowances can be specified for the same method with different arguments and return values::
 
     from doubles import allow
