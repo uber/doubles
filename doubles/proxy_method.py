@@ -6,7 +6,9 @@ from doubles.exceptions import UnallowedMethodCallError
 from doubles.proxy_property import ProxyProperty
 from doubles.allowance import build_argument_repr_string
 
-double_name = lambda name: 'double_of_' + name
+
+def double_name(name):
+    return 'double_of_' + name
 
 
 def _restore__new__(target, original_method):

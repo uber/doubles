@@ -8,10 +8,11 @@ from doubles.exceptions import (
 )
 
 
-if sys.version_info >= (3, 0):
-    _get_func_object = lambda x: x.__func__
-else:
-    _get_func_object = lambda x: x.im_func
+def _get_func_object(func):
+    if sys.version_info >= (3, 0):
+        return func.__func__
+    else:
+        return func.im_func
 
 
 def _is_python_function(func):
