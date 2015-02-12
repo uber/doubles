@@ -117,3 +117,13 @@ callable_variable = Callable()
 
 class_method = User.class_method
 instance_method = User('Bob', 25).get_name
+
+
+class NeverEquals(object):
+    def __eq__(self, other):
+        return False
+
+
+class AlwaysEquals(object):
+    def __eq__(self, other):
+        return True

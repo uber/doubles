@@ -10,6 +10,7 @@ from doubles.exceptions import (
 from doubles.instance_double import InstanceDouble
 from doubles import allow, no_builtin_verification
 from doubles.lifecycle import teardown
+from doubles.testing import AlwaysEquals, NeverEquals
 
 
 class UserDefinedException(Exception):
@@ -44,6 +45,18 @@ class TestBasicAllowance(object):
 
             with raises(VerifyingDoubleArgumentError):
                 subject.instance_method('bar')
+
+    def test_objects_with_custom__eq__method_one(self):
+        subject = InstanceDouble('doubles.testing.User')
+        allow(subject).method_with_positional_arguments.with_args(NeverEquals())
+
+        subject.method_with_positional_arguments(AlwaysEquals())
+
+    def test_objects_with_custom__eq__method_two(self):
+        subject = InstanceDouble('doubles.testing.User')
+        allow(subject).method_with_positional_arguments.with_args(AlwaysEquals())
+
+        subject.method_with_positional_arguments(NeverEquals())
 
 
 class TestReturnValues(object):
