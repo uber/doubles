@@ -1,4 +1,5 @@
-pluralize = lambda w, n: w if n == 1 else w + 's'
+def pluralize(word, count):
+    return word if count == 1 else word + 's'
 
 
 class CallCountAccumulator(object):
