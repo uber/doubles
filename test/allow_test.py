@@ -137,6 +137,12 @@ class TestAndReturn(object):
 
 
 class TestWithArgs(object):
+    def test__call__is_short_hand_for_with_args(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).method_with_positional_arguments('Bob').and_return('Barker')
+        assert subject.method_with_positional_arguments('Bob') == 'Barker'
+
     def test_allows_any_arguments_if_none_are_specified(self):
         subject = InstanceDouble('doubles.testing.User')
 
