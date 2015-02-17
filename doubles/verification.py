@@ -8,10 +8,11 @@ from doubles.exceptions import (
 )
 
 
-def _get_func_object(func):
-    if sys.version_info >= (3, 0):
+if sys.version_info >= (3, 0):
+    def _get_func_object(func):
         return func.__func__
-    else:
+else:
+    def _get_func_object(func):
         return func.im_func
 
 
