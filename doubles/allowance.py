@@ -161,7 +161,23 @@ class Allowance(object):
         :rtype: bool
         """
 
-        return self.args == args and self.kwargs == kwargs
+        if self.args is _any and self.kwargs is _any:
+            return True
+        if args == self.args and kwargs == self.kwargs:
+            return True
+        elif len(args) != len(self.args) or len(kwargs) != len(self.kwargs):
+            return False
+
+        if not all(x == y or y == x for x, y in zip(args, self.args)):
+            return False
+
+        for key, value in self.kwargs.items():
+            if key not in kwargs:
+                return False
+            elif not (kwargs[key] == value or value == kwargs[key]):
+                return False
+
+        return True
 
     def return_value(self, *args, **kwargs):
         """
