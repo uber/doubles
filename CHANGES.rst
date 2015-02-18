@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.0.7 (unreleased)
+
+- Added __name__ and __doc__ proxying to ProxyMethod objects
+
 1.0.6 (2014-02-16)
 ------------------
 

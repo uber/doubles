@@ -41,6 +41,10 @@ class OldStyleUser():
     def method_with_positional_arguments(self, foo):
         return 'method_with_positional_arguments return value'
 
+    def method_with_doc(self):
+        """A basic method of OldStyleUser to illustrate existance of a docstring"""
+        return
+
     @property
     def some_property(self):
         return 'some_property return value'
