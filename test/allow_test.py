@@ -58,6 +58,22 @@ class TestBasicAllowance(object):
 
         subject.method_with_positional_arguments(NeverEquals())
 
+    def test_proxies_docstring(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).method_with_doc
+
+        assert subject.method_with_doc.__doc__ == (
+            """A basic method of OldStyleUser to illustrate existance of a docstring"""
+        )
+
+    def test_proxies_name(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).method_with_doc
+
+        assert subject.method_with_doc.__name__ == "method_with_doc"
+
 
 class TestReturnValues(object):
     def test_returns_result_of_a_callable(self):
