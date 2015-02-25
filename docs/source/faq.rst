@@ -93,7 +93,7 @@ Expectations
 
 
 Why can't an expectation return a value?
----------------------------------------------
+----------------------------------------
 
 You can't.  If your function depends on the return value of the method you are mocking then you should use allow.   Then you should test that the value returned from the allow was used correctly by asserting something later on. e.g.::
 
@@ -119,3 +119,10 @@ Here we shouldn't expect that ``api_call_to_get_emails`` is called, we should ex
         expect(myapp).send_email.with_args('drew@carey').once()
 
         func_to_test(1)
+
+How do I assert that a function is not called?
+----------------------------------------------
+
+If you expect the ``send_mail`` method never to be called on ``user``::
+
+    expect(user).send_mail.never()
