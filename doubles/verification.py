@@ -7,6 +7,9 @@ from doubles.exceptions import (
     VerifyingDoubleError,
 )
 
+ACCEPTS_ARGS = (list, tuple, set)
+ACCEPTS_KWARGS = (dict,)
+
 
 if sys.version_info >= (3, 0):
     def _get_func_object(func):
@@ -36,7 +39,12 @@ def _verify_arguments_of_doubles__new__(target, args, kwargs):
     :params dict kwargs: Keyword arguments.
     """
     if not _is_python_function(target.doubled_obj.__init__):
-        if args or kwargs:
+        class_ = target.doubled_obj
+        if args and not kwargs and issubclass(class_, ACCEPTS_ARGS):
+            return True
+        elif kwargs and not args and issubclass(class_, ACCEPTS_KWARGS):
+            return True
+        elif args or kwargs:
             given_args_count = 1 + len(args) + len(kwargs)
             raise VerifyingDoubleArgumentError(
                 '__init__() takes exactly 1 arguments ({} given)'.format(

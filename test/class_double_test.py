@@ -175,3 +175,37 @@ class TestingStubbingNonClassDoubleConstructors(object):
     def test_raises_if_you_expect_constructor(self, test_class):
         with raises(ConstructorDoubleError):
             expect_constructor(test_class)
+
+
+class TestStubbingConstructorOfBuiltinSubClass(object):
+    @mark.parametrize('type_', ['Dict'])
+    class TestAcceptsKwargs(object):
+        def test_fails_with_positional_args(self, type_):
+            double = ClassDouble('doubles.testing.{}SubClass'.format(type_))
+            with raises(VerifyingDoubleArgumentError):
+                allow_constructor(double).with_args(1, 2)
+
+        def test_fails_with_positional_args_and_kwargs(self, type_):
+            double = ClassDouble('doubles.testing.{}SubClass'.format(type_))
+            with raises(VerifyingDoubleArgumentError):
+                allow_constructor(double).with_args(1, 2, foo=1)
+
+        def test_passes_with_kwargs(self, type_):
+            double = ClassDouble('doubles.testing.{}SubClass'.format(type_))
+            allow_constructor(double).with_args(bob='Barker')
+
+    @mark.parametrize('type_', ['List', 'Set', 'Tuple'])
+    class TestAccpectArgs(object):
+        def test_passes_with_positional_args(self, type_):
+            double = ClassDouble('doubles.testing.{}SubClass'.format(type_))
+            allow_constructor(double).with_args(1, 2)
+
+        def test_fails_with_kwargs(self, type_):
+            double = ClassDouble('doubles.testing.{}SubClass'.format(type_))
+            with raises(VerifyingDoubleArgumentError):
+                allow_constructor(double).with_args(bob='Barker')
+
+        def test_fails_with_positional_args_and_kwargs(self, type_):
+            double = ClassDouble('doubles.testing.{}SubClass'.format(type_))
+            with raises(VerifyingDoubleArgumentError):
+                allow_constructor(double).with_args(1, 2, foo=1)
