@@ -17,7 +17,7 @@ def patch_class(input_class):
         def _doubles__new__(self, *args, **kwargs):
             pass
 
-    new_class = type('Doubled' + input_class.__name__, (input_class, Instantiator), {})
+    new_class = type(input_class.__name__, (input_class, Instantiator), {})
 
     return new_class
 

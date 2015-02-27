@@ -20,7 +20,7 @@ def _get_doubles_target(module, class_name, path):
     try:
         doubles_target = getattr(module, class_name)
         if isinstance(doubles_target, ObjectDouble):
-            return doubles_target
+            return doubles_target._doubles_target
 
         if not isclass(doubles_target):
             raise VerifyingDoubleImportError(
