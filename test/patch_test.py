@@ -4,6 +4,7 @@ from doubles import (
     patch,
     patch_class,
     InstanceDouble,
+    ClassDouble,
     allow_constructor,
 )
 from doubles.exceptions import (
@@ -63,3 +64,7 @@ class TestPatchClass(object):
     def test_non_existent_class(self):
         with pytest.raises(VerifyingDoubleImportError):
             patch_class('doubles.testing.NotReal')
+
+    def test_class_double_after_patching(self):
+        patch_class('doubles.testing.User')
+        assert ClassDouble('doubles.testing.User')
