@@ -121,10 +121,9 @@ class Allowance(object):
         return self
 
     def with_args_that_match(self, matching_function):
-        """
-        Define a custom function for testing arguments
+        """Define a custom function for testing arguments
 
-        :param func matching_function:  The funciton used to test arguments passed to the stub.
+        :param func matching_function:  The function used to test arguments passed to the stub.
         """
         self.args = None
         self.kwargs = None
@@ -194,8 +193,7 @@ class Allowance(object):
         return True
 
     def satisfy_custom_matcher(self, args, kwargs):
-        """
-        Returns a boolean indicating whether or not the stub will accept the provided arguments.
+        """Return a boolean indicating if the args satisify the stub
 
         :return: Whether or not the stub accepts the provided arguments.
         :rtype: bool
