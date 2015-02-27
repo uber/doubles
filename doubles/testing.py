@@ -131,3 +131,19 @@ class NeverEquals(object):
 class AlwaysEquals(object):
     def __eq__(self, other):
         return True
+
+
+class DictSubClass(dict):
+    pass
+
+
+class ListSubClass(list):
+    pass
+
+
+class SetSubClass(set):
+    pass
+
+
+class TupleSubClass(tuple):
+    pass
