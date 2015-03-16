@@ -1,6 +1,6 @@
 import re
 
-from pytest import raises
+from pytest import raises, mark
 
 from doubles.exceptions import (
     UnallowedMethodCallError,
@@ -8,7 +8,7 @@ from doubles.exceptions import (
     VerifyingDoubleArgumentError
 )
 from doubles.instance_double import InstanceDouble
-from doubles import allow, no_builtin_verification
+from doubles import allow, expect, no_builtin_verification
 from doubles.lifecycle import teardown
 from doubles.testing import AlwaysEquals, NeverEquals
 
@@ -75,48 +75,49 @@ class TestBasicAllowance(object):
         assert subject.method_with_doc.__name__ == "method_with_doc"
 
 
+@mark.parametrize('stubber', [allow, expect])
 class TestReturnValues(object):
-    def test_returns_result_of_a_callable(self):
+    def test_returns_result_of_a_callable(self, stubber):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).instance_method.and_return_result_of(lambda: 'bar')
+        stubber(subject).instance_method.and_return_result_of(lambda: 'bar')
 
         assert subject.instance_method() == 'bar'
 
-    def test_returns_result_of_a_callable_with_positional_arg(self):
+    def test_returns_result_of_a_callable_with_positional_arg(self, stubber):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).method_with_positional_arguments.and_return_result_of(lambda x: x)
+        stubber(subject).method_with_positional_arguments.and_return_result_of(lambda x: x)
 
         assert subject.method_with_positional_arguments('bar') == 'bar'
 
-    def test_returns_result_of_a_callable_with_positional_vargs(self):
+    def test_returns_result_of_a_callable_with_positional_vargs(self, stubber):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).method_with_varargs.and_return_result_of(lambda *x: x)
+        stubber(subject).method_with_varargs.and_return_result_of(lambda *x: x)
 
         result = subject.method_with_varargs('bob', 'barker')
         assert result == ('bob', 'barker')
 
-    def test_returns_result_of_a_callable_with_varkwargs(self):
+    def test_returns_result_of_a_callable_with_varkwargs(self, stubber):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).method_with_varkwargs.and_return_result_of(lambda **kwargs: kwargs['bob'])
+        stubber(subject).method_with_varkwargs.and_return_result_of(lambda **kwargs: kwargs['bob'])
 
         assert subject.method_with_varkwargs(bob='barker') == 'barker'
 
-    def test_raises_provided_exception(self):
+    def test_raises_provided_exception(self, stubber):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).instance_method.and_raise(UserDefinedException)
+        stubber(subject).instance_method.and_raise(UserDefinedException)
 
         with raises(UserDefinedException):
             subject.instance_method()
 
-    def test_chaining_result_methods_gives_the_last_one_precedence(self):
+    def test_chaining_result_methods_gives_the_last_one_precedence(self, stubber):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).instance_method.and_return('bar').and_return_result_of(
+        stubber(subject).instance_method.and_return('bar').and_return_result_of(
             lambda: 'baz'
         ).and_raise(UserDefinedException).and_return('final')
 

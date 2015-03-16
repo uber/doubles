@@ -89,37 +89,6 @@ Patches do not verify against the underlying object, so use them carefully.  Pat
 Expectations
 +++++++++++++
 
-.. _expect-return-value:
-
-
-Why can't an expectation return a value?
-----------------------------------------
-
-You can't.  If your function depends on the return value of the method you are mocking then you should use allow.   Then you should test that the value returned from the allow was used correctly by asserting something later on. e.g.::
-
-    def func_to_test(user_id):
-        emails = api_call_to_get_emails(user_id)
-
-        for e in emails:
-            send_email(email_address)
-
-Here we shouldn't expect that ``api_call_to_get_emails`` is called, we should expect that ``send_email`` is called with each email returned by ``api_call_to_get_emails``.  This test would look like::
-
-    import myapp
-
-    from doubles import allow, expect
-
-
-    def test_func():
-        allow(myapp).api_call_to_get_emails.with_args(1).and_return(
-          ['bob@barker.com', 'drew@carey.com'],
-        )
-
-        expect(myapp).send_email.with_args('bob@barker').once()
-        expect(myapp).send_email.with_args('drew@carey').once()
-
-        func_to_test(1)
-
 How do I assert that a function is not called?
 ----------------------------------------------
 
