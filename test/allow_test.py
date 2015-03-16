@@ -553,58 +553,58 @@ class TestCustomMatcher(object):
         def func():
             raise Exception('Bob Barker')
 
-        allow(self.subject).instance_method.with_args_that_match(func)
+        allow(self.subject).instance_method.with_args_validator(func)
         with raises(UnallowedMethodCallError):
             self.subject.instance_method()
 
     def test_matcher_with_no_args_returns_true(self):
-        allow(self.subject).instance_method.with_args_that_match(lambda: True).and_return('Bob')
+        allow(self.subject).instance_method.with_args_validator(lambda: True).and_return('Bob')
         self.subject.instance_method() == 'Bob'
 
     def test_matcher_with_no_args_returns_false(self):
-        allow(self.subject).instance_method.with_args_that_match(lambda: False)
+        allow(self.subject).instance_method.with_args_validator(lambda: False)
         with raises(UnallowedMethodCallError):
             self.subject.instance_method()
 
     def test_matcher_with_positional_args_returns_true(self):
         (allow(self.subject)
             .method_with_positional_arguments
-            .with_args_that_match(lambda x: True)
+            .with_args_validator(lambda x: True)
             .and_return('Bob'))
         self.subject.method_with_positional_arguments('Bob Barker') == 'Bob'
 
     def test_matcher_with_positional_args_returns_false(self):
-        allow(self.subject).method_with_positional_arguments.with_args_that_match(lambda x: False)
+        allow(self.subject).method_with_positional_arguments.with_args_validator(lambda x: False)
         with raises(UnallowedMethodCallError):
             self.subject.method_with_positional_arguments('Bob Barker')
 
     def test_matcher_with_kwargs_args_returns_false(self):
         def func(bar=None):
             return False
-        allow(self.subject).instance_method.with_args_that_match(func)
+        allow(self.subject).instance_method.with_args_validator(func)
         with raises(UnallowedMethodCallError):
             self.subject.instance_method()
 
     def test_matcher_with_kwargs_args_returns_true(self):
         def func(bar=None):
             return True
-        allow(self.subject).instance_method.with_args_that_match(func).and_return('Bob')
+        allow(self.subject).instance_method.with_args_validator(func).and_return('Bob')
         self.subject.instance_method() == 'Bob'
 
     def test_matcher_with_positional_and_kwargs_returns_true(self):
         def func(foo, bar=None):
             return True
-        allow(self.subject).method_with_default_args.with_args_that_match(func).and_return('Bob')
+        allow(self.subject).method_with_default_args.with_args_validator(func).and_return('Bob')
         self.subject.method_with_default_args('bob', bar='Barker') == 'Bob'
 
     def test_matcher_with_positional_and_kwargs_returns_false(self):
         def func(foo, bar=None):
             return False
-        allow(self.subject).method_with_default_args.with_args_that_match(func).and_return('Bob')
+        allow(self.subject).method_with_default_args.with_args_validator(func).and_return('Bob')
         with raises(UnallowedMethodCallError):
             self.subject.method_with_default_args('bob', bar='Barker')
 
     def test_matcher_returns_true_but_args_do_not_match_call_signature(self):
-        allow(self.subject).instance_method.with_args_that_match(lambda x: True)
+        allow(self.subject).instance_method.with_args_validator(lambda x: True)
         with raises(VerifyingDoubleArgumentError):
             self.subject.instance_method('bob')

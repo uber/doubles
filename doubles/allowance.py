@@ -120,7 +120,7 @@ class Allowance(object):
         self.verify_arguments()
         return self
 
-    def with_args_that_match(self, matching_function):
+    def with_args_validator(self, matching_function):
         """Define a custom function for testing arguments
 
         :param func matching_function:  The function used to test arguments passed to the stub.
