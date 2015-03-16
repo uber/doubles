@@ -7,8 +7,7 @@ class CallCountAccumulator(object):
         self._call_count = 0
 
     def set_exact(self, n):
-        """
-        Set an exact call count expectation
+        """Set an exact call count expectation
 
         :param integer n:
         """
@@ -16,8 +15,7 @@ class CallCountAccumulator(object):
         self._exact = n
 
     def set_minimum(self, n):
-        """
-        Set a minimum call count expectation
+        """Set a minimum call count expectation
 
         :param integer n:
         """
@@ -25,8 +23,7 @@ class CallCountAccumulator(object):
         self._minimum = n
 
     def set_maximum(self, n):
-        """
-        Set a maximum call count expectation
+        """Set a maximum call count expectation
 
         :param integer n:
         """
@@ -34,8 +31,7 @@ class CallCountAccumulator(object):
         self._maximum = n
 
     def has_too_many_calls(self):
-        """
-        Test if there have been too many calls
+        """Test if there have been too many calls
 
         :rtype boolean
         """
@@ -47,8 +43,7 @@ class CallCountAccumulator(object):
         return False
 
     def has_too_few_calls(self):
-        """
-        Test if there have not been enough calls
+        """Test if there have not been enough calls
 
         :rtype boolean
         """
@@ -60,8 +55,7 @@ class CallCountAccumulator(object):
         return False
 
     def has_incorrect_call_count(self):
-        """
-        Test if there have not been a valid number of calls
+        """Test if there have not been a valid number of calls
 
         :rtype boolean
         """
@@ -69,8 +63,7 @@ class CallCountAccumulator(object):
         return self.has_too_few_calls() or self.has_too_many_calls()
 
     def has_correct_call_count(self):
-        """
-        Test if there have been a valid number of calls
+        """Test if there have been a valid number of calls
 
         :rtype boolean
         """
@@ -78,8 +71,7 @@ class CallCountAccumulator(object):
         return not self.has_incorrect_call_count()
 
     def never(self):
-        """
-        Test if the number of expect is 0
+        """Test if the number of expect is 0
 
         :rtype: boolean
         """
@@ -87,17 +79,14 @@ class CallCountAccumulator(object):
         return self.has_exact and self._exact == 0
 
     def called(self):
-        """
-        Increment the call count
-        """
+        """Increment the call count"""
 
         self._call_count += 1
         return self
 
     @property
     def count(self):
-        """
-        Extract the current call count
+        """Extract the current call count
 
         :rtype integer
         """
@@ -106,8 +95,7 @@ class CallCountAccumulator(object):
 
     @property
     def has_minimum(self):
-        """
-        Test if self has a minimum call count set
+        """Test if self has a minimum call count set
 
         :rtype boolean
         """
@@ -116,8 +104,7 @@ class CallCountAccumulator(object):
 
     @property
     def has_maximum(self):
-        """
-        Test if self has a maximum call count set
+        """Test if self has a maximum call count set
 
         :rtype boolean
         """
@@ -126,8 +113,7 @@ class CallCountAccumulator(object):
 
     @property
     def has_exact(self):
-        """
-        Test if self has an exact call count set
+        """Test if self has an exact call count set
 
         :rtype boolean
         """
@@ -135,8 +121,7 @@ class CallCountAccumulator(object):
         return getattr(self, '_exact', None) is not None
 
     def _restriction_string(self):
-        """
-        Get a string explaining the expectation currently set
+        """Get a string explaining the expectation currently set
 
         e.g `at least 5 times`, `at most 1 time`, or `2 times`
 
@@ -159,9 +144,7 @@ class CallCountAccumulator(object):
         )
 
     def error_string(self):
-        """
-        Get a string explaining the difference between the expected and
-        actual call count.
+        """Returns a well formed error message
 
         e.g at least 5 times but was called 4 times
 

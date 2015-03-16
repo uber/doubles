@@ -14,9 +14,9 @@ class ObjectDouble(object):
         self._doubles_target = target
 
     def __repr__(self):
-        """
-        Provides a string representation of the double, including the memory address and the
-        name of the object being doubled.
+        """Provides a string representation of the double.
+
+        NOTE: Includes the memory address and the name of the object being doubled.
 
         :return: A string representation of the double.
         :rtype: str

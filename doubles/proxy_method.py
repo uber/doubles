@@ -12,8 +12,7 @@ def double_name(name):
 
 
 def _restore__new__(target, original_method):
-    """
-    Restore __new__ to original_method on the target
+    """Restore __new__ to original_method on the target
 
     Python 3 does some magic to verify no arguments are sent to __new__ if it
     is the builtin version, to work in python 3 we must handle this:
@@ -61,8 +60,7 @@ class ProxyMethod(object):
         self._hijack_target()
 
     def __call__(self, *args, **kwargs):
-        """
-        The actual invocation of the doubled method.
+        """The actual invocation of the doubled method.
 
         :param tuple args: The arguments the doubled method was called with.
         :param dict kwargs: The keyword arguments the doubled method was called with.
@@ -81,8 +79,7 @@ class ProxyMethod(object):
         return expectation.return_value(*args, **kwargs)
 
     def __get__(self, instance, owner):
-        """
-        Implements the descriptor protocol to allow doubled properties to behave as properties.
+        """Implements the descriptor protocol to allow doubled properties to behave as properties.
 
         :return: The return value of any matching double in the case of a property, self otherwise.
         :rtype: object, ProxyMethod
@@ -144,8 +141,7 @@ class ProxyMethod(object):
             self._target.hijack_attr(self._method_name)
 
     def _raise_exception(self, args, kwargs):
-        """
-        Raises an ``UnallowedMethodCallError`` with a useful message.
+        """ Raises an ``UnallowedMethodCallError`` with a useful message.
 
         :raise: ``UnallowedMethodCallError``
         """

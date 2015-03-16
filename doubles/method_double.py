@@ -30,8 +30,7 @@ class MethodDouble(object):
         )
 
     def add_allowance(self, caller):
-        """
-        Adds a new allowance for the method.
+        """Adds a new allowance for the method.
 
         :param: tuple caller: A tuple indicating where the method was called
         :return: The new ``Allowance``.
@@ -43,8 +42,7 @@ class MethodDouble(object):
         return allowance
 
     def add_expectation(self, caller):
-        """
-        Adds a new expectation for the method.
+        """Adds a new expectation for the method.
 
         :return: The new ``Expectation``.
         :rtype: Expectation
@@ -60,8 +58,7 @@ class MethodDouble(object):
         self._proxy_method.restore_original_method()
 
     def verify(self):
-        """
-        Verifies all expectations on the method.
+        """Verifies all expectations on the method.
 
         :raise: ``MockExpectationError`` on the first expectation that is not satisfied, if any.
         """
@@ -71,7 +68,8 @@ class MethodDouble(object):
                 expectation.raise_failure_exception()
 
     def _find_matching_allowance(self, args, kwargs):
-        """
+        """Return a matching allowance.
+
         Returns the first allowance that matches the ones declared. Tries one with specific
         arguments first, then falls back to an allowance that allows arbitrary arguments.
 
@@ -92,7 +90,8 @@ class MethodDouble(object):
                 return allowance
 
     def _find_matching_double(self, args, kwargs):
-        """
+        """Returns the first matching expectation or allowance.
+
         Returns the first allowance or expectation that matches the ones declared. Tries one
         with specific arguments first, then falls back to an expectation that allows arbitrary
         arguments.
@@ -112,7 +111,8 @@ class MethodDouble(object):
             return allowance
 
     def _find_matching_expectation(self, args, kwargs):
-        """
+        """Return a matching expectation.
+
         Returns the first expectation that matches the ones declared. Tries one with specific
         arguments first, then falls back to an expectation that allows arbitrary arguments.
 
@@ -129,7 +129,8 @@ class MethodDouble(object):
                 return expectation
 
     def _verify_method(self):
-        """
+        """Verify that a method may be doubled.
+
         Verifies that the target object has a method matching the name the user is attempting to
         double.
 

@@ -31,8 +31,7 @@ def _is_python_33():
 
 
 def _verify_arguments_of_doubles__new__(target, args, kwargs):
-    """
-    Verify arg/kwargs against a class's __init__
+    """Verify arg/kwargs against a class's __init__
 
     :param class target: The class to verify against.
     :param tuple args:  Positional arguments.
@@ -69,8 +68,7 @@ def _raise_doubles_error_from_index_error(method_name):
 
 
 def verify_method(target, method_name, class_level=False):
-    """
-    Verifies that the provided method exists on the target object.
+    """Verifies that the provided method exists on the target object.
 
     :param Target target: A ``Target`` object containing the object with the method to double.
     :param str method_name: The name of the method to double.
@@ -91,8 +89,7 @@ def verify_method(target, method_name, class_level=False):
 
 
 def verify_arguments(target, method_name, args, kwargs):
-    """
-    Verifies that the provided arguments match the signature of the provided method.
+    """Verifies that the provided arguments match the signature of the provided method.
 
     :param Target target: A ``Target`` object containing the object with the method to double.
     :param str method_name: The name of the method to double.

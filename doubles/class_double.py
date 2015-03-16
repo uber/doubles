@@ -6,8 +6,7 @@ from doubles.exceptions import UnallowedMethodCallError
 
 
 def patch_class(input_class):
-    """
-    Create a new class based on the input_class.
+    """Create a new class based on the input_class.
 
     :param class input_class:  The class to patch.
     :rtype class:
@@ -41,8 +40,7 @@ class ClassDouble(InstanceDouble):
         self._target = Target(self._doubles_target)
 
     def __call__(self, *args, **kwargs):
-        """
-        Verify arguments and proxy to _doubles__new__
+        """Verify arguments and proxy to _doubles__new__
 
         :rtype obj:
         :raises VerifyingDoubleArgumentError: If args/kwargs don't match the expected argumenst of
@@ -52,8 +50,7 @@ class ClassDouble(InstanceDouble):
         return self._doubles__new__(*args, **kwargs)
 
     def _doubles__new__(self, *args, **kwargs):
-        """
-        Raises an UnallowedMethodCallError
+        """Raises an UnallowedMethodCallError
 
         NOTE: This method is here only to raise if it has not been stubbed
         """

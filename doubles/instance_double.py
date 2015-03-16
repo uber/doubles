@@ -6,8 +6,7 @@ from doubles.utils import get_module, get_path_components
 
 
 def _get_doubles_target(module, class_name, path):
-    """
-    Validate and return the class to be doubled.
+    """Validate and return the class to be doubled.
 
     :param module module: The module that contains the class that will be doubled.
     :param str class_name: The name of the class that will be doubled.
@@ -35,8 +34,7 @@ def _get_doubles_target(module, class_name, path):
 
 
 class InstanceDouble(ObjectDouble):
-    """
-    A pure double representing an instance of the target class.
+    """A pure double representing an instance of the target class.
 
     Any kwargs supplied will be set as attributes on the instance that is
     created.
