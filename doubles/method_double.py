@@ -84,6 +84,10 @@ class MethodDouble(object):
                 return allowance
 
         for allowance in self._allowances:
+            if allowance.satisfy_custom_matcher(args, kwargs):
+                return allowance
+
+        for allowance in self._allowances:
             if allowance.satisfy_any_args_match():
                 return allowance
 

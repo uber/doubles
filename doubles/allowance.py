@@ -43,6 +43,7 @@ class Allowance(object):
         self._caller = caller
         self.args = _any
         self.kwargs = _any
+        self._custom_matcher = None
         self._is_satisfied = True
         self._call_counter = CallCountAccumulator()
 
@@ -119,6 +120,16 @@ class Allowance(object):
         self.verify_arguments()
         return self
 
+    def with_args_validator(self, matching_function):
+        """Define a custom function for testing arguments
+
+        :param func matching_function:  The function used to test arguments passed to the stub.
+        """
+        self.args = None
+        self.kwargs = None
+        self._custom_matcher = matching_function
+        return self
+
     def __call__(self, *args, **kwargs):
         """
         A short hand syntax for with_args
@@ -161,9 +172,11 @@ class Allowance(object):
         :rtype: bool
         """
 
-        if self.args is _any and self.kwargs is _any:
+        if self.args is None and self.kwargs is None:
+            return False
+        elif self.args is _any and self.kwargs is _any:
             return True
-        if args == self.args and kwargs == self.kwargs:
+        elif args == self.args and kwargs == self.kwargs:
             return True
         elif len(args) != len(self.args) or len(kwargs) != len(self.kwargs):
             return False
@@ -178,6 +191,19 @@ class Allowance(object):
                 return False
 
         return True
+
+    def satisfy_custom_matcher(self, args, kwargs):
+        """Return a boolean indicating if the args satisify the stub
+
+        :return: Whether or not the stub accepts the provided arguments.
+        :rtype: bool
+        """
+        if not self._custom_matcher:
+            return False
+        try:
+            return self._custom_matcher(*args, **kwargs)
+        except Exception:
+            return False
 
     def return_value(self, *args, **kwargs):
         """
