@@ -16,17 +16,14 @@ class Patch(object):
         self.set_value(None)
 
     def _capture_original_object(self):
-        """
-        Capture the original python object.
-        """
+        """Capture the original python object."""
         try:
             self._doubles_target = getattr(self.target, self._name)
         except AttributeError:
             raise VerifyingDoubleError(self.target, self._name)
 
     def set_value(self, value):
-        """
-        Set the value of the target.
+        """Set the value of the target.
 
         :param obj value: The value to set.
         """
@@ -34,7 +31,5 @@ class Patch(object):
         setattr(self.target, self._name, value)
 
     def restore_original_object(self):
-        """
-        Restore the target to it's original value.
-        """
+        """Restore the target to it's original value."""
         self.set_value(self._doubles_target)

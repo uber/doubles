@@ -50,8 +50,7 @@ class Allowance(object):
         self._return_value = lambda *args, **kwargs: None
 
     def and_raise(self, exception):
-        """
-        Causes the double to raise the provided exception when called.
+        """Causes the double to raise the provided exception when called.
 
         :param Exception exception: The exception to raise.
         """
@@ -62,7 +61,8 @@ class Allowance(object):
         return self
 
     def and_return(self, *return_values):
-        """
+        """Set a return value for an allowance
+
         Causes the double to return the provided values in order.  If multiple
         values are provided, they are returned one at a time in sequence as the double is called.
         If the double is called more times than there are return values, it should continue to
@@ -84,8 +84,7 @@ class Allowance(object):
         return self
 
     def and_return_result_of(self, return_value):
-        """
-        Causes the double to return the result of calling the provided value.
+        """ Causes the double to return the result of calling the provided value.
 
         :param return_value: A callable that will be invoked to determine the double's return value.
         :type return_value: any callable object
@@ -98,9 +97,10 @@ class Allowance(object):
         return self
 
     def is_satisfied(self):
-        """
-        Returns a boolean indicating whether or not the double has been satisfied. Stubs are
-        always satisfied, but mocks are only satisifed if they've been called as was declared.
+        """Returns a boolean indicating whether or not the double has been satisfied.
+
+        Stubs are always satisfied, but mocks are only satisifed if they've been
+        called as was declared.
 
         :return: Whether or not the double is satisfied.
         :rtype: bool
@@ -108,8 +108,7 @@ class Allowance(object):
         return self._is_satisfied
 
     def with_args(self, *args, **kwargs):
-        """
-        Declares that the double can only be called with the provided arguments.
+        """Declares that the double can only be called with the provided arguments.
 
         :param args: Any positional arguments required for invocation.
         :param kwargs: Any keyword arguments required for invocation.
@@ -131,8 +130,7 @@ class Allowance(object):
         return self
 
     def __call__(self, *args, **kwargs):
-        """
-        A short hand syntax for with_args
+        """A short hand syntax for with_args
 
         Allows callers to do:
             allow(module).foo.with_args(1, 2)
@@ -153,8 +151,8 @@ class Allowance(object):
         return self
 
     def satisfy_any_args_match(self):
-        """
-        Returns a boolean indicating whether or not the stub will accept arbitrary arguments.
+        """Returns a boolean indicating whether or not the stub will accept arbitrary arguments.
+
         This will be true unless the user has specified otherwise using ``with_args`` or
         ``with_no_args``.
 
@@ -165,8 +163,7 @@ class Allowance(object):
         return self.args is _any and self.kwargs is _any
 
     def satisfy_exact_match(self, args, kwargs):
-        """
-        Returns a boolean indicating whether or not the stub will accept the provided arguments.
+        """Returns a boolean indicating whether or not the stub will accept the provided arguments.
 
         :return: Whether or not the stub accepts the provided arguments.
         :rtype: bool
@@ -206,8 +203,7 @@ class Allowance(object):
             return False
 
     def return_value(self, *args, **kwargs):
-        """
-        Extracts the real value to be returned from the wrapping callable.
+        """Extracts the real value to be returned from the wrapping callable.
 
         :return: The value the double should return when called.
         """
@@ -216,8 +212,7 @@ class Allowance(object):
         return self._return_value(*args, **kwargs)
 
     def verify_arguments(self, args=None, kwargs=None):
-        """
-        Ensures that the arguments specified match the signature of the real method.
+        """Ensures that the arguments specified match the signature of the real method.
 
         :raise: ``VerifyingDoubleError`` if the arguments do not match.
         """
@@ -233,8 +228,7 @@ class Allowance(object):
 
     @verify_count_is_non_negative
     def exactly(self, n):
-        """
-        Set an exact call count allowance
+        """Set an exact call count allowance
 
         :param integer n:
         """
@@ -244,8 +238,7 @@ class Allowance(object):
 
     @verify_count_is_non_negative
     def at_least(self, n):
-        """
-        Set a minimum call count allowance
+        """Set a minimum call count allowance
 
         :param integer n:
         """
@@ -255,8 +248,7 @@ class Allowance(object):
 
     @verify_count_is_non_negative
     def at_most(self, n):
-        """
-        Set a maximum call count allowance
+        """Set a maximum call count allowance
 
         :param integer n:
         """
@@ -265,25 +257,19 @@ class Allowance(object):
         return self
 
     def never(self):
-        """
-        Set an expected call count allowance of 0
-        """
+        """Set an expected call count allowance of 0"""
 
         self.exactly(0)
         return self
 
     def once(self):
-        """
-        Set an expected call count allowance of 1
-        """
+        """Set an expected call count allowance of 1"""
 
         self.exactly(1)
         return self
 
     def twice(self):
-        """
-        Set an expected call count allowance of 2
-        """
+        """Set an expected call count allowance of 2"""
 
         self.exactly(2)
         return self
@@ -294,8 +280,7 @@ class Allowance(object):
     time = times
 
     def _called(self):
-        """
-        Indicate that the allowance was called
+        """Indicate that the allowance was called
 
         :raise MockExpectationError if the allowance has been called too many times
         """
@@ -304,8 +289,7 @@ class Allowance(object):
             self.raise_failure_exception()
 
     def raise_failure_exception(self, expect_or_allow='Allowed'):
-        """
-        Raises a ``MockExpectationError`` with a useful message.
+        """Raises a ``MockExpectationError`` with a useful message.
 
         :raise: ``MockExpectationError``
         """
@@ -323,8 +307,7 @@ class Allowance(object):
         )
 
     def _expected_argument_string(self):
-        """
-        Generates a string describing what arguments the double expected.
+        """Generates a string describing what arguments the double expected.
 
         :return: A string describing expected arguments.
         :rtype: str

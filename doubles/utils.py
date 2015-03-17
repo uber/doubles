@@ -4,8 +4,7 @@ from doubles.exceptions import VerifyingDoubleImportError
 
 
 def get_module(module_path, full_path):
-    """
-    Return the module given its path.
+    """Return the module given its path.
 
     :param str module_path: The path to the module to import.
     :param str full_path: The full path to the class that will be doubled.
@@ -21,8 +20,7 @@ def get_module(module_path, full_path):
 
 
 def get_path_components(path):
-    """
-    Extract the module name and class name out of the fully qualified path to the class.
+    """Extract the module name and class name out of the fully qualified path to the class.
 
     :param str path: The full path to the class.
     :return: The module path and the class name.

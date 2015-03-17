@@ -8,8 +8,7 @@ _thread_local_data = local()
 
 
 def current_space():
-    """
-    An accessor for the current thread's active ``Space``.
+    """An accessor for the current thread's active ``Space``.
 
     :return: The active ``Space``.
     :rtype: Space
@@ -43,7 +42,8 @@ def clear(*objects_to_clear):
 
 
 def verify():
-    """
+    """Verify a mock
+
     Verifies any mocks that have been created during the test run. Must be called after each
     test case, but before teardown.
     """
@@ -54,7 +54,8 @@ def verify():
 
 @contextmanager
 def no_builtin_verification():
-    """
+    """Turn off validation for builtin methods
+
     While inside this context we will ignore errors raised while verifying the
     arguments of builtins.
 
@@ -66,8 +67,7 @@ def no_builtin_verification():
 
 
 def ignore_builtin_verification():
-    """
-    Check if we ignoring builtin argument verification errors.
+    """Check if we ignoring builtin argument verification errors.
 
     :return: True if we are ignoring errors.
     :rtype: bool

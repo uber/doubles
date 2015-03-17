@@ -16,8 +16,7 @@ class Proxy(object):
         self._method_doubles = {}
 
     def add_allowance(self, method_name, caller):
-        """
-        Adds a new allowance for the given method name.
+        """Adds a new allowance for the given method name.
 
         :param str method_name: The name of the method to allow.
         :param tuple caller: A tuple indicating where the allowance was added
@@ -28,8 +27,7 @@ class Proxy(object):
         return self.method_double_for(method_name).add_allowance(caller)
 
     def add_expectation(self, method_name, caller):
-        """
-        Adds a new expectation for the given method name.
+        """Adds a new expectation for the given method name.
 
         :param str method_name: The name of the method to expect.
         :return: The new ``Expectation``.
@@ -39,7 +37,8 @@ class Proxy(object):
         return self.method_double_for(method_name).add_expectation(caller)
 
     def restore_original_object(self):
-        """
+        """Remove all stubs from an object.
+
         Removes the proxy methods applied to each method double and replaces them with the original
         values.
         """
@@ -48,8 +47,7 @@ class Proxy(object):
             method_double.restore_original_method()
 
     def verify(self):
-        """
-        Verifies all expectations on all method doubles.
+        """Verifies all expectations on all method doubles.
 
         :raise: ``MockExpectationError`` on the first expectation that is not satisfied, if any.
         """
@@ -58,8 +56,7 @@ class Proxy(object):
             method_double.verify()
 
     def method_double_for(self, method_name):
-        """
-        Returns the method double for the provided method name, creating one if necessary.
+        """Returns the method double for the provided method name, creating one if necessary.
 
         :param str method_name: The name of the method to retrieve a method double for.
         :return: The mapped ``MethodDouble``.

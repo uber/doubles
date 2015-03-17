@@ -16,8 +16,7 @@ class Space(object):
         self.skip_builtin_verification = False
 
     def patch_for(self, path):
-        """
-        Returns the ``Patch`` for the target path, creating it if necessary.
+        """Returns the ``Patch`` for the target path, creating it if necessary.
 
         :param str path: The absolute module path to the target.
         :return: The mapped ``Patch``.
@@ -30,8 +29,7 @@ class Space(object):
         return self._patches[path]
 
     def proxy_for(self, obj):
-        """
-        Returns the ``Proxy`` for the target object, creating it if necessary.
+        """Returns the ``Proxy`` for the target object, creating it if necessary.
 
         :param object obj: The object that will be doubled.
         :return: The mapped ``Proxy``.
@@ -63,8 +61,7 @@ class Space(object):
         del self._proxies[id(obj)]
 
     def verify(self):
-        """
-        Verifies expectations on all doubled objects.
+        """Verifies expectations on all doubled objects.
 
         :raise: ``MockExpectationError`` on the first expectation that is not satisfied, if any.
         """
