@@ -10,12 +10,6 @@ class UnallowedMethodCallError(AssertionError):
     pass
 
 
-class UnsupportedMethodError(AssertionError):
-    """An exception raised when a return/raise call is made on an expectation."""
-
-    pass
-
-
 class VerifyingDoubleError(AssertionError):
     """
     An exception raised when attempting to double a method that does not exist on the real object.
