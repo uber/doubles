@@ -10,7 +10,7 @@ from doubles.exceptions import (
 from doubles.instance_double import InstanceDouble
 from doubles import allow, no_builtin_verification
 from doubles.lifecycle import teardown
-from doubles.testing import AlwaysEquals, NeverEquals
+from doubles.testing import AlwaysEquals, NeverEquals, SuperUser
 
 
 class UserDefinedException(Exception):
@@ -518,3 +518,11 @@ class TestCustomMatcher(object):
         allow(self.subject).instance_method.with_args_validator(lambda x: True)
         with raises(VerifyingDoubleArgumentError):
             self.subject.instance_method('bob')
+
+
+class TestSuperMethods(object):
+    def test_allowing_super(self):
+        user = SuperUser('Bob', 25)
+        allow(super(SuperUser, user)).get_name.and_return('bobby')
+
+        assert user.get_name() == 'bobby'
