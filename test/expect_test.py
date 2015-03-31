@@ -10,6 +10,14 @@ from doubles.targets.expectation_target import expect
 
 
 class TestExpect(object):
+    def test_with_args_validator(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        expect(subject).method_with_varargs.with_args_validator(
+            lambda *args: args[0] == 'Bob Barker'
+        )
+        subject.method_with_varargs('Bob Barker', 'Drew Carey')
+
     def test_raises_if_an_expected_method_call_without_args_is_not_made(self):
         subject = InstanceDouble('doubles.testing.User')
 
