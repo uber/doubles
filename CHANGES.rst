@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.0.8 (2015-3-31)
+-----------------
+
+- Allow with_args_validator to work with expectations
+
 1.0.7 (2015-3-17)
 -----------------
 
