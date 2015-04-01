@@ -46,6 +46,22 @@ class Expectation(Allowance):
 
         return is_match
 
+    def satisfy_custom_matcher(self, args, kwargs):
+        """Returns a boolean indicating whether or not the mock will accept the provided arguments.
+
+        :param tuple args: A tuple of possition args
+        :param dict kwargs: A dictionary of keyword args
+        :return: Whether or not the mock accepts the provided arguments.
+        :rtype: bool
+        """
+
+        is_match = super(Expectation, self).satisfy_custom_matcher(args, kwargs)
+
+        if is_match:
+            self._satisfy()
+
+        return is_match
+
     def _satisfy(self):
         """Marks the mock as satisfied."""
 

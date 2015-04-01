@@ -125,6 +125,10 @@ class MethodDouble(object):
                 return expectation
 
         for expectation in self._expectations:
+            if expectation.satisfy_custom_matcher(args, kwargs):
+                return expectation
+
+        for expectation in self._expectations:
             if expectation.satisfy_any_args_match():
                 return expectation
 
