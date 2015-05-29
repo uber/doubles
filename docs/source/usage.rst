@@ -148,7 +148,7 @@ The previous sections have shown examples where methods on classes are stubbed o
     def test_get_token_returns_a_newly_generated_token_for_the_user():
         user = User('Carl')
 
-        allow(util).generate_user_token.with(user).and_return('dummy user token')
+        allow(util).generate_user_token.with_args(user).and_return('dummy user token')
 
         assert user.get_token() == 'dummy user token'
 
