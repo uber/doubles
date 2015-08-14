@@ -357,7 +357,7 @@ ClassDouble
     def test_verifying_class_double():
       User = ClassDouble('myapp.User')
 
-      allow(User).to_call('find_by_foo')
+      allow(User).find_by_foo
 
 
 ObjectDouble
@@ -373,7 +373,7 @@ ObjectDouble
     def test_verifying_object_double():
       something = ObjectDouble(some_object)
 
-      allow(something).to_call('foo')
+      allow(something).foo
 
 There is a subtle distinction between a pure test double created with ``ObjectDouble`` and a partial double created by passing a non-double object to ``allow`` or ``expect``. The former creates an object that does not accept any method calls which are not explicitly allowed, but verifies any that are against the real object. A partial double modifies parts of the real object itself, allowing some methods to be doubled and others to retain their real implementation.
 
