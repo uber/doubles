@@ -63,6 +63,11 @@ class User(OldStyleUser, object):
     pass
 
 
+class SuperUser(User):
+    def get_name(self):
+        return super(SuperUser, self).get_name()
+
+
 class UserWithCustomNew(User):
     def __new__(cls, name, age):
         instance = User.__new__(cls)
