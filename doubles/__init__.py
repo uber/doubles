@@ -1,4 +1,4 @@
-import pkg_resources
+__version__ = '1.0.8'
 
 from doubles.class_double import ClassDouble  # noqa
 from doubles.instance_double import InstanceDouble  # noqa
@@ -12,5 +12,3 @@ from doubles.lifecycle import (  # noqa
     no_builtin_verification,
     clear,
 )
-
-__version__ = pkg_resources.get_distribution('doubles').version

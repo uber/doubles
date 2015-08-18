@@ -2,13 +2,11 @@ from setuptools import setup
 from setuptools.command.test import test as TestCommand
 import sys
 
+import doubles
+
+
 with open('README.rst') as f:
     long_description = f.read()
-
-if sys.version_info < (3,2):
-    install_requires = ['futures']
-else:
-    install_requires = []
 
 
 class PyTest(TestCommand):
@@ -24,7 +22,7 @@ class PyTest(TestCommand):
 
 setup(
     name='doubles',
-    version='1.0.8',
+    version=doubles.__version__,
     description='Test doubles for Python.',
     long_description=long_description,
     author='Jimmy Cuadra',
@@ -48,6 +46,5 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Topic :: Software Development :: Testing',
-    ],
-    install_requires = install_requires,
+    ]
 )

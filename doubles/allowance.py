@@ -1,14 +1,25 @@
 from functools import wraps
 from inspect import getargspec
 
-from concurrent.futures import Future
-
 from doubles.exceptions import MockExpectationError, VerifyingBuiltinDoubleArgumentError
 from doubles.verification import verify_arguments
 from doubles.call_count_accumulator import CallCountAccumulator
 import doubles.lifecycle
 
 _any = object()
+
+
+def _get_future():
+    try:
+        from concurrent.futures import Future
+    except ImportError:
+        try:
+            from tornado.concurrent import Future
+        except ImportError:
+            raise ImportError(
+                'Error Importing Future, Could not find concurrent.futures or tornado.concurrent',
+            )
+    return Future()
 
 
 def verify_count_is_non_negative(func):
@@ -67,7 +78,7 @@ class Allowance(object):
 
         :param Exception exception: The exception to raise.
         """
-        future = Future()
+        future = _get_future()
         future.set_exception(exception)
         return self.and_return(future)
 
@@ -78,7 +89,7 @@ class Allowance(object):
         """
         futures = []
         for value in return_values:
-            future = Future()
+            future = _get_future()
             future.set_result(value)
             futures.append(future)
         return self.and_return(*futures)
