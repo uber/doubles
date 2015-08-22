@@ -9,6 +9,19 @@ import doubles.lifecycle
 _any = object()
 
 
+def _get_future():
+    try:
+        from concurrent.futures import Future
+    except ImportError:
+        try:
+            from tornado.concurrent import Future
+        except ImportError:
+            raise ImportError(
+                'Error Importing Future, Could not find concurrent.futures or tornado.concurrent',
+            )
+    return Future()
+
+
 def verify_count_is_non_negative(func):
     @wraps(func)
     def inner(self, arg):
@@ -59,6 +72,27 @@ class Allowance(object):
 
         self._return_value = proxy_exception
         return self
+
+    def and_raise_future(self, exception):
+        """Similar to `and_raise` but the doubled method returns a future.
+
+        :param Exception exception: The exception to raise.
+        """
+        future = _get_future()
+        future.set_exception(exception)
+        return self.and_return(future)
+
+    def and_return_future(self, *return_values):
+        """Similar to `and_return` but the doubled method returns a future.
+
+        :param object return_values: The values the double will return when called,
+        """
+        futures = []
+        for value in return_values:
+            future = _get_future()
+            future.set_result(value)
+            futures.append(future)
+        return self.and_return(*futures)
 
     def and_return(self, *return_values):
         """Set a return value for an allowance

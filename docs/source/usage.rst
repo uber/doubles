@@ -454,3 +454,42 @@ The return value of ``allow_constructor`` and ``expect_constructor`` support all
 
 
 *NOTE*: Currently you can only stub the constructor of ``ClassDoubles``
+
+Stubbing Asynchronous Methods
+-----------------------------
+
+Stubbing asynchronous methods requires returning futures ``and_return_future`` and ``and_raise_future`` do it for you.
+
+
+Returning Values
+++++++++++++++++
+
+Stubbing a method with ``and_return_future`` is similar to using ``and_return``, except the value is wrapped in a ``Future``::
+
+    from doubles import allow, InstanceDouble
+
+    def test_and_return_future():
+        user = InstanceDouble('doubles.testing.User')
+        allow(user).instance_method.and_return_future('Bob Barker')
+
+        result = user.elf.subject.instance_method()
+        assert result.result() == 'Bob Barker'
+
+Raising Exceptions
+++++++++++++++++++
+
+Stubbing a method with ``and_raise_future`` is similar to using ``and_raise``, except the exceptions is wrapped in a ``Future``::
+
+    from doubles import allow, InstanceDouble
+    from pytest import raises
+
+    def test_and_raise_future():
+        user = InstanceDouble('doubles.testing.User')
+        exception = Exception('Bob Barker')
+        allow(user).instance_method.and_raise_future(exception)
+        result = user.instance_method()
+
+        with raises(Exception) as e:
+            result.result()
+
+        assert e.value == exception

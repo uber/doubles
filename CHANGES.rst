@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.1.0 (TBD)
+-----------
+
+- Native support for futures: `and_return_future` and `and_raise_future`
+
 1.0.8 (2015-3-31)
 -----------------
 

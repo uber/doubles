@@ -518,3 +518,32 @@ class TestCustomMatcher(object):
         allow(self.subject).instance_method.with_args_validator(lambda x: True)
         with raises(VerifyingDoubleArgumentError):
             self.subject.instance_method('bob')
+
+
+class TestAsync(object):
+    def setup(self):
+        self.subject = InstanceDouble('doubles.testing.User')
+
+    def test_and_return_future(self):
+        allow(self.subject).instance_method.and_return_future('Bob Barker')
+
+        result = self.subject.instance_method()
+        assert result.result() == 'Bob Barker'
+
+    def test_and_return_future_multiple_values(self):
+        allow(self.subject).instance_method.and_return_future('Bob Barker', 'Drew Carey')
+
+        result1 = self.subject.instance_method()
+        result2 = self.subject.instance_method()
+        assert result1.result() == 'Bob Barker'
+        assert result2.result() == 'Drew Carey'
+
+    def test_and_raise_future(self):
+        exception = Exception('Bob Barker')
+        allow(self.subject).instance_method.and_raise_future(exception)
+
+        result = self.subject.instance_method()
+        with raises(Exception) as e:
+            result.result()
+
+        assert e.value == exception
