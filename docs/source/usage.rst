@@ -472,7 +472,7 @@ Stubbing a method with ``and_return_future`` is similar to using ``and_return``,
         user = InstanceDouble('doubles.testing.User')
         allow(user).instance_method.and_return_future('Bob Barker')
 
-        result = user.elf.subject.instance_method()
+        result = user.instance_method()
         assert result.result() == 'Bob Barker'
 
 Raising Exceptions
