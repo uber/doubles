@@ -1,8 +1,13 @@
 Changelog
 =========
 
+1.1.1 (2015-9-23)
+-----------------
+
+- Optimized suite by using a faster method of retrieving stack frames.
+
 1.1.0 (2015-8-23)
------------
+-----------------
 
 - Native support for futures: `and_return_future` and `and_raise_future`
 
