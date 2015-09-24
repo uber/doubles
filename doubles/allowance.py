@@ -335,8 +335,8 @@ class Allowance(object):
                 self._call_counter.error_string(),
                 self._target.obj,
                 self._expected_argument_string(),
-                self._caller[1],
-                self._caller[2]
+                self._caller.filename,
+                self._caller.lineno,
             )
         )
 
