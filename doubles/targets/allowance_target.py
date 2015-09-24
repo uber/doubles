@@ -1,4 +1,4 @@
-from inspect import stack
+import inspect
 
 from doubles.lifecycle import current_space
 from doubles.class_double import ClassDouble
@@ -65,5 +65,5 @@ class AllowanceTarget(object):
         if __dict__ and attr_name in __dict__:
             return __dict__[attr_name]
 
-        caller = stack()[1]
+        caller = inspect.getframeinfo(inspect.currentframe().f_back)
         return self._proxy.add_allowance(attr_name, caller)
