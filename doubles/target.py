@@ -147,10 +147,10 @@ class Target(object):
         :rtype: func
         """
 
-        if not hasattr(self.doubled_obj, method_name):
+        if not hasattr(self.doubled_obj, attr_name):
             return None
 
-        func = getattr(self.doubled_obj, method_name)
+        func = getattr(self.doubled_obj, attr_name)
         if not _is_callable(func):
             return None
 
@@ -159,7 +159,7 @@ class Target(object):
             'toplevel',
             self.doubled_obj if self.is_class() else self.doubled_obj_type,
         )
-        self.attrs[method_name] = attr
+        self.attrs[attr_name] = attr
         return attr
 
     def get_attr(self, method_name):
