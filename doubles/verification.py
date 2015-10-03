@@ -76,7 +76,7 @@ def verify_method(target, method_name, class_level=False):
         and in the case where the target is a class, that the attribute isn't an instance method.
     """
 
-    attr = target.attrs.get(method_name)
+    attr = target.get_attr(method_name)
 
     if not attr:
         raise VerifyingDoubleError(method_name, target.doubled_obj).no_matching_method()
@@ -101,7 +101,7 @@ def verify_arguments(target, method_name, args, kwargs):
     if method_name == '_doubles__new__':
         return _verify_arguments_of_doubles__new__(target, args, kwargs)
 
-    attr = target.attrs[method_name]
+    attr = target.get_attr(method_name)
     method = attr.object
 
     if attr.kind in ('toplevel', 'class method', 'static method'):
