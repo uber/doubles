@@ -13,6 +13,12 @@ import doubles.testing
 
 @mark.parametrize('test_class', [User, OldStyleUser])
 class TestInstanceMethods(object):
+    def test_method_added_after_isntance_creation(self, test_class):
+        user = test_class('Alice', 25)
+        allow(user).method_added_after_instance_creation.and_return('Bob Barker')
+
+        assert user.method_added_after_instance_creation() == 'Bob Barker'
+
     def test_stubs_instance_methods(self, test_class):
         user = test_class('Alice', 25)
 

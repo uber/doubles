@@ -3,7 +3,7 @@ from collections import namedtuple
 
 from doubles.object_double import ObjectDouble
 
-ModuleAttribute = namedtuple('ModuleAttribute', ['object', 'kind', 'defining_class'])
+Attribute = namedtuple('Attribute', ['object', 'kind', 'defining_class'])
 
 
 def _is_callable(obj):
@@ -91,7 +91,7 @@ class Target(object):
 
         if ismodule(self.doubled_obj):
             for name, func in getmembers(self.doubled_obj, _is_callable):
-                attrs[name] = ModuleAttribute(func, 'toplevel', self.doubled_obj)
+                attrs[name] = Attribute(func, 'toplevel', self.doubled_obj)
         else:
             for attr in classify_class_attrs(self.doubled_obj_type):
                 attrs[attr.name] = attr
@@ -138,3 +138,30 @@ class Target(object):
             )
         except AttributeError:
             return None
+
+    def get_callable_attr(self, attr_name):
+        """Used to double methods added to an object after creation
+
+        :param str attr_name: the name of the original attribute to return
+        :return: Attribute or None.
+        :rtype: func
+        """
+
+        if not hasattr(self.doubled_obj, method_name):
+            return None
+
+        func = getattr(self.doubled_obj, method_name)
+        if not _is_callable(func):
+            return None
+
+        attr = Attribute(
+            func,
+            'toplevel',
+            self.doubled_obj if self.is_class() else self.doubled_obj_type,
+        )
+        self.attrs[method_name] = attr
+        return attr
+
+    def get_attr(self, method_name):
+        """Get attribute from the target object"""
+        return self.attrs.get(method_name) or self.get_callable_attr(method_name)

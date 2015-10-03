@@ -6,6 +6,10 @@ class EmptyClass(OldStyleEmptyClass, object):
     pass
 
 
+def dummy_function():
+    return 'dummy result'
+
+
 class OldStyleUser():
     """An importable dummy class used for testing purposes."""
 
@@ -14,6 +18,7 @@ class OldStyleUser():
     def __init__(self, name, age):
         self.name = name
         self.age = age
+        self.method_added_after_instance_creation = dummy_function
 
     @staticmethod
     def static_method(arg):
