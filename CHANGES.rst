@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.1.2 (2015-10-3)
+-----------------
+
+- Support stubbing callable attributes.
+
 1.1.1 (2015-9-23)
 -----------------
 
