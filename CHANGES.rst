@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.1.3 (2015-10-3)
+-----------------
+
+- Fix bug when restoring stubbed attributes.
+
 1.1.2 (2015-10-3)
 -----------------
 
