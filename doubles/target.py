@@ -156,7 +156,7 @@ class Target(object):
 
         attr = Attribute(
             func,
-            'toplevel',
+            'attribute',
             self.doubled_obj if self.is_class() else self.doubled_obj_type,
         )
         self.attrs[attr_name] = attr

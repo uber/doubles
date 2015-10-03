@@ -16,12 +16,16 @@ class TestInstanceMethods(object):
     def test_callable_class_attribute(self, test_class):
         allow(test_class).callable_class_attribute.and_return('Bob Barker')
         assert test_class.callable_class_attribute() == 'Bob Barker'
+        teardown()
+        assert test_class.callable_class_attribute() == 'dummy result'
 
     def test_callable_instance_attribute(self, test_class):
         user = test_class('Alice', 25)
         allow(user).callable_instance_attribute.and_return('Bob Barker')
 
         assert user.callable_instance_attribute() == 'Bob Barker'
+        teardown()
+        assert user.callable_instance_attribute() == 'dummy result'
 
     def test_stubs_instance_methods(self, test_class):
         user = test_class('Alice', 25)

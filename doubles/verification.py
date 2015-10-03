@@ -104,7 +104,7 @@ def verify_arguments(target, method_name, args, kwargs):
     attr = target.get_attr(method_name)
     method = attr.object
 
-    if attr.kind in ('toplevel', 'class method', 'static method'):
+    if attr.kind in ('attribute', 'toplevel', 'class method', 'static method'):
         try:
             method = method.__get__(None, attr.defining_class)
         except AttributeError:
