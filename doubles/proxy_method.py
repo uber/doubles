@@ -54,7 +54,7 @@ class ProxyMethod(object):
         self._target = target
         self._method_name = method_name
         self._find_expectation = find_expectation
-        self._attr = target.attrs[method_name]
+        self._attr = target.get_attr(method_name)
 
         self._capture_original_method()
         self._hijack_target()

@@ -10,10 +10,12 @@ class OldStyleUser():
     """An importable dummy class used for testing purposes."""
 
     class_attribute = 'foo'
+    callable_class_attribute = classmethod(lambda cls: 'dummy result')
 
     def __init__(self, name, age):
         self.name = name
         self.age = age
+        self.callable_instance_attribute = lambda: 'dummy result'
 
     @staticmethod
     def static_method(arg):
