@@ -2,8 +2,6 @@ from setuptools import setup
 from setuptools.command.test import test as TestCommand
 import sys
 
-import doubles
-
 
 with open('README.rst') as f:
     long_description = f.read()
@@ -22,7 +20,7 @@ class PyTest(TestCommand):
 
 setup(
     name='doubles',
-    version=doubles.__version__,
+    version='1.1.3',
     description='Test doubles for Python.',
     long_description=long_description,
     author='Jimmy Cuadra',
@@ -30,6 +28,7 @@ setup(
     url='https://github.com/uber/doubles',
     license='MIT',
     packages=['doubles', 'doubles.targets'],
+    install_requires=['pyhamcrest'],
     tests_require=['pytest'],
     cmdclass={'test': PyTest},
     entry_points = {

@@ -1,5 +1,6 @@
 from functools import wraps
 from inspect import getargspec
+from hamcrest.core.matcher import Matcher
 
 from doubles.exceptions import MockExpectationError, VerifyingBuiltinDoubleArgumentError
 from doubles.verification import verify_arguments
@@ -212,16 +213,20 @@ class Allowance(object):
         elif len(args) != len(self.args) or len(kwargs) != len(self.kwargs):
             return False
 
-        if not all(x == y or y == x for x, y in zip(args, self.args)):
+        if not all(self._match(x, y) for x, y in zip(args, self.args)):
             return False
 
         for key, value in self.kwargs.items():
             if key not in kwargs:
                 return False
-            elif not (kwargs[key] == value or value == kwargs[key]):
+            elif not self._match(kwargs[key], value):
                 return False
 
         return True
+
+    def _match(self, actual, expected):
+        return expected.matches(actual) if isinstance(expected, Matcher) else (
+            actual == expected or expected == actual)
 
     def satisfy_custom_matcher(self, args, kwargs):
         """Return a boolean indicating if the args satisify the stub

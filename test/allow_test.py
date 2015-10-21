@@ -1,7 +1,5 @@
 import re
-
 from pytest import raises
-
 from doubles.exceptions import (
     UnallowedMethodCallError,
     MockExpectationError,
@@ -11,6 +9,7 @@ from doubles.instance_double import InstanceDouble
 from doubles import allow, no_builtin_verification
 from doubles.lifecycle import teardown
 from doubles.testing import AlwaysEquals, NeverEquals
+from hamcrest import equal_to
 
 
 class UserDefinedException(Exception):
@@ -147,13 +146,36 @@ class TestWithArgs(object):
             str(e.value)
         )
 
-    def test_matches_most_specific_allowance(self):
+    def test_allows_matching_args(self):
         subject = InstanceDouble('doubles.testing.User')
 
-        allow(subject).method_with_varargs.and_return('bar')
-        allow(subject).method_with_varargs.with_args('baz').and_return('blah')
+        allow(subject).method_with_positional_arguments.with_args(equal_to('foo'))
 
-        assert subject.method_with_varargs('baz') == 'blah'
+        assert subject.method_with_positional_arguments('foo') is None
+
+    def test_allows_matching_kwargs(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).method_with_default_args.with_args('one', bar=equal_to('two'))
+
+        assert subject.method_with_default_args('one', bar='two') is None
+
+    def test_raises_if_method_is_called_with_unmatchable_arguments(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        allow(subject).method_with_varargs.with_args(equal_to('bar'))
+
+        with raises(UnallowedMethodCallError) as e:
+            subject.method_with_varargs('baz')
+
+        assert re.match(
+            r"Received unexpected call to 'method_with_varargs' on "
+            r"<InstanceDouble of <class '?doubles.testing.User'?"
+            r"(?: at 0x[0-9a-f]{9})?> object at .+>\."
+            r"  The supplied arguments \('baz'\)"
+            r" do not match any available allowances.",
+            str(e.value)
+        )
 
 
 class TestWithNoArgs(object):
