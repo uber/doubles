@@ -1,9 +1,8 @@
 from doubles.lifecycle import teardown, verify
 
 
-def pytest_runtest_call(item, __multicall__):
+def pytest_runtest_call(item):
     try:
-        __multicall__.execute()
         verify()
     finally:
         teardown()
