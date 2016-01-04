@@ -11,7 +11,7 @@ try:
             verify()
         finally:
             teardown()
-except:
+except AttributeError:
     def pytest_runtest_call(item, __multicall__):
         try:
             __multicall__.execute()

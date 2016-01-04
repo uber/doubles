@@ -7,7 +7,7 @@ cov.start()
 
 try:
     from doubles.pytest_plugin import pytest_runtest_protocol  # noqa
-except:
+except ImportError:
     from doubles.pytest_plugin import pytest_runtest_call  # noqa
 
 
