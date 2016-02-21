@@ -13,6 +13,19 @@ import doubles.testing
 
 @mark.parametrize('test_class', [User, OldStyleUser])
 class TestInstanceMethods(object):
+    def test_arbitrary_callable_on_instance(self, test_class):
+        instance = test_class('Bob', 10)
+        allow(instance).arbitrary_callable.and_return('Bob Barker')
+        assert instance.arbitrary_callable() == 'Bob Barker'
+        teardown()
+        assert instance.arbitrary_callable() == 'ArbitraryCallable Value'
+
+    def test_arbitrary_callable_on_class(self, test_class):
+        allow(test_class).arbitrary_callable.and_return('Bob Barker')
+        assert test_class.arbitrary_callable() == 'Bob Barker'
+        teardown()
+        assert test_class.arbitrary_callable() == 'ArbitraryCallable Value'
+
     def test_callable_class_attribute(self, test_class):
         allow(test_class).callable_class_attribute.and_return('Bob Barker')
         assert test_class.callable_class_attribute() == 'Bob Barker'

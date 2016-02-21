@@ -1,15 +1,10 @@
-from inspect import classify_class_attrs, isclass, ismodule, isfunction, getmembers
+from inspect import classify_class_attrs, isclass, ismodule, getmembers
 from collections import namedtuple
 
 from doubles.object_double import ObjectDouble
+from doubles.verification import is_callable
 
 Attribute = namedtuple('Attribute', ['object', 'kind', 'defining_class'])
-
-
-def _is_callable(obj):
-    if isfunction(obj):
-        return True
-    return hasattr(obj, '__call__')
 
 
 def _proxy_class_method_to_instance(original, name):
@@ -90,7 +85,7 @@ class Target(object):
         attrs = {}
 
         if ismodule(self.doubled_obj):
-            for name, func in getmembers(self.doubled_obj, _is_callable):
+            for name, func in getmembers(self.doubled_obj, is_callable):
                 attrs[name] = Attribute(func, 'toplevel', self.doubled_obj)
         else:
             for attr in classify_class_attrs(self.doubled_obj_type):
@@ -151,7 +146,7 @@ class Target(object):
             return None
 
         func = getattr(self.doubled_obj, attr_name)
-        if not _is_callable(func):
+        if not is_callable(func):
             return None
 
         attr = Attribute(

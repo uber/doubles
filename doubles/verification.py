@@ -25,6 +25,12 @@ def _is_python_function(func):
     return isfunction(func)
 
 
+def is_callable(obj):
+    if isfunction(obj):
+        return True
+    return hasattr(obj, '__call__')
+
+
 def _is_python_33():
     v = sys.version_info
     return v[0] == 3 and v[1] == 3
@@ -81,7 +87,7 @@ def verify_method(target, method_name, class_level=False):
     if not attr:
         raise VerifyingDoubleError(method_name, target.doubled_obj).no_matching_method()
 
-    if attr.kind == 'data' and not isbuiltin(attr.object):
+    if attr.kind == 'data' and not isbuiltin(attr.object) and not is_callable(attr.object):
         raise VerifyingDoubleError(method_name, target.doubled_obj).not_callable()
 
     if class_level and attr.kind == 'method' and method_name != '__new__':
@@ -104,7 +110,7 @@ def verify_arguments(target, method_name, args, kwargs):
     attr = target.get_attr(method_name)
     method = attr.object
 
-    if attr.kind in ('attribute', 'toplevel', 'class method', 'static method'):
+    if attr.kind in ('data', 'attribute', 'toplevel', 'class method', 'static method'):
         try:
             method = method.__get__(None, attr.defining_class)
         except AttributeError:
