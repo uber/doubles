@@ -6,11 +6,20 @@ class EmptyClass(OldStyleEmptyClass, object):
     pass
 
 
+class ArbitraryCallable(object):
+    def __init__(self, value):
+        self.value = value
+
+    def __call__(self):
+        return self.value
+
+
 class OldStyleUser():
     """An importable dummy class used for testing purposes."""
 
     class_attribute = 'foo'
     callable_class_attribute = classmethod(lambda cls: 'dummy result')
+    arbitrary_callable = ArbitraryCallable('ArbitraryCallable Value')
 
     def __init__(self, name, age):
         self.name = name
