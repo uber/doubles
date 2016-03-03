@@ -5,7 +5,10 @@ from coverage import coverage
 cov = coverage(source=('doubles',))
 cov.start()
 
-from doubles.pytest import pytest_runtest_call  # noqa
+try:
+    from doubles.pytest_plugin import pytest_runtest_protocol  # noqa
+except ImportError:
+    from doubles.pytest_plugin import pytest_runtest_call  # noqa
 
 
 def pytest_sessionfinish(session, exitstatus):
