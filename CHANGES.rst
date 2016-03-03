@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.2.0 (2016-3-2)
+----------------
+
+- update pytest integration for version >=2.8
+- Support arbitrary callables on class
+
 1.1.3 (2015-10-3)
 -----------------
 
