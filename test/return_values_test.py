@@ -9,6 +9,11 @@ class UserDefinedException(Exception):
     pass
 
 
+class UserDefinedExceptionWithArgs(Exception):
+    def __init__(self, msg, arg1, arg2=None):
+        pass
+
+
 @mark.parametrize('stubber', [allow, expect])
 class TestReturnValues(object):
     def test_returns_result_of_a_callable(self, stubber):
@@ -46,6 +51,15 @@ class TestReturnValues(object):
         stubber(subject).instance_method.and_raise(UserDefinedException)
 
         with raises(UserDefinedException):
+            subject.instance_method()
+
+    def test_raises_provided_exception_with_complex_signature(self, stubber):
+        subject = InstanceDouble('doubles.testing.User')
+
+        stubber(subject).instance_method.and_raise(
+            UserDefinedExceptionWithArgs, 'msg', 'arg1', arg2='arg2')
+
+        with raises(UserDefinedExceptionWithArgs):
             subject.instance_method()
 
     def test_chaining_result_methods_gives_the_last_one_precedence(self, stubber):
