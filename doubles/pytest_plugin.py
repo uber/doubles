@@ -2,19 +2,13 @@ import pytest
 
 from doubles.lifecycle import teardown, verify
 
+def pytest_runtest_call(item):
+    def verify_and_teardown_doubles():
+        try:
+            verify()
+        except Exception as e:
+            pytest.fail(str(e))
+        finally:
+            teardown()
 
-try:
-    @pytest.hookimpl(hookwrapper=True)
-    def pytest_runtest_protocol(item):
-        try:
-            outcome = yield  # noqa
-            verify()
-        finally:
-            teardown()
-except AttributeError:
-    def pytest_runtest_call(item, __multicall__):
-        try:
-            __multicall__.execute()
-            verify()
-        finally:
-            teardown()
+    item.addfinalizer(verify_and_teardown_doubles)

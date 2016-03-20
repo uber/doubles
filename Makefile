@@ -1,5 +1,5 @@
 .PHONY: test
-test: clean lint
+test: clean 
 	@py.test -s -p no:doubles test
 
 .PHONY: lint
