@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.2.1 (2016-3-20)
+----------------
+
+- Make expectation failure messages clearer
+
 1.2.0 (2016-3-2)
 ----------------
 
