@@ -36,7 +36,7 @@ def test_failed_expections_do_not_leak_between_tests(testdir, capsys):
     """)
     result = testdir.runpytest()
     outcomes = result.parseoutcomes()
-    assert outcomes['failed'] == 2
+    assert outcomes['error'] == 2
     expected_error = (
         "*Expected 'class_method' to be called 1 time but was called 0 times on"
         " <class 'doubles.testing.User'> with ('{arg_value}')*"
