@@ -25,7 +25,7 @@ Inherit from ``doubles.unittest.TestCase`` in your test case classes and the Dou
 Manual integration
 ------------------
 
-If you are using another test runner or need manual control of the Doubles lifecycle, these are the three methods you'll need to use:
+If you are using another test runner or need manual control of the Doubles lifecycle, these are the two methods you'll need to use:
 
-2. ``doubles.verify`` should be called after each test to verify any expectations made. It can be skipped if the test case has already failed for another reason.
-3. ``doubles.teardown`` must be called after each test and after the call to ``doubles.verify``.
+1. ``doubles.verify`` should be called after each test to verify any expectations made. It can be skipped if the test case has already failed for another reason.
+2. ``doubles.teardown`` must be called after each test and after the call to ``doubles.verify``.
