@@ -217,7 +217,7 @@ class TestTwice(object):
         teardown()
 
         assert re.match(
-            r"Allowed 'instance_method' to be called 2 times but was called 3 times on "
+            r"Allowed 'instance_method' to be called 2 times instead of 3 times on "
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/allow_test.py:\d+\)",
@@ -244,7 +244,7 @@ class TestOnce(object):
         teardown()
 
         assert re.match(
-            r"Allowed 'instance_method' to be called 1 time but was called 2 times on "
+            r"Allowed 'instance_method' to be called 1 time instead of 2 times on "
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/allow_test.py:\d+\)",
@@ -268,7 +268,7 @@ class TestZeroTimes(object):
         teardown()
 
         assert re.match(
-            r"Allowed 'instance_method' to be called 0 times but was called 1 "
+            r"Allowed 'instance_method' to be called 0 times instead of 1 "
             r"time on <InstanceDouble of <class 'doubles.testing.User'> "
             r"object at .+> with any args, but was not."
             r" \(.*doubles/test/allow_test.py:\d+\)",
@@ -299,7 +299,7 @@ class TestExactly(object):
         teardown()
 
         assert re.match(
-            r"Allowed 'instance_method' to be called 0 times but was called 1 "
+            r"Allowed 'instance_method' to be called 0 times instead of 1 "
             r"time on <InstanceDouble of <class 'doubles.testing.User'> "
             r"object at .+> with any args, but was not."
             r" \(.*doubles/test/allow_test.py:\d+\)",
@@ -339,7 +339,7 @@ class TestExactly(object):
         teardown()
 
         assert re.match(
-            r"Allowed 'instance_method' to be called 1 time but was called 2 times on "
+            r"Allowed 'instance_method' to be called 1 time instead of 2 times on "
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/allow_test.py:\d+\)",
@@ -447,7 +447,7 @@ class TestAtMost(object):
         teardown()
 
         assert re.match(
-            r"Allowed 'instance_method' to be called at most 1 time but was called 2 times on "
+            r"Allowed 'instance_method' to be called at most 1 time instead of 2 times on "
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/allow_test.py:\d+\)",
