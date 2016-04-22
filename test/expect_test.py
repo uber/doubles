@@ -126,7 +126,7 @@ class TestTwice(object):
         teardown()
 
         assert re.match(
-            r"Expected 'instance_method' to be called 2 times but was called 1 time on "
+            r"Expected 'instance_method' to be called 2 times instead of 1 time on "
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/expect_test.py:\d+\)",
@@ -145,7 +145,7 @@ class TestTwice(object):
         teardown()
 
         assert re.match(
-            r"Expected 'instance_method' to be called 2 times but was called 3 times on "
+            r"Expected 'instance_method' to be called 2 times instead of 3 times on "
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/expect_test.py:\d+\)",
@@ -172,7 +172,7 @@ class TestOnce(object):
         teardown()
 
         assert re.match(
-            r"Expected 'instance_method' to be called 1 time but was called 2 times on "
+            r"Expected 'instance_method' to be called 1 time instead of 2 times on "
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/expect_test.py:\d+\)",
@@ -207,7 +207,7 @@ class TestExactly(object):
         teardown()
 
         assert re.match(
-            r"Expected 'instance_method' to be called 2 times but was called 1 time on "
+            r"Expected 'instance_method' to be called 2 times instead of 1 time on "
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/expect_test.py:\d+\)",
@@ -232,7 +232,7 @@ class TestExactly(object):
         teardown()
 
         assert re.match(
-            r"Expected 'instance_method' to be called 1 time but was called 2 times on "
+            r"Expected 'instance_method' to be called 1 time instead of 2 times on "
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/expect_test.py:\d+\)",
@@ -259,7 +259,7 @@ class TestAtLeast(object):
         teardown()
 
         assert re.match(
-            r"Expected 'instance_method' to be called at least 2 times but was called 1 time on "
+            r"Expected 'instance_method' to be called at least 2 times instead of 1 time on "
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/expect_test.py:\d+\)",
@@ -317,7 +317,7 @@ class TestAtMost(object):
         teardown()
 
         assert re.match(
-            r"Expected 'instance_method' to be called at most 1 time but was called 2 times on "
+            r"Expected 'instance_method' to be called at most 1 time instead of 2 times on "
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/expect_test.py:\d+\)",
@@ -343,7 +343,7 @@ class Test__call__(object):
         teardown()
 
         assert re.match(
-            r"Expected '__call__' to be called 1 time but was called 0 times on "
+            r"Expected '__call__' to be called 1 time instead of 0 times on "
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/expect_test.py:\d+\)",
@@ -371,7 +371,7 @@ class Test__enter__(object):
         teardown()
 
         assert re.match(
-            r"Expected '__enter__' to be called 1 time but was called 0 times on "
+            r"Expected '__enter__' to be called 1 time instead of 0 times on "
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/expect_test.py:\d+\)",
@@ -399,7 +399,7 @@ class Test__exit__(object):
         teardown()
 
         assert re.match(
-            r"Expected '__exit__' to be called 1 time but was called 0 times on "
+            r"Expected '__exit__' to be called 1 time instead of 0 times on "
             r"<InstanceDouble of <class 'doubles.testing.User'> object at .+> "
             r"with any args, but was not."
             r" \(.*doubles/test/expect_test.py:\d+\)",

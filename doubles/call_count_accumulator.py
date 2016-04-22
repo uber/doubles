@@ -154,7 +154,7 @@ class CallCountAccumulator(object):
         if self.has_correct_call_count():
             return ''
 
-        return '{} but was called {} {} '.format(
+        return '{} instead of {} {} '.format(
             self._restriction_string(),
             self.count,
             pluralize('time', self.count)
