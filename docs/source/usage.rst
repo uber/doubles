@@ -251,7 +251,7 @@ Partial doubles
 
 In all of the examples so far, we added stubs and mocks to an instance of our production ``User`` class. These are called a partial doubles, because only the parts of the object that were explicitly declared as stubs or mocks are affected. The untouched methods on the object behave as usual. Let's take a look at an example that illustrates this.::
 
-    from doubles import alllow
+    from doubles import allow
 
 
     class User(object):
