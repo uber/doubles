@@ -33,17 +33,17 @@ class Target(object):
         self.doubled_obj_type = self._determine_doubled_obj_type()
         self.attrs = self._generate_attrs()
 
-    def is_class(self):
-        """Determines if the object is a class.
+    def is_class_or_module(self):
+        """Determines if the object is a class or a module
 
-        :return: True if the object is a class, False otherwise.
+        :return: True if the object is a class or a module, False otherwise.
         :rtype: bool
         """
 
         if isinstance(self.obj, ObjectDouble):
             return self.obj.is_class
 
-        return self.doubled_obj == self.doubled_obj_type
+        return isclass(self.doubled_obj) or ismodule(self.doubled_obj)
 
     def _determine_doubled_obj(self):
         """Return the target object.
@@ -152,7 +152,7 @@ class Target(object):
         attr = Attribute(
             func,
             'attribute',
-            self.doubled_obj if self.is_class() else self.doubled_obj_type,
+            self.doubled_obj if self.is_class_or_module() else self.doubled_obj_type,
         )
         self.attrs[attr_name] = attr
         return attr

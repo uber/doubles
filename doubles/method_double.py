@@ -1,7 +1,5 @@
 from doubles.allowance import Allowance
-from doubles.class_double import ClassDouble
 from doubles.expectation import Expectation
-from doubles.instance_double import InstanceDouble
 from doubles.proxy_method import ProxyMethod
 from doubles.verification import verify_method
 
@@ -141,12 +139,6 @@ class MethodDouble(object):
         :raise: ``VerifyingDoubleError`` if no matching method is found.
         """
 
-        # TODO: Find a way to set class_level without manual type checking.
-        if isinstance(self._target.obj, ClassDouble):
-            class_level = True
-        elif isinstance(self._target.obj, InstanceDouble):
-            class_level = False
-        else:
-            class_level = self._target.is_class()
+        class_level = self._target.is_class_or_module()
 
         verify_method(self._target, self._method_name, class_level=class_level)

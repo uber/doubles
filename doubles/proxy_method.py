@@ -101,7 +101,7 @@ class ProxyMethod(object):
     def restore_original_method(self):
         """Replaces the proxy method on the target object with its original value."""
 
-        if self._target.is_class():
+        if self._target.is_class_or_module():
             setattr(self._target.obj, self._method_name, self._original_method)
             if self._method_name == '__new__' and sys.version_info >= (3, 0):
                 _restore__new__(self._target.obj, self._original_method)
@@ -127,7 +127,7 @@ class ProxyMethod(object):
     def _hijack_target(self):
         """Replaces the target method on the target object with the proxy method."""
 
-        if self._target.is_class():
+        if self._target.is_class_or_module():
             setattr(self._target.obj, self._method_name, self)
         elif self._attr.kind == 'property':
             proxy_property = ProxyProperty(
