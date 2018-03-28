@@ -62,13 +62,16 @@ class Allowance(object):
 
         self._return_value = lambda *args, **kwargs: None
 
-    def and_raise(self, exception):
+    def and_raise(self, exception, *args, **kwargs):
         """Causes the double to raise the provided exception when called.
+
+        If provided, additional arguments (positional and keyword) passed to
+        `and_raise` are used in the exception instantiation.
 
         :param Exception exception: The exception to raise.
         """
-        def proxy_exception(*args, **kwargs):
-            raise exception
+        def proxy_exception(*proxy_args, **proxy_kwargs):
+            raise exception(*args, **kwargs)
 
         self._return_value = proxy_exception
         return self
