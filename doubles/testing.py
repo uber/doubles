@@ -74,6 +74,17 @@ class User(OldStyleUser, object):
     pass
 
 
+class UserWithSlots(User):
+    __slots__ = (
+        'class_attribute',
+        'callable_class_attribute',
+        'arbitrary_callable',
+        'name',
+        'age',
+        'callable_instance_attribute'
+    )
+
+
 class UserWithCustomNew(User):
     def __new__(cls, name, age):
         instance = User.__new__(cls)

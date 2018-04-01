@@ -5,26 +5,27 @@ from pytest import raises, mark
 from doubles.exceptions import VerifyingDoubleArgumentError, VerifyingDoubleError
 from doubles.object_double import ObjectDouble
 from doubles.targets.allowance_target import allow
-from doubles.testing import User, OldStyleUser
+from doubles.testing import User, OldStyleUser, UserWithSlots
 
 user = User('Alice', 25)
 old_style_user = OldStyleUser('Alice', 25)
+user_with_slots = UserWithSlots('Alice', 25)
 
 
-@mark.parametrize('test_object', [user, old_style_user])
+@mark.parametrize('test_object', [user, old_style_user, user_with_slots])
 class TestRepr(object):
     def test_displays_correct_class_name(self, test_object):
         subject = ObjectDouble(test_object)
 
         assert re.match(
-            r"<ObjectDouble of <doubles.testing.(?:OldStyle)?User "
+            r"<ObjectDouble of <doubles.testing.%s "
             r"(?:instance|object) at 0x[0-9a-f]+> object "
-            r"at 0x[0-9a-f]+>",
+            r"at 0x[0-9a-f]+>" % test_object.__class__.__name__,
             repr(subject)
         )
 
 
-@mark.parametrize('test_object', [user, old_style_user])
+@mark.parametrize('test_object', [user, old_style_user, user_with_slots])
 class TestObjectDouble(object):
     def test_allows_stubs_on_existing_methods(self, test_object):
         doubled_user = ObjectDouble(test_object)

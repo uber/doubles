@@ -14,6 +14,7 @@ from doubles.exceptions import (
 from doubles.testing import (
     User,
     OldStyleUser,
+    UserWithSlots,
     EmptyClass,
     OldStyleEmptyClass,
 )
@@ -21,6 +22,7 @@ from doubles.testing import (
 TEST_CLASSES = (
     'doubles.testing.User',
     'doubles.testing.OldStyleUser',
+    'doubles.testing.UserWithSlots',
     'doubles.testing.EmptyClass',
     'doubles.testing.OldStyleEmptyClass',
 )
@@ -28,6 +30,7 @@ TEST_CLASSES = (
 VALID_ARGS = {
     'doubles.testing.User': ('Bob', 100),
     'doubles.testing.OldStyleUser': ('Bob', 100),
+    'doubles.testing.UserWithSlots': ('Bob', 100),
     'doubles.testing.EmptyClass': tuple(),
     'doubles.testing.OldStyleEmptyClass': tuple(),
 }
@@ -166,7 +169,7 @@ class TestStubbingConstructor(object):
             assert TestClass(*VALID_ARGS[test_class]) is None
 
 
-@mark.parametrize('test_class', [User, OldStyleUser, EmptyClass, OldStyleEmptyClass])
+@mark.parametrize('test_class', [User, OldStyleUser, UserWithSlots, EmptyClass, OldStyleEmptyClass])
 class TestingStubbingNonClassDoubleConstructors(object):
     def test_raises_if_you_allow_constructor(self, test_class):
         with raises(ConstructorDoubleError):
