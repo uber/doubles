@@ -7,11 +7,11 @@ from doubles.exceptions import (
 )
 from doubles.lifecycle import teardown
 from doubles import allow, no_builtin_verification
-from doubles.testing import User, OldStyleUser, UserWithCustomNew
+from doubles.testing import User, OldStyleUser, UserWithSlots, UserWithCustomNew
 import doubles.testing
 
 
-@mark.parametrize('test_class', [User, OldStyleUser])
+@mark.parametrize('test_class', [User, OldStyleUser, UserWithSlots])
 class TestInstanceMethods(object):
     def test_arbitrary_callable_on_instance(self, test_class):
         instance = test_class('Bob', 10)
@@ -121,7 +121,7 @@ class TestInstanceMethods(object):
         assert user_2.some_property == 'some_property return value'
 
 
-@mark.parametrize('test_class', [User, OldStyleUser])
+@mark.parametrize('test_class', [User, OldStyleUser, UserWithSlots])
 class Test__call__(object):
     def test_basic_usage(self, test_class):
         user = test_class('Alice', 25)
@@ -177,7 +177,7 @@ class Test__call__(object):
             allow(user).__call__.with_args(1, 2, bob='barker')
 
 
-@mark.parametrize('test_class', [User, OldStyleUser])
+@mark.parametrize('test_class', [User, OldStyleUser, UserWithSlots])
 class Test__enter__(object):
     def test_basic_usage(self, test_class):
         user = test_class('Alice', 25)
@@ -229,7 +229,7 @@ class Test__enter__(object):
             allow(user).__enter__.with_args(1)
 
 
-@mark.parametrize('test_class', [User, OldStyleUser])
+@mark.parametrize('test_class', [User, OldStyleUser, UserWithSlots])
 class Test__exit__(object):
     def test_basic_usage(self, test_class):
         user = test_class('Alice', 25)
@@ -273,7 +273,7 @@ class Test__exit__(object):
             allow(user).__exit__.with_no_args()
 
 
-@mark.parametrize('test_class', [User, OldStyleUser])
+@mark.parametrize('test_class', [User, OldStyleUser, UserWithSlots])
 class TestClassMethods(object):
     def test_stubs_class_methods(self, test_class):
         allow(test_class).class_method.with_args('foo').and_return('overridden value')
