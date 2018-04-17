@@ -1,6 +1,15 @@
 Changelog
 =========
 
+1.3.1 (2018-4-16)
+----------------
+
+- Support Pytest 3.5
+- Support Exceptions with custom args
+- Cleanup test runner integration docs
+- Update is_class check, use builtin method
+- Cleanup some grammar in failure messages
+
 1.2.1 (2016-3-20)
 ----------------
 
