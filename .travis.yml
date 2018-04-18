@@ -8,7 +8,7 @@ python:
     - "3.5"
     - "3.6"
 
-install: make bootstrap
+install:
     - make bootstap
     - if [[ $TRAVIS_PYTHON_VERSION == '3.2' ]]; then travis_retry pip install pytest==2.9.1; fi
 
