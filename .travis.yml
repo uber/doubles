@@ -10,7 +10,6 @@ python:
 
 install: make bootstrap
   - make bootstap
-  # pytest 3+ does not support python 3.2
   - if [[ $TRAVIS_PYTHON_VERSION == 3.2 ]]; then pip install pytest==2.9.1; fi
 
 script: make
