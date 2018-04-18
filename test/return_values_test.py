@@ -57,7 +57,8 @@ class TestReturnValues(object):
         subject = InstanceDouble('doubles.testing.User')
 
         stubber(subject).instance_method.and_raise(
-            UserDefinedExceptionWithArgs, 'msg', 'arg1', arg2='arg2')
+            UserDefinedExceptionWithArgs('msg', 'arg1', arg2='arg2'),
+        )
 
         with raises(UserDefinedExceptionWithArgs):
             subject.instance_method()

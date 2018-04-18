@@ -193,7 +193,7 @@ Both stubs and mocks allow a method call to raise an exception instead of return
         else:
             raise AssertionError('Expected test to raise StandardError.')
 
-If the exception to be raised requires arguments, they can be passed to ``and_raises`` directly::
+If the exception to be raised requires arguments, they can be passed to the Exception constructor directly before ``and_raises`` is invoked::
 
     from doubles import allow
 
@@ -203,7 +203,7 @@ If the exception to be raised requires arguments, they can be passed to ``and_ra
     def test_raising_an_exception():
         user = User('Carl')
 
-        allow(user).get_name.and_raise(NonStandardError, 'an argument', arg2='another arg')
+        allow(user).get_name.and_raise(NonStandardError('an argument', arg2='another arg'))
 
         try:
             user.get_name()

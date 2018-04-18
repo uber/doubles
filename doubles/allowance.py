@@ -71,7 +71,7 @@ class Allowance(object):
         :param Exception exception: The exception to raise.
         """
         def proxy_exception(*proxy_args, **proxy_kwargs):
-            raise exception(*args, **kwargs)
+            raise exception
 
         self._return_value = proxy_exception
         return self
