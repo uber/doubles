@@ -352,5 +352,7 @@ class Allowance(object):
 
         if self.args is _any and self.kwargs is _any:
             return 'any args'
+        elif self._custom_matcher:
+            return "custom matcher: '{}'".format(self._custom_matcher.__name__)
         else:
             return build_argument_repr_string(self.args, self.kwargs)
