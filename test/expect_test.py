@@ -10,6 +10,25 @@ from doubles.targets.expectation_target import expect
 
 
 class TestExpect(object):
+    def test_with_args_validator_not_called(self):
+        subject = InstanceDouble('doubles.testing.User')
+
+        def arg_matcher(*args):
+            return True
+        expect(subject).method_with_varargs.with_args_validator(arg_matcher)
+        with raises(MockExpectationError) as e:
+            verify()
+        teardown()
+
+        assert re.match(
+            r"Expected 'method_with_varargs' to be called on "
+            r"<InstanceDouble of <class '?doubles.testing.User'?"
+            r"(?: at 0x[0-9a-f]{9})?> object at .+> "
+            r"with custom matcher: 'arg_matcher', but was not."
+            r" \(.*doubles/test/expect_test.py:\d+\)",
+            str(e.value)
+        )
+
     def test_with_args_validator(self):
         subject = InstanceDouble('doubles.testing.User')
 
