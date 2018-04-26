@@ -2,11 +2,12 @@ import pytest
 
 from doubles.lifecycle import teardown, verify
 
-def pytest_runtest_call(item):
-    def verify_and_teardown_doubles():
-        try:
-            verify()
-        finally:
-            teardown()
+@pytest.hookimpl(hookwrapper=True)
+def pytest_pyfunc_call(pyfuncitem):
+    outcome = yield
 
-    item.addfinalizer(verify_and_teardown_doubles)
+    try:
+        outcome.get_result()
+        verify()
+    finally:
+        teardown()
