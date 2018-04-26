@@ -5,7 +5,7 @@ from coverage import coverage
 cov = coverage(source=('doubles',))
 cov.start()
 
-from doubles.pytest_plugin import pytest_pyfunc_call  # noqa
+pytest_plugins = ['doubles.pytest_plugin']
 
 
 def pytest_sessionfinish(session, exitstatus):
