@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.5.0 (2018-6-07)
+----------------
+
+- Report unsatisfied expectations as failures instead of errors.
+
 1.4.0 (2018-4-25)
 ----------------
 
