@@ -7,8 +7,8 @@ doubles
 .. image:: https://travis-ci.org/uber/doubles.svg?branch=master
     :target: https://travis-ci.org/uber/doubles
 
-.. image:: https://coveralls.io/repos/uber/doubles/badge.png
-  :target: https://coveralls.io/r/uber/doubles
+.. image:: https://coveralls.io/repos/github/uber/doubles/badge.svg?branch=master
+    :target: https://coveralls.io/github/uber/doubles?branch=master
 
 
 **Doubles** is a Python package that provides test doubles for use in automated tests.
