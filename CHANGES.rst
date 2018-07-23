@@ -9,7 +9,8 @@ Changelog
 1.4.0 (2018-4-25)
 ----------------
 
-- Fix bug in unsatisfied `with_args_validator` exceptions.  Note this may cause some tests being run with the `unittest` runner that used to pass to fail.
+- Fix bug in unsatisfied `with_args_validator` exceptions.  Note this may cause some tests being run with the `unittest`
+runner that used to pass to fail.
 
 1.3.2 (2018-4-17)
 ----------------
