@@ -34,7 +34,7 @@ setup(
     cmdclass={'test': PyTest},
     entry_points = {
         'pytest11': ['doubles = doubles.pytest_plugin'],
-        'nose.plugins.0.10': ['doubles = doubles.nose:NoseIntegration']
+        'nose.plugins.0.10': ['doubles = doubles.nose:NoseIntegration'],
     },
     zip_safe=True,
     keywords=['testing', 'test doubles', 'mocks', 'mocking', 'stubs', 'stubbing'],
@@ -43,6 +43,8 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Topic :: Software Development :: Testing',
