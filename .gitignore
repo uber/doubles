@@ -1,7 +1,9 @@
 *.pyc
 /.coverage
+/.pytest_cache
 /.python-version
 /*.egg-info
 /dist
 /docs/build
 /htmlcov
+/venv
