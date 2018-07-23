@@ -110,7 +110,7 @@ class TestUsingStubbingConstructor(object):
 
     @mark.parametrize('test_class', TEST_CLASSES[0:2])
     class TestUserOnly(object):
-        """Test using the constructor on a class witha custom __init__"""
+        """Test using the constructor on a class with a custom __init__"""
 
         def test_called_with_wrong_args(self, test_class):
             TestClass = ClassDouble(test_class)

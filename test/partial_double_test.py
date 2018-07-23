@@ -384,18 +384,18 @@ class TestTopLevelFunctions(object):
 
         assert doubles.testing.decorated_function('bob barker') == 'foo'
 
-    def test_varibale_that_points_to_class_method(self):
+    def test_variable_that_points_to_class_method(self):
         allow(doubles.testing).class_method.and_return('foo')
 
         assert doubles.testing.class_method('bob barker') == 'foo'
 
-    def test_varibale_that_points_to_instance_method(self):
+    def test_variable_that_points_to_instance_method(self):
         allow(doubles.testing).instance_method.and_return('foo')
 
         assert doubles.testing.instance_method() == 'foo'
 
 
-class TestClassWithGetAtter(object):
+class TestClassWithGetAttr(object):
     def test_can_allow_an_existing_method(self):
         test_obj = doubles.testing.ClassWithGetAttr()
         allow(test_obj).method.and_return('foobar')

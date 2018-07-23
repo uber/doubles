@@ -64,7 +64,7 @@ class TestBasicAllowance(object):
         allow(subject).method_with_doc
 
         assert subject.method_with_doc.__doc__ == (
-            """A basic method of OldStyleUser to illustrate existance of a docstring"""
+            """A basic method of OldStyleUser to illustrate existence of a docstring"""
         )
 
     def test_proxies_name(self):
