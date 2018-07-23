@@ -59,7 +59,7 @@ def no_builtin_verification():
     While inside this context we will ignore errors raised while verifying the
     arguments of builtins.
 
-    Note: It is impossible to verify the expected arugments of built in functions
+    Note: It is impossible to verify the expected arguments of built in functions
     """
     current_space().skip_builtin_verification = True
     yield

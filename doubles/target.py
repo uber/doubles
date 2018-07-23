@@ -94,7 +94,7 @@ class Target(object):
         return attrs
 
     def hijack_attr(self, attr_name):
-        """Hijcak an attribute on the target object.
+        """Hijack an attribute on the target object.
 
         Updates the underlying class and delegating the call to the instance.
         This allows specially-handled attributes like __call__, __enter__,

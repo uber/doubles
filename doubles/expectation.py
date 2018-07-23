@@ -49,7 +49,7 @@ class Expectation(Allowance):
     def satisfy_custom_matcher(self, args, kwargs):
         """Returns a boolean indicating whether or not the mock will accept the provided arguments.
 
-        :param tuple args: A tuple of possition args
+        :param tuple args: A tuple of position args
         :param dict kwargs: A dictionary of keyword args
         :return: Whether or not the mock accepts the provided arguments.
         :rtype: bool
@@ -79,7 +79,7 @@ class Expectation(Allowance):
     def is_satisfied(self):
         """
         Returns a boolean indicating whether or not the double has been satisfied. Stubs are
-        always satisfied, but mocks are only satisifed if they've been called as was declared,
+        always satisfied, but mocks are only satisfied if they've been called as was declared,
         or if call is expected not to happen.
 
         :return: Whether or not the double is satisfied.

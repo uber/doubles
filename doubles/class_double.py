@@ -43,7 +43,7 @@ class ClassDouble(InstanceDouble):
         """Verify arguments and proxy to _doubles__new__
 
         :rtype obj:
-        :raises VerifyingDoubleArgumentError: If args/kwargs don't match the expected argumenst of
+        :raises VerifyingDoubleArgumentError: If args/kwargs don't match the expected arguments of
             __init__ of the underlying class.
         """
         verify_arguments(self._target, '_doubles__new__', args, kwargs)

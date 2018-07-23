@@ -136,7 +136,7 @@ class Allowance(object):
     def is_satisfied(self):
         """Returns a boolean indicating whether or not the double has been satisfied.
 
-        Stubs are always satisfied, but mocks are only satisifed if they've been
+        Stubs are always satisfied, but mocks are only satisfied if they've been
         called as was declared.
 
         :return: Whether or not the double is satisfied.
@@ -227,7 +227,7 @@ class Allowance(object):
         return True
 
     def satisfy_custom_matcher(self, args, kwargs):
-        """Return a boolean indicating if the args satisify the stub
+        """Return a boolean indicating if the args satisfy the stub
 
         :return: Whether or not the stub accepts the provided arguments.
         :rtype: bool
