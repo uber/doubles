@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.5.1 (2018-7-24)
+----------------
+
+- Fix bug which breaks automatic teardown of top-level expectations between test cases
+
 1.5.0 (2018-6-07)
 ----------------
 
