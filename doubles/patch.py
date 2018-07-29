@@ -1,5 +1,5 @@
-from doubles.utils import get_module, get_path_components
 from doubles.exceptions import VerifyingDoubleError
+from doubles.utils import get_module, get_path_components
 
 
 class Patch(object):

@@ -1,8 +1,8 @@
 import inspect
 
-from doubles.lifecycle import current_space
 from doubles.class_double import ClassDouble
 from doubles.exceptions import ConstructorDoubleError
+from doubles.lifecycle import current_space
 
 
 def expect(target):

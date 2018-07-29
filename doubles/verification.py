@@ -1,5 +1,5 @@
-from inspect import isbuiltin, getcallargs, isfunction, ismethod
 import sys
+from inspect import isbuiltin, getcallargs, isfunction, ismethod
 
 from doubles.exceptions import (
     VerifyingDoubleArgumentError,

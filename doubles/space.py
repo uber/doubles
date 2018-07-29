@@ -1,5 +1,5 @@
-from doubles.proxy import Proxy
 from doubles.patch import Patch
+from doubles.proxy import Proxy
 
 
 class Space(object):

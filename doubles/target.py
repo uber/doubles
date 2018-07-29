@@ -1,5 +1,5 @@
-from inspect import classify_class_attrs, isclass, ismodule, getmembers
 from collections import namedtuple
+from inspect import classify_class_attrs, isclass, ismodule, getmembers
 
 from doubles.object_double import ObjectDouble
 from doubles.verification import is_callable

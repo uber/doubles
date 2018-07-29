@@ -1,10 +1,10 @@
 from functools import wraps
 from inspect import getargspec
 
+import doubles.lifecycle
+from doubles.call_count_accumulator import CallCountAccumulator
 from doubles.exceptions import MockExpectationError, VerifyingBuiltinDoubleArgumentError
 from doubles.verification import verify_arguments
-from doubles.call_count_accumulator import CallCountAccumulator
-import doubles.lifecycle
 
 _any = object()
 

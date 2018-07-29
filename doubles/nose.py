@@ -4,8 +4,8 @@ import sys
 
 from nose.plugins.base import Plugin
 
-from doubles.lifecycle import verify, teardown
 from doubles.exceptions import MockExpectationError
+from doubles.lifecycle import verify, teardown
 
 
 class NoseIntegration(Plugin):

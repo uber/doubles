@@ -1,10 +1,10 @@
-from inspect import isbuiltin
-from functools import wraps
 import sys
+from functools import wraps
+from inspect import isbuiltin
 
+from doubles.allowance import build_argument_repr_string
 from doubles.exceptions import UnallowedMethodCallError
 from doubles.proxy_property import ProxyProperty
-from doubles.allowance import build_argument_repr_string
 
 
 def double_name(name):

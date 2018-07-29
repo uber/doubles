@@ -1,8 +1,7 @@
-from doubles.instance_double import InstanceDouble
-
-from doubles.verification import verify_arguments
-from doubles.target import Target
 from doubles.exceptions import UnallowedMethodCallError
+from doubles.instance_double import InstanceDouble
+from doubles.target import Target
+from doubles.verification import verify_arguments
 
 
 def patch_class(input_class):

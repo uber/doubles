@@ -1,8 +1,7 @@
-from threading import local
 from contextlib import contextmanager
+from threading import local
 
 from doubles.space import Space
-
 
 _thread_local_data = local()
 
