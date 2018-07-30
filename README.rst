@@ -7,6 +7,9 @@ doubles
 .. image:: https://travis-ci.org/uber/doubles.svg?branch=master
     :target: https://travis-ci.org/uber/doubles
 
+.. image:: https://readthedocs.org/projects/doubles/badge/?version=latest
+    :target: https://doubles.readthedocs.io/en/latest/?badge=latest
+
 .. image:: https://coveralls.io/repos/github/uber/doubles/badge.svg?branch=master
     :target: https://coveralls.io/github/uber/doubles?branch=master
 
