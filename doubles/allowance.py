@@ -1,9 +1,11 @@
-from functools import wraps
-from inspect import getargspec
+import functools
+import inspect
 
-import doubles.lifecycle
+import six
+
 from doubles.call_count_accumulator import CallCountAccumulator
 from doubles.exceptions import MockExpectationError, VerifyingBuiltinDoubleArgumentError
+import doubles.lifecycle
 from doubles.verification import verify_arguments
 
 _any = object()
@@ -23,7 +25,7 @@ def _get_future():
 
 
 def verify_count_is_non_negative(func):
-    @wraps(func)
+    @functools.wraps(func)
     def inner(self, arg):
         if arg < 0:
             raise TypeError(func.__name__ + ' requires one positive integer argument')
@@ -32,8 +34,12 @@ def verify_count_is_non_negative(func):
 
 
 def check_func_takes_args(func):
-    arg_spec = getargspec(func)
-    return arg_spec.args or arg_spec.varargs or arg_spec.keywords or arg_spec.defaults
+    if six.PY3:
+        arg_spec = inspect.getfullargspec(func)
+        return any([arg_spec.args, arg_spec.varargs, arg_spec.varkw, arg_spec.defaults])
+    else:
+        arg_spec = inspect.getargspec(func)
+        return any([arg_spec.args, arg_spec.varargs, arg_spec.keywords, arg_spec.defaults])
 
 
 def build_argument_repr_string(args, kwargs):
