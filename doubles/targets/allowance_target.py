@@ -60,10 +60,8 @@ class AllowanceTarget(object):
         :rtype: object, Allowance
         """
 
-        __dict__ = object.__getattribute__(self, '__dict__')
-
-        if __dict__ and attr_name in __dict__:
-            return __dict__[attr_name]
-
-        caller = inspect.getframeinfo(inspect.currentframe().f_back)
-        return self._proxy.add_allowance(attr_name, caller)
+        try:
+            return object.__getattribute__(self, attr_name)
+        except AttributeError:
+            caller = inspect.getframeinfo(inspect.currentframe().f_back)
+            return self._proxy.add_allowance(attr_name, caller)
