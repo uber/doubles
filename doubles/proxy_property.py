@@ -8,6 +8,6 @@ class ProxyProperty(property):
         self._original = original
 
     def __get__(self, obj, objtype=None):
-        if self._name in obj.__dict__:
-            return obj.__dict__[self._name].__get__(obj, objtype)
+        if hasattr(obj, self._name):
+            return getattr(obj, self._name).__get__(obj, objtype)
         return self._original.__get__(obj, objtype)
