@@ -98,6 +98,10 @@ class ProxyMethod(object):
     def __doc__(self):
         return self._original_method.__doc__
 
+    @property
+    def __wrapped__(self):
+        return self._original_method
+
     def restore_original_method(self):
         """Replaces the proxy method on the target object with its original value."""
 

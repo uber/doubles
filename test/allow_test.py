@@ -1,5 +1,8 @@
+import inspect
 import re
+import sys
 
+import pytest
 from pytest import raises
 
 from doubles.exceptions import (
@@ -73,6 +76,13 @@ class TestBasicAllowance(object):
         allow(subject).method_with_doc
 
         assert subject.method_with_doc.__name__ == "method_with_doc"
+
+    @pytest.mark.skipif(sys.version_info <= (3, 3), reason="requires Python 3.3 or higher")
+    def test_proxies_can_be_inspected(self):
+        subject = InstanceDouble("doubles.testing.User")
+        allow(subject).instance_method
+        parameters = inspect.signature(subject.instance_method).parameters
+        assert len(parameters) == 1
 
 
 class TestWithArgs(object):
