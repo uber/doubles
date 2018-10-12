@@ -1,6 +1,13 @@
 Changelog
 =========
 
+1.5.2 (2018-10-12)
+----------------
+
+- Add support for inspect.signature
+- Add support of Python 3.7
+- Fix inspect DeprecationWarning
+
 1.5.1 (2018-7-24)
 ----------------
 
