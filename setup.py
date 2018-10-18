@@ -21,7 +21,7 @@ class PyTest(TestCommand):
 
 setup(
     name='doubles',
-    version='1.5.2',
+    version='1.5.3',
     description='Test doubles for Python.',
     long_description=long_description,
     author='Jimmy Cuadra',
