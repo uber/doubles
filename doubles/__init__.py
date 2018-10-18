@@ -1,5 +1,3 @@
-__version__ = '1.5.2'
-
 from doubles.class_double import ClassDouble  # noqa
 from doubles.instance_double import InstanceDouble  # noqa
 from doubles.lifecycle import (  # noqa

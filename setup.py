@@ -1,8 +1,7 @@
-from setuptools import setup
-from setuptools.command.test import test as TestCommand
 import sys
 
-import doubles
+from setuptools import setup
+from setuptools.command.test import test as TestCommand
 
 
 with open('README.rst') as f:
@@ -22,7 +21,7 @@ class PyTest(TestCommand):
 
 setup(
     name='doubles',
-    version=doubles.__version__,
+    version='1.5.2',
     description='Test doubles for Python.',
     long_description=long_description,
     author='Jimmy Cuadra',
@@ -30,6 +29,7 @@ setup(
     url='https://github.com/uber/doubles',
     license='MIT',
     packages=['doubles', 'doubles.targets'],
+    install_requires=['six'],
     tests_require=['pytest'],
     cmdclass={'test': PyTest},
     entry_points = {
