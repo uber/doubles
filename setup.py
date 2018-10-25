@@ -1,3 +1,4 @@
+import re
 import sys
 
 from setuptools import setup
@@ -6,6 +7,9 @@ from setuptools.command.test import test as TestCommand
 
 with open('README.rst') as f:
     long_description = f.read()
+
+with open('doubles/__init__.py') as f:
+    version = re.search(r'__version__ = \'(.*?)\'', f.read()).group(1)
 
 
 class PyTest(TestCommand):
@@ -21,7 +25,7 @@ class PyTest(TestCommand):
 
 setup(
     name='doubles',
-    version='1.5.3',
+    version=version,
     description='Test doubles for Python.',
     long_description=long_description,
     author='Jimmy Cuadra',
