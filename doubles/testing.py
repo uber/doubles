@@ -74,6 +74,68 @@ class User(OldStyleUser, object):
     pass
 
 
+class UserWithSlots(object):
+    __slots__ = (
+        'name',
+        'age',
+        'callable_instance_attribute'
+    )
+
+    """An importable dummy class used for testing purposes."""
+
+    class_attribute = 'foo'
+    callable_class_attribute = classmethod(lambda cls: 'dummy result')
+    arbitrary_callable = ArbitraryCallable('ArbitraryCallable Value')
+
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+        self.callable_instance_attribute = lambda: 'dummy result'
+
+    @staticmethod
+    def static_method(arg):
+        return 'static_method return value: {}'.format(arg)
+
+    @classmethod
+    def class_method(cls, arg):
+        return 'class_method return value: {}'.format(arg)
+
+    def get_name(self):
+        return self.name
+
+    def instance_method(self):
+        return 'instance_method return value'
+
+    def method_with_varargs(self, *args):
+        return 'method_with_varargs return value'
+
+    def method_with_default_args(self, foo, bar='baz'):
+        return 'method_with_default_args return value'
+
+    def method_with_varkwargs(self, **kwargs):
+        return 'method_with_varkwargs return value'
+
+    def method_with_positional_arguments(self, foo):
+        return 'method_with_positional_arguments return value'
+
+    def method_with_doc(self):
+        """A basic method of UserWithSlots to illustrate existance of a docstring"""
+        return
+
+    @property
+    def some_property(self):
+        return 'some_property return value'
+
+    def __call__(self, *args):
+        return 'user was called'
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        pass
+
+
 class UserWithCustomNew(User):
     def __new__(cls, name, age):
         instance = User.__new__(cls)

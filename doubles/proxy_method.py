@@ -113,12 +113,12 @@ class ProxyMethod(object):
                 setattr(self._target.obj, self._method_name, self._original_method)
         elif self._attr.kind == 'property':
             setattr(self._target.obj.__class__, self._method_name, self._original_method)
-            del self._target.obj.__dict__[double_name(self._method_name)]
+            delattr(self._target.obj, double_name(self._method_name))
         elif self._attr.kind == 'attribute':
-            self._target.obj.__dict__[self._method_name] = self._original_method
+            setattr(self._target.obj, self._method_name, self._original_method)
         else:
             # TODO: Could there ever have been a value here that needs to be restored?
-            del self._target.obj.__dict__[self._method_name]
+            delattr(self._target.obj, self._method_name)
 
         if self._method_name in ['__call__', '__enter__', '__exit__']:
             self._target.restore_attr(self._method_name)
@@ -139,9 +139,9 @@ class ProxyMethod(object):
                 self._original_method,
             )
             setattr(self._target.obj.__class__, self._method_name, proxy_property)
-            self._target.obj.__dict__[double_name(self._method_name)] = self
+            setattr(self._target.obj, double_name(self._method_name), self)
         else:
-            self._target.obj.__dict__[self._method_name] = self
+            setattr(self._target.obj, self._method_name, self)
 
         if self._method_name in ['__call__', '__enter__', '__exit__']:
             self._target.hijack_attr(self._method_name)
