@@ -8,6 +8,10 @@ python:
 matrix:
     include:
         - { python: "3.7", dist: xenial, sudo: true }
+        - { python: "3.8", dist: xenial, sudo: true }
+        - { python: "3.9", dist: xenial, sudo: true }
+        - { python: "3.10", dist: xenial, sudo: true }
+        - { python: "3.11", dist: xenial, sudo: true }
 install:
     - make bootstrap
 script:
