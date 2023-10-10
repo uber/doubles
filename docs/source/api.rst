@@ -4,36 +4,36 @@ API
 Stubs and mocks
 ---------------
 
-.. autofunction:: doubles.allow
-.. autofunction:: doubles.expect
-.. autofunction:: doubles.allow_constructor
-.. autofunction:: doubles.expect_constructor
-.. autofunction:: doubles.patch
-.. autofunction:: doubles.patch_class
+.. autofunction:: dobles.allow
+.. autofunction:: dobles.expect
+.. autofunction:: dobles.allow_constructor
+.. autofunction:: dobles.expect_constructor
+.. autofunction:: dobles.patch
+.. autofunction:: dobles.patch_class
 
-.. autoclass:: doubles.allowance.Allowance
+.. autoclass:: dobles.allowance.Allowance
     :members: and_raise, and_return, and_return_result_of, with_args, with_no_args
-.. autoclass:: doubles.expectation.Expectation
+.. autoclass:: dobles.expectation.Expectation
     :members: with_args, with_no_args
 
-Pure doubles
+Pure dobles
 ------------
 
-.. autoclass:: doubles.InstanceDouble
+.. autoclass:: dobles.InstanceDouble
     :inherited-members:
-.. autoclass:: doubles.ClassDouble
+.. autoclass:: dobles.ClassDouble
     :members:
     :inherited-members:
-.. autoclass:: doubles.ObjectDouble
+.. autoclass:: dobles.ObjectDouble
     :members:
 
 Test lifecycle
 --------------
-.. autofunction:: doubles.verify
-.. autofunction:: doubles.teardown
+.. autofunction:: dobles.verify
+.. autofunction:: dobles.teardown
 
 Exceptions
 ----------
 
-.. automodule:: doubles.exceptions
+.. automodule:: dobles.exceptions
     :members:

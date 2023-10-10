@@ -3,10 +3,10 @@ import inspect
 
 import six
 
-from doubles.call_count_accumulator import CallCountAccumulator
-from doubles.exceptions import MockExpectationError, VerifyingBuiltinDoubleArgumentError
-import doubles.lifecycle
-from doubles.verification import verify_arguments
+from dobles.call_count_accumulator import CallCountAccumulator
+from dobles.exceptions import MockExpectationError, VerifyingBuiltinDoubleArgumentError
+import dobles.lifecycle
+from dobles.verification import verify_arguments
 
 _any = object()
 
@@ -266,7 +266,7 @@ class Allowance(object):
         try:
             verify_arguments(self._target, self._method_name, args, kwargs)
         except VerifyingBuiltinDoubleArgumentError:
-            if doubles.lifecycle.ignore_builtin_verification():
+            if dobles.lifecycle.ignore_builtin_verification():
                 raise
 
     @verify_count_is_non_negative

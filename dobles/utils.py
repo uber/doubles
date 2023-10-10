@@ -1,6 +1,6 @@
 from importlib import import_module
 
-from doubles.exceptions import VerifyingDoubleImportError
+from dobles.exceptions import VerifyingDoubleImportError
 
 
 def get_module(module_path, full_path):

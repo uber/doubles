@@ -1,0 +1,12 @@
+# Code coverage
+coverage
+coveralls
+# Linting
+flake8
+# Validate package
+pyroma
+# Test runner
+pytest
+# Documentation
+Sphinx
+sphinx-rtd-theme

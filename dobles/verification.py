@@ -1,7 +1,7 @@
 import sys
 from inspect import isbuiltin, getcallargs, isfunction, ismethod
 
-from doubles.exceptions import (
+from dobles.exceptions import (
     VerifyingDoubleArgumentError,
     VerifyingBuiltinDoubleArgumentError,
     VerifyingDoubleError,
@@ -36,7 +36,7 @@ def _is_python_33():
     return v[0] == 3 and v[1] == 3
 
 
-def _verify_arguments_of_doubles__new__(target, args, kwargs):
+def _verify_arguments_of_dobles__new__(target, args, kwargs):
     """Verify arg/kwargs against a class's __init__
 
     :param class target: The class to verify against.
@@ -66,7 +66,7 @@ def _verify_arguments_of_doubles__new__(target, args, kwargs):
     )
 
 
-def _raise_doubles_error_from_index_error(method_name):
+def _raise_dobles_error_from_index_error(method_name):
     # Work Around for http://bugs.python.org/issue20817
     raise VerifyingDoubleArgumentError(
         "{method}() missing 3 or more arguments.".format(method=method_name)
@@ -104,8 +104,8 @@ def verify_arguments(target, method_name, args, kwargs):
     :raise: ``VerifyingDoubleError`` if the provided arguments do not match the signature.
     """
 
-    if method_name == '_doubles__new__':
-        return _verify_arguments_of_doubles__new__(target, args, kwargs)
+    if method_name == '_dobles__new__':
+        return _verify_arguments_of_dobles__new__(target, args, kwargs)
 
     attr = target.get_attr(method_name)
     method = attr.object
@@ -134,6 +134,6 @@ def _verify_arguments(method, method_name, args, kwargs):
         raise VerifyingDoubleArgumentError(str(e))
     except IndexError as e:
         if _is_python_33():
-            _raise_doubles_error_from_index_error(method_name)
+            _raise_dobles_error_from_index_error(method_name)
         else:
             raise e

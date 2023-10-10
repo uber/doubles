@@ -1,7 +1,7 @@
 from pytest import raises
 
-from doubles import allow, InstanceDouble, no_builtin_verification
-from doubles.exceptions import (
+from dobles import allow, InstanceDouble, no_builtin_verification
+from dobles.exceptions import (
     VerifyingDoubleArgumentError,
     VerifyingDoubleError,
     VerifyingDoubleImportError
@@ -68,12 +68,12 @@ class TestInstanceDouble(object):
         assert str(e.value) == 'No object at path: unittest.foo.'
 
     def test_mocking__call__works(self):
-        user = InstanceDouble('doubles.testing.User')
+        user = InstanceDouble('dobles.testing.User')
         allow(user).__call__.and_return('bob barker')
         assert user() == 'bob barker'
 
     def test_mocking__enter__and__exit__works(self):
-        user = InstanceDouble('doubles.testing.User')
+        user = InstanceDouble('dobles.testing.User')
         allow(user).__enter__.and_return('bob barker')
         allow(user).__exit__
 
@@ -81,11 +81,11 @@ class TestInstanceDouble(object):
             assert u == 'bob barker'
 
     def test_passing_kwargs_assings_them_as_attrs(self):
-        user = InstanceDouble('doubles.testing.User', name='Bob Barker')
+        user = InstanceDouble('dobles.testing.User', name='Bob Barker')
 
         assert user.name == 'Bob Barker'
 
     def test_class_with__getattr__(self):
-        test_obj = InstanceDouble('doubles.testing.ClassWithGetAttr')
+        test_obj = InstanceDouble('dobles.testing.ClassWithGetAttr')
         allow(test_obj).method.and_return('bob barker')
         assert test_obj.method() == 'bob barker'

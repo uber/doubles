@@ -1,10 +1,10 @@
 Terminology
 ===========
 
-Terminology used when discussing test doubles has often been confused, historically. To alleviate confusion, at least within the scope of using the Doubles library, the following definitions are provided:
+Terminology used when discussing test dobles has often been confused, historically. To alleviate confusion, at least within the scope of using the dobles library, the following definitions are provided:
 
 test double
-  An object that stands in for another object during the course of a test. This is a generic term that describes all the different types of objects the Doubles library provides.
+  An object that stands in for another object during the course of a test. This is a generic term that describes all the different types of objects the dobles library provides.
 stub
   A test double that returns a predetermined value when called.
 fake

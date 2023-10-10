@@ -1,8 +1,8 @@
 import inspect
 
-from doubles.class_double import ClassDouble
-from doubles.exceptions import ConstructorDoubleError
-from doubles.lifecycle import current_space
+from dobles.class_double import ClassDouble
+from dobles.exceptions import ConstructorDoubleError
+from dobles.lifecycle import current_space
 
 
 def allow(target):
@@ -37,7 +37,7 @@ def allow_constructor(target):
             'Cannot allow_constructor of {} since it is not a ClassDouble.'.format(target),
         )
 
-    return allow(target)._doubles__new__
+    return allow(target)._dobles__new__
 
 
 class AllowanceTarget(object):

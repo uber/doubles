@@ -1,12 +1,9 @@
-class OldStyleEmptyClass():
+class EmptyClass:
     pass
 
 
-class EmptyClass(OldStyleEmptyClass, object):
-    pass
+class ArbitraryCallable:
 
-
-class ArbitraryCallable(object):
     def __init__(self, value):
         self.value = value
 
@@ -14,7 +11,7 @@ class ArbitraryCallable(object):
         return self.value
 
 
-class OldStyleUser():
+class User:
     """An importable dummy class used for testing purposes."""
 
     class_attribute = 'foo'
@@ -53,7 +50,7 @@ class OldStyleUser():
         return 'method_with_positional_arguments return value'
 
     def method_with_doc(self):
-        """A basic method of OldStyleUser to illustrate existence of a docstring"""
+        """A basic method of User to illustrate existence of a docstring"""
         return
 
     @property
@@ -70,11 +67,8 @@ class OldStyleUser():
         pass
 
 
-class User(OldStyleUser, object):
-    pass
-
-
 class UserWithCustomNew(User):
+
     def __new__(cls, name, age):
         instance = User.__new__(cls)
         instance.name_set_in__new__ = name
@@ -82,17 +76,15 @@ class UserWithCustomNew(User):
 
 
 def top_level_function(arg1, arg2='default'):
-    return "{arg1} -- {arg2}".format(
-        arg1=arg1,
-        arg2=arg2
-    )
+    return "{arg1} -- {arg2}".format(arg1=arg1, arg2=arg2)
 
 
 def top_level_function_that_creates_an_instance():
-    return User('Bob Barker', 100), OldStyleUser('Bob Barker', 100)
+    return User('Bob Barker', 100), User('Bob Barker', 100)
 
 
 class ClassWithGetAttr(object):
+
     def __init__(self):
         self.attr = 'attr'
 
@@ -104,6 +96,7 @@ class ClassWithGetAttr(object):
 
 
 class Callable(object):
+
     def __call__(self, arg1):
         return arg1
 
@@ -113,6 +106,7 @@ def return_callable(func):
 
 
 def decorate_me(func):
+
     def decorated(arg1):
         return '{arg1} decorated'.format(arg1=arg1)
 
@@ -128,6 +122,7 @@ def decorated_function_callable(arg1):
 def decorated_function(arg1):
     return arg1
 
+
 callable_variable = Callable()
 
 class_method = User.class_method
@@ -135,11 +130,13 @@ instance_method = User('Bob', 25).get_name
 
 
 class NeverEquals(object):
+
     def __eq__(self, other):
         return False
 
 
 class AlwaysEquals(object):
+
     def __eq__(self, other):
         return True
 

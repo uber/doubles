@@ -1,8 +1,8 @@
 from collections import namedtuple
 from inspect import classify_class_attrs, isclass, ismodule, getmembers
 
-from doubles.object_double import ObjectDouble
-from doubles.verification import is_callable
+from dobles.object_double import ObjectDouble
+from dobles.verification import is_callable
 
 Attribute = namedtuple('Attribute', ['object', 'kind', 'defining_class'])
 
@@ -13,7 +13,7 @@ def _proxy_class_method_to_instance(original, name):
             return instance.__dict__[name](*args, **kwargs)
         return original(instance, *args, **kwargs)
 
-    func._doubles_target_method = original
+    func._dobles_target_method = original
     return func
 
 
@@ -48,16 +48,16 @@ class Target(object):
     def _determine_doubled_obj(self):
         """Return the target object.
 
-        Returns the object that should be treated as the target object. For partial doubles, this
-        will be the same as ``self.obj``, but for pure doubles, it's pulled from the special
-        ``_doubles_target`` attribute.
+        Returns the object that should be treated as the target object. For partial dobles, this
+        will be the same as ``self.obj``, but for pure dobles, it's pulled from the special
+        ``_dobles_target`` attribute.
 
         :return: The object to be doubled.
         :rtype: object
         """
 
         if isinstance(self.obj, ObjectDouble):
-            return self.obj._doubles_target
+            return self.obj._dobles_target
         else:
             return self.obj
 
@@ -129,7 +129,7 @@ class Target(object):
         """
         try:
             return getattr(
-                getattr(self.obj.__class__, attr_name), '_doubles_target_method', None
+                getattr(self.obj.__class__, attr_name), '_dobles_target_method', None
             )
         except AttributeError:
             return None

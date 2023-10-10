@@ -1,8 +1,8 @@
 import inspect
 
-from doubles.class_double import ClassDouble
-from doubles.exceptions import ConstructorDoubleError
-from doubles.lifecycle import current_space
+from dobles.class_double import ClassDouble
+from dobles.exceptions import ConstructorDoubleError
+from dobles.lifecycle import current_space
 
 
 def expect(target):
@@ -35,7 +35,7 @@ def expect_constructor(target):
             'Cannot allow_constructor of {} since it is not a ClassDouble.'.format(target),
         )
 
-    return expect(target)._doubles__new__
+    return expect(target)._dobles__new__
 
 
 class ExpectationTarget(object):

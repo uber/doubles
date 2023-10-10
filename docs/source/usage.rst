@@ -1,7 +1,7 @@
 Usage
 =====
 
-**Doubles** is used by creating stubs and mocks with the ``allow`` and ``expect`` functions. Each of these functions takes a "target" object as an argument. The target is the object whose methods will be allowed or expected to be called. For example, if you wanted to expect a call to something like ``User.find_by_id``, then ``User`` would be the target. Using a real object from your system as the target creates a so-called "partial double."
+**dobles** is used by creating stubs and mocks with the ``allow`` and ``expect`` functions. Each of these functions takes a "target" object as an argument. The target is the object whose methods will be allowed or expected to be called. For example, if you wanted to expect a call to something like ``User.find_by_id``, then ``User`` would be the target. Using a real object from your system as the target creates a so-called "partial double."
 
 There are also three constructors, ``InstanceDouble``, ``ClassDouble``, and ``ObjectDouble``, which can be used to create so-called "pure double" targets, meaning they are unique objects which don't modify any existing object in the system.
 
@@ -10,9 +10,9 @@ The details of ``allow``, ``expect``, and the three pure double constructors fol
 Stubs and allowances
 --------------------
 
-Stubs are doubles which have a predetermined result when called. To stub out a method on an object, use the ``allow`` function::
+Stubs are dobles which have a predetermined result when called. To stub out a method on an object, use the ``allow`` function::
 
-    from doubles import allow
+    from dobles import allow
 
     from myapp import User
 
@@ -29,7 +29,7 @@ On the first line of the test, we create a user object from a theoretical class 
 To instruct the stub to return a predetermined value, use the ``and_return`` method::
 
 
-    from doubles import allow
+    from dobles import allow
 
     from myapp import User
 
@@ -45,7 +45,7 @@ By default, once a method call has been allowed, it can be made any number of ti
 
 The examples shown so far will allow the stubbed method to be called with any arguments that match its signature. To specify that a method call is allowed only with specific arguments, use ``with_args``::
 
-    from doubles import allow
+    from dobles import allow
 
     from myapp import User
 
@@ -60,7 +60,7 @@ The examples shown so far will allow the stubbed method to be called with any ar
 
 You do not need to specifically call ``with_args``, calling the allowance directly is the same as calling ``with_args``.  The following example is identical to the code above::
 
-    from doubles import allow
+    from dobles import allow
 
     from myapp import User
 
@@ -75,7 +75,7 @@ You do not need to specifically call ``with_args``, calling the allowance direct
 
 Multiple allowances can be specified for the same method with different arguments and return values::
 
-    from doubles import allow
+    from dobles import allow
 
     from myapp import User
 
@@ -90,7 +90,7 @@ Multiple allowances can be specified for the same method with different argument
 
 To specify that a method can only be called *with no arguments*, use ``with_no_args``::
 
-    from doubles import allow
+    from dobles import allow
 
     from myapp import User
 
@@ -110,7 +110,7 @@ Mocks and expectations
 
 Stubs are useful for returning predetermined values, but they do not verify that they were interacted with. To add assertions about double interaction into the mix, create a mock object by declaring an *expectation*. This follows a very similar syntax, but uses ``expect`` instead of ``allow``::
 
-    from doubles import expect
+    from dobles import expect
 
     from myapp import User
 
@@ -122,7 +122,7 @@ Stubs are useful for returning predetermined values, but they do not verify that
 
 The above test will fail with a ``MockExpectationError`` exception, because we expected ``user.get_name`` to be called, but it was not. To satisfy the mock and make the test pass::
 
-    from doubles import expect
+    from dobles import expect
 
     from myapp import User
 
@@ -141,7 +141,7 @@ Doubling top-level functions
 
 The previous sections have shown examples where methods on classes are stubbed or mocked. It's also possible to double a top-level function by importing the module where the function is defined into your test file. Pass the module to ``allow`` or ``expect`` and proceed as normal. In the follow example, imagine that we want to stub a function called ``generate_user_token`` in the ``myapp.util`` module::
 
-    from doubles import allow
+    from dobles import allow
 
     from myapp import util, User
 
@@ -155,9 +155,9 @@ The previous sections have shown examples where methods on classes are stubbed o
 Fakes
 -----
 
-Fakes are doubles that have special logic to determine their return values, rather than returning a simple static value. A double can be given a fake implementation with the ``and_return_result_of`` method, which accepts any callable object::
+Fakes are dobles that have special logic to determine their return values, rather than returning a simple static value. A double can be given a fake implementation with the ``and_return_result_of`` method, which accepts any callable object::
 
-    from doubles import allow
+    from dobles import allow
 
     from myapp import User
 
@@ -176,7 +176,7 @@ Raising exceptions
 
 Both stubs and mocks allow a method call to raise an exception instead of returning a result using the ``and_raise`` method. Simply pass the object you want to raise as an argument. The following test will pass::
 
-    from doubles import allow
+    from dobles import allow
 
     from myapp import User
 
@@ -195,7 +195,7 @@ Both stubs and mocks allow a method call to raise an exception instead of return
 
 If the exception to be raised requires arguments, they can be passed to the Exception constructor directly before ``and_raises`` is invoked::
 
-    from doubles import allow
+    from dobles import allow
 
     from myapp import User
 
@@ -217,7 +217,7 @@ Call counts
 
 Limits can be set on how many times a doubled method can be called. In most cases, you'll specify an exact call count with the syntax ``exactly(n).times``, which will cause the test to fail if the doubled method is called fewer or more times than you declared::
 
-    from doubles import expect
+    from dobles import expect
 
     from myapp import User
 
@@ -231,7 +231,7 @@ Limits can be set on how many times a doubled method can be called. In most case
 
 The convenience methods ``once``, ``twice`` and ``never`` are provided for the most common use cases. The following test will pass::
 
-    from doubles import expect
+    from dobles import expect
 
     from myapp import User
 
@@ -248,7 +248,7 @@ The convenience methods ``once``, ``twice`` and ``never`` are provided for the m
 
 To specify lower or upper bounds on call count instead of an exact number, use ``at_least`` and ``at_most``::
 
-    from doubles import expect
+    from dobles import expect
 
     from myapp import User
 
@@ -265,12 +265,12 @@ To specify lower or upper bounds on call count instead of an exact number, use `
 
 Call counts can be specified for allowances in addition to expectations, with the caveat that only upper bounds are enforced for allowances, making ``at_least`` a no-op.
 
-Partial doubles
+Partial dobles
 ---------------
 
-In all of the examples so far, we added stubs and mocks to an instance of our production ``User`` class. These are called a partial doubles, because only the parts of the object that were explicitly declared as stubs or mocks are affected. The untouched methods on the object behave as usual. Let's take a look at an example that illustrates this.::
+In all of the examples so far, we added stubs and mocks to an instance of our production ``User`` class. These are called a partial dobles, because only the parts of the object that were explicitly declared as stubs or mocks are affected. The untouched methods on the object behave as usual. Let's take a look at an example that illustrates this.::
 
-    from doubles import allow
+    from dobles import allow
 
 
     class User(object):
@@ -292,18 +292,18 @@ In all of the examples so far, we added stubs and mocks to an instance of our pr
 
 For the sake of the example, assume that the two class methods on ``User`` are implemented to return an instance of the class. We create a sentinel value to use as a dummy user, and stub ``User`` to return that specific object when ``User.find_by_email`` is called. When we then call the two class methods, we see that the method we stubbed returns the sentinel value as we declared, and ``User.find_by_id`` retains its real implementation, returning a ``User`` object.
 
-After a test has run, all partial doubles will be restored to their pristine, undoubled state.
+After a test has run, all partial dobles will be restored to their pristine, undoubled state.
 
-Verifying doubles
+Verifying dobles
 -----------------
 
-One of the trade offs of using test doubles is that production code may change after tests are written, and the doubles may no longer match the interface of the real object they are doubling. This is known as "API drift" and is one possible cause of the situation where a test suite is passing but the production code is broken. The potential for API drift is often used as an argument against using test doubles. **Doubles** provides a feature called verifying doubles to help address API drift and to increase confidence in test suites.
+One of the trade offs of using test dobles is that production code may change after tests are written, and the dobles may no longer match the interface of the real object they are doubling. This is known as "API drift" and is one possible cause of the situation where a test suite is passing but the production code is broken. The potential for API drift is often used as an argument against using test dobles. **dobles** provides a feature called verifying dobles to help address API drift and to increase confidence in test suites.
 
-All test doubles created by **Doubles** are verifying doubles. They will cause the test to fail by raising a ``VerifyingDoubleError`` if an allowance or expectation is declared for a method that does not exist on the real object. In addition, the test will fail if the method exists but is specified with arguments that don't match the real method's signature.
+All test dobles created by **dobles** are verifying dobles. They will cause the test to fail by raising a ``VerifyingDoubleError`` if an allowance or expectation is declared for a method that does not exist on the real object. In addition, the test will fail if the method exists but is specified with arguments that don't match the real method's signature.
 
 In all the previous examples, we added stubs and mocks for real methods on the ``User`` object. Let's see what happens if we try to stub a method that doesn't exist::
 
-    from doubles import allow
+    from dobles import allow
 
     from myapp import User
 
@@ -315,7 +315,7 @@ In all the previous examples, we added stubs and mocks for real methods on the `
 
 Similarly, we cannot declare an allowance or expectation with arguments that don't match the actual signature of the doubled method::
 
-    from doubles import allow
+    from dobles import allow
 
     from myapp import User
 
@@ -329,13 +329,13 @@ Similarly, we cannot declare an allowance or expectation with arguments that don
 Disabling builtin verification
 ++++++++++++++++++++++++++++++
 
-Some of the objects in Python's standard library are written in C and do not support the same introspection capabilities that user-created objects do. Because of this, the automatic verification features of **Doubles** may not work when you try to double a standard library function. There are two approaches to work around this:
+Some of the objects in Python's standard library are written in C and do not support the same introspection capabilities that user-created objects do. Because of this, the automatic verification features of **dobles** may not work when you try to double a standard library function. There are two approaches to work around this:
 
-*Recommended*: Create a simple object that wraps the standard library you want to use. Use your wrapper object from your production code and double the wrapper in your tests. Test the wrapper itself in integration with the real standard library calls, without using test doubles, to ensure that your wrapper works as expected. Although this may seem heavy handed, it's actually a good approach, since it's a common adage of test doubles never to double objects you don't own.
+*Recommended*: Create a simple object that wraps the standard library you want to use. Use your wrapper object from your production code and double the wrapper in your tests. Test the wrapper itself in integration with the real standard library calls, without using test dobles, to ensure that your wrapper works as expected. Although this may seem heavy handed, it's actually a good approach, since it's a common adage of test dobles never to double objects you don't own.
 
 Alternatively, use the ``no_builtin_verification`` context manager to disable the automatic verification. This is not a recommended approach, but is available if you must use it::
 
-    from doubles import allow, InstanceDouble, no_builtin_verification
+    from dobles import allow, InstanceDouble, no_builtin_verification
 
     with no_builtin_verification():
         date = InstanceDouble('datetime.date')
@@ -344,19 +344,19 @@ Alternatively, use the ``no_builtin_verification`` context manager to disable th
 
         assert date.ctime() is None
 
-Pure doubles
+Pure dobles
 ------------
 
-Often it's useful to have a test double that represents a real object, but does not actually touch the real object. These doubles are called pure doubles, and like partial doubles, stubs and mocks are verified against the real object. In contrast to partial doubles, pure doubles do not implement any methods themselves, so allowances and expectations must be explicitly declared for any method that will be called on them. Calling a method that has not been allowed or expected on a pure double will raise an exception, even if the object the pure double represents has such a method.
+Often it's useful to have a test double that represents a real object, but does not actually touch the real object. These dobles are called pure dobles, and like partial dobles, stubs and mocks are verified against the real object. In contrast to partial dobles, pure dobles do not implement any methods themselves, so allowances and expectations must be explicitly declared for any method that will be called on them. Calling a method that has not been allowed or expected on a pure double will raise an exception, even if the object the pure double represents has such a method.
 
-There are three different constructors for creating pure doubles, depending on what type of object you're doubling and how it should be verified:
+There are three different constructors for creating pure dobles, depending on what type of object you're doubling and how it should be verified:
 
 InstanceDouble
 ++++++++++++++
 
 ``InstanceDouble`` creates a pure test double that will ensure its usage matches the API of an instance of the provided class. It's used as follows::
 
-    from doubles import InstanceDouble, allow
+    from dobles import InstanceDouble, allow
 
 
     def test_verifying_instance_double():
@@ -371,7 +371,7 @@ ClassDouble
 
 ``ClassDouble`` is the same as ``InstanceDouble``, except that it verifies against the class itself instead of an instance of the class. The following test will fail, assuming ``find_by_foo`` is not a real class method::
 
-    from doubles import ClassDouble, allow
+    from dobles import ClassDouble, allow
 
     def test_verifying_class_double():
       User = ClassDouble('myapp.User')
@@ -384,7 +384,7 @@ ObjectDouble
 
 ``ObjectDouble`` creates a pure test double that is verified against a specific object. The following test will fail, assuming ``foo`` is not a real method on ``some_object``::
 
-    from doubles import ObjectDouble, allow
+    from dobles import ObjectDouble, allow
 
     from myapp import some_object
 
@@ -401,7 +401,7 @@ Clearing Allowances
 
 If you ever want to to clear all allowances and expectations you have set without verifying them, use ``teardown``::
 
-    from doubles import teardown, expect
+    from dobles import teardown, expect
 
     def test_clearing_allowances():
         expect(some_object).foobar
@@ -410,7 +410,7 @@ If you ever want to to clear all allowances and expectations you have set withou
 
 If you ever want to to clear all allowances and expectations you have set on an individual object  without verifying them, use ``clear``::
 
-    from doubles import clear, expect
+    from dobles import clear, expect
 
     def test_clearing_allowances():
         expect(some_object).foobar
@@ -422,13 +422,13 @@ Patching
 
 ``patch`` is used to replace an existing object::
 
-    from doubles import patch
-    import doubles.testing
+    from dobles import patch
+    import dobles.testing
 
     def test_patch():
-        patch('doubles.testing.User', 'Bob Barker')
+        patch('dobles.testing.User', 'Bob Barker')
 
-        assert doubles.testing.User == 'Bob Barker'
+        assert dobles.testing.User == 'Bob Barker'
 
 Patches do not verify against the underlying object, so use them carefully.  Patches are automatically restored at the end of the test.
 
@@ -437,33 +437,33 @@ Patching Classes
 ``patch_class`` is a wrapper on top of ``patch`` to help you patch a python class with a ``ClassDouble``.  ``patch_class`` creates a ``ClassDouble`` of the class specified, patches the original class and returns the ``ClassDouble``::
 
 
-    from doubles import patch_class, ClassDouble
-    import doubles.testing
+    from dobles import patch_class, ClassDouble
+    import dobles.testing
 
     def test_patch_class():
-        class_double = patch_class('doubles.testing.User')
+        class_double = patch_class('dobles.testing.User')
 
-        assert doubles.testing.User is class_double
+        assert dobles.testing.User is class_double
         assert isinstance(class_double, ClassDouble)
 
 Stubbing Constructors
 ---------------------
 
-By default ``ClassDoubles`` cannot create new instances::
+By default ``Classdobles`` cannot create new instances::
 
-    from doubles import ClassDouble
+    from dobles import ClassDouble
 
     def test_unstubbed_constructor():
-        User = ClassDouble('doubles.testing.User')
+        User = ClassDouble('dobles.testing.User')
         User('Teddy', 1901)  # Raises an UnallowedMethodCallError
 
 Stubbing the constructor of a ``ClassDouble`` is very similar to using ``allow`` or ``expect`` except we use: ``allow_constructor`` or ``expect_constructor``, and don't specify a method::
 
-    from doubles import allow_constructor, ClassDouble
-    import doubles.testing
+    from dobles import allow_constructor, ClassDouble
+    import dobles.testing
 
     def test_allow_constructor_with_args():
-        User = ClassDouble('doubles.testing.User')
+        User = ClassDouble('dobles.testing.User')
 
         allow_constructor(User).with_args('Bob', 100).and_return('Bob')
 
@@ -472,7 +472,7 @@ Stubbing the constructor of a ``ClassDouble`` is very similar to using ``allow``
 The return value of ``allow_constructor`` and ``expect_constructor`` support all of the same methods as allow/expect. (e.g. ``with_args``, ``once``, ``exactly``, .etc).
 
 
-*NOTE*: Currently you can only stub the constructor of ``ClassDoubles``
+*NOTE*: Currently you can only stub the constructor of ``Classdobles``
 
 Stubbing Asynchronous Methods
 -----------------------------
@@ -485,10 +485,10 @@ Returning Values
 
 Stubbing a method with ``and_return_future`` is similar to using ``and_return``, except the value is wrapped in a ``Future``::
 
-    from doubles import allow, InstanceDouble
+    from dobles import allow, InstanceDouble
 
     def test_and_return_future():
-        user = InstanceDouble('doubles.testing.User')
+        user = InstanceDouble('dobles.testing.User')
         allow(user).instance_method.and_return_future('Bob Barker')
 
         result = user.instance_method()
@@ -499,11 +499,11 @@ Raising Exceptions
 
 Stubbing a method with ``and_raise_future`` is similar to using ``and_raise``, except the exceptions is wrapped in a ``Future``::
 
-    from doubles import allow, InstanceDouble
+    from dobles import allow, InstanceDouble
     from pytest import raises
 
     def test_and_raise_future():
-        user = InstanceDouble('doubles.testing.User')
+        user = InstanceDouble('dobles.testing.User')
         exception = Exception('Bob Barker')
         allow(user).instance_method.and_raise_future(exception)
         result = user.instance_method()

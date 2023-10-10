@@ -2,9 +2,9 @@ import sys
 from functools import wraps
 from inspect import isbuiltin
 
-from doubles.allowance import build_argument_repr_string
-from doubles.exceptions import UnallowedMethodCallError
-from doubles.proxy_property import ProxyProperty
+from dobles.allowance import build_argument_repr_string
+from dobles.exceptions import UnallowedMethodCallError
+from dobles.proxy_property import ProxyProperty
 
 
 def double_name(name):
@@ -66,7 +66,7 @@ class ProxyMethod(object):
         :param dict kwargs: The keyword arguments the doubled method was called with.
         :return: The return value the doubled method was declared to return.
         :rtype: object
-        :raise: ``UnallowedMethodCallError`` if no matching doubles were found.
+        :raise: ``UnallowedMethodCallError`` if no matching dobles were found.
         """
 
         expectation = self._find_expectation(args, kwargs)

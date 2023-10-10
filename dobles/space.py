@@ -1,10 +1,10 @@
-from doubles.patch import Patch
-from doubles.proxy import Proxy
+from dobles.patch import Patch
+from dobles.proxy import Proxy
 
 
 class Space(object):
     """
-    A container object for all the doubles created during the execution of a test case. Maintains
+    A container object for all the dobles created during the execution of a test case. Maintains
     a one-to-one mapping of target objects and ``Proxy`` objects. Maintained by the ``lifecycle``
     module and not intended to be used directly by other objects.
     """

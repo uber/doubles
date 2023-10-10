@@ -1,11 +1,11 @@
 from inspect import isclass
 
-from doubles.exceptions import VerifyingDoubleImportError
-from doubles.object_double import ObjectDouble
-from doubles.utils import get_module, get_path_components
+from dobles.exceptions import VerifyingDoubleImportError
+from dobles.object_double import ObjectDouble
+from dobles.utils import get_module, get_path_components
 
 
-def _get_doubles_target(module, class_name, path):
+def _get_dobles_target(module, class_name, path):
     """Validate and return the class to be doubled.
 
     :param module module: The module that contains the class that will be doubled.
@@ -17,16 +17,16 @@ def _get_doubles_target(module, class_name, path):
     """
 
     try:
-        doubles_target = getattr(module, class_name)
-        if isinstance(doubles_target, ObjectDouble):
-            return doubles_target._doubles_target
+        dobles_target = getattr(module, class_name)
+        if isinstance(dobles_target, ObjectDouble):
+            return dobles_target._dobles_target
 
-        if not isclass(doubles_target):
+        if not isclass(dobles_target):
             raise VerifyingDoubleImportError(
                 'Path does not point to a class: {}.'.format(path)
             )
 
-        return doubles_target
+        return dobles_target
     except AttributeError:
         raise VerifyingDoubleImportError(
             'No object at path: {}.'.format(path)
@@ -49,6 +49,6 @@ class InstanceDouble(ObjectDouble):
     def __init__(self, path, **kwargs):
         module_path, class_name = get_path_components(path)
         module = get_module(module_path, path)
-        self._doubles_target = _get_doubles_target(module, class_name, path)
+        self._dobles_target = _get_dobles_target(module, class_name, path)
         for k, v in kwargs.items():
             setattr(self, k, v)

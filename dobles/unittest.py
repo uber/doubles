@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 import unittest
 
-from doubles.lifecycle import teardown, verify
+from dobles.lifecycle import teardown, verify
 
 
 def wrap_test(test_func):

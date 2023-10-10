@@ -5,15 +5,15 @@ try:
 except ImportError:
     from io import StringIO
 
-from doubles.instance_double import InstanceDouble
-from doubles.targets.expectation_target import expect
-from doubles.unittest import TestCase
+from dobles.instance_double import InstanceDouble
+from dobles.targets.expectation_target import expect
+from dobles.unittest import TestCase
 
 
 def test_unittest_integration():
     class UnittestIntegration(TestCase):
         def runTest(self):
-            subject = InstanceDouble('doubles.testing.User')
+            subject = InstanceDouble('dobles.testing.User')
 
             expect(subject).instance_method
 

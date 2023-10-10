@@ -1,4 +1,4 @@
-from doubles.allowance import Allowance
+from dobles.allowance import Allowance
 
 
 class Expectation(Allowance):

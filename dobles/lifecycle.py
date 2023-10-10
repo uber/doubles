@@ -1,7 +1,7 @@
 from contextlib import contextmanager
 from threading import local
 
-from doubles.space import Space
+from dobles.space import Space
 
 _thread_local_data = local()
 
@@ -20,7 +20,7 @@ def current_space():
 
 
 def teardown():
-    """Tears down the current Doubles environment. Must be called after each test case."""
+    """Tears down the current dobles environment. Must be called after each test case."""
     if hasattr(_thread_local_data, 'current_space'):
         _thread_local_data.current_space.teardown()
         del _thread_local_data.current_space

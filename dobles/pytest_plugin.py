@@ -1,6 +1,6 @@
 import pytest
 
-from doubles.lifecycle import teardown, verify
+from dobles.lifecycle import teardown, verify
 
 
 @pytest.hookimpl(hookwrapper=True)

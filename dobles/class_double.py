@@ -1,7 +1,7 @@
-from doubles.exceptions import UnallowedMethodCallError
-from doubles.instance_double import InstanceDouble
-from doubles.target import Target
-from doubles.verification import verify_arguments
+from dobles.exceptions import UnallowedMethodCallError
+from dobles.instance_double import InstanceDouble
+from dobles.target import Target
+from dobles.verification import verify_arguments
 
 
 def patch_class(input_class):
@@ -12,7 +12,7 @@ def patch_class(input_class):
     """
     class Instantiator(object):
         @classmethod
-        def _doubles__new__(self, *args, **kwargs):
+        def _dobles__new__(self, *args, **kwargs):
             pass
 
     new_class = type(input_class.__name__, (input_class, Instantiator), {})
@@ -35,20 +35,20 @@ class ClassDouble(InstanceDouble):
 
     def __init__(self, path):
         super(ClassDouble, self).__init__(path)
-        self._doubles_target = patch_class(self._doubles_target)
-        self._target = Target(self._doubles_target)
+        self._dobles_target = patch_class(self._dobles_target)
+        self._target = Target(self._dobles_target)
 
     def __call__(self, *args, **kwargs):
-        """Verify arguments and proxy to _doubles__new__
+        """Verify arguments and proxy to _dobles__new__
 
         :rtype obj:
         :raises VerifyingDoubleArgumentError: If args/kwargs don't match the expected arguments of
             __init__ of the underlying class.
         """
-        verify_arguments(self._target, '_doubles__new__', args, kwargs)
-        return self._doubles__new__(*args, **kwargs)
+        verify_arguments(self._target, '_dobles__new__', args, kwargs)
+        return self._dobles__new__(*args, **kwargs)
 
-    def _doubles__new__(self, *args, **kwargs):
+    def _dobles__new__(self, *args, **kwargs):
         """Raises an UnallowedMethodCallError
 
         NOTE: This method is here only to raise if it has not been stubbed

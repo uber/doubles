@@ -11,7 +11,7 @@ class ObjectDouble(object):
     is_class = False
 
     def __init__(self, target):
-        self._doubles_target = target
+        self._dobles_target = target
 
     def __repr__(self):
         """Provides a string representation of the double.
@@ -27,6 +27,6 @@ class ObjectDouble(object):
 
         return '<{} of {!r} object at {}>'.format(
             class_name,
-            self._doubles_target,
+            self._dobles_target,
             address
         )

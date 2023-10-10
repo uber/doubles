@@ -1,14 +1,14 @@
-Contributing to Doubles
+Contributing to Dobles
 =======================
 
-Thank you for using Doubles and for helping to improve it!
+Thank you for using Dobles and for helping to improve it!
 
 Bugs
 ----
 
-If you find a bug while using Doubles, please open an issue on GitHub Issues: https://github.com/uber/doubles/issues.
-Any exceptions raised by Doubles that are not one of the exception classes in the ``doubles.exceptions`` module are
-considered bugs. Unexpected or surprising behavior may also be considered bugs. The goal is for Doubles to be intuitive
+If you find a bug while using Dobles, please open an issue on GitHub Issues: https://github.com/smartfastlabs/dobles/issues.
+Any exceptions raised by Dobles that are not one of the exception classes in the ``dobles.exceptions`` module are
+considered bugs. Unexpected or surprising behavior may also be considered bugs. The goal is for Dobles to be intuitive
 and consistent.
 
 Features

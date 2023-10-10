@@ -1,2 +1,2 @@
 [report]
-omit = doubles/testing.py
+omit = dobles/testing.py

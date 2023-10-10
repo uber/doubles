@@ -1,10 +1,10 @@
 .PHONY: test
 test: clean lint
-	@py.test -s -p no:doubles test
+	@py.test -s -p no:dobles test
 
 .PHONY: lint
 lint:
-	@flake8 doubles test
+	@flake8 dobles test
 
 .PHONY: clean
 clean:

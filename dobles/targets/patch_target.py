@@ -1,5 +1,5 @@
-from doubles.class_double import ClassDouble
-from doubles.lifecycle import current_space
+from dobles.class_double import ClassDouble
+from dobles.lifecycle import current_space
 
 
 def patch_class(target):

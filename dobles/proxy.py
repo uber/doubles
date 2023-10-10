@@ -1,10 +1,10 @@
-from doubles.method_double import MethodDouble
-from doubles.target import Target
+from dobles.method_double import MethodDouble
+from dobles.target import Target
 
 
 class Proxy(object):
     """
-    An intermediate object used to maintain a mapping between target objects and method doubles.
+    An intermediate object used to maintain a mapping between target objects and method dobles.
     """
 
     def __init__(self, obj):
@@ -13,7 +13,7 @@ class Proxy(object):
         """
 
         self._target = Target(obj)
-        self._method_doubles = {}
+        self._method_dobles = {}
 
     def add_allowance(self, method_name, caller):
         """Adds a new allowance for the given method name.
@@ -43,16 +43,16 @@ class Proxy(object):
         values.
         """
 
-        for method_double in self._method_doubles.values():
+        for method_double in self._method_dobles.values():
             method_double.restore_original_method()
 
     def verify(self):
-        """Verifies all expectations on all method doubles.
+        """Verifies all expectations on all method dobles.
 
         :raise: ``MockExpectationError`` on the first expectation that is not satisfied, if any.
         """
 
-        for method_double in self._method_doubles.values():
+        for method_double in self._method_dobles.values():
             method_double.verify()
 
     def method_double_for(self, method_name):
@@ -63,7 +63,7 @@ class Proxy(object):
         :rtype: MethodDouble
         """
 
-        if method_name not in self._method_doubles:
-            self._method_doubles[method_name] = MethodDouble(method_name, self._target)
+        if method_name not in self._method_dobles:
+            self._method_dobles[method_name] = MethodDouble(method_name, self._target)
 
-        return self._method_doubles[method_name]
+        return self._method_dobles[method_name]

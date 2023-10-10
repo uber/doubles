@@ -14,17 +14,17 @@ This feature is deprecated, I recommend  using the ``patch_class`` method, which
 I get a ``VerifyingDoubleError`` "Cannot double method ... does not implement it", whats going on?
 --------------------------------------------------------------------------------------------------
 
-Make sure you are using a version of doubles greater than 1.0.1.  There was a bug prior to 1.0.1 that would not allow you to mock callable objects.
+Make sure you are using a version of dobles greater than 1.0.1.  There was a bug prior to 1.0.1 that would not allow you to mock callable objects.
 
 
 I get a ``VerifyingBuiltinDoubleArgumentError`` "... is not a Python func", what is going on?
 ---------------------------------------------------------------------------------------------
 
-Python does not allow doubles to look into builtin functions and asked them what their call signatures are.  Since we can't do this it is impossible to verify the arguments passed into a stubbed method.  By default if doubles cannot inspect a function it raises a ``VerifyingBuiltinDoubleArgumentError``, this is most common with builtins.  To bypass this functionality for builtins you can do::
+Python does not allow dobles to look into builtin functions and asked them what their call signatures are.  Since we can't do this it is impossible to verify the arguments passed into a stubbed method.  By default if dobles cannot inspect a function it raises a ``VerifyingBuiltinDoubleArgumentError``, this is most common with builtins.  To bypass this functionality for builtins you can do::
 
       import functools
 
-      from doubles import no_builtin_verification, allow
+      from dobles import no_builtin_verification, allow
 
 
       with no_builtin_verification():
@@ -42,7 +42,7 @@ How can I make SomeClass(args, kwargs) return my double?
 
 Use ``patch_class`` and ``allow_constructor``::
 
-    from doubles import patch_class, allow_constructor
+    from dobles import patch_class, allow_constructor
 
     import myapp
 
@@ -57,7 +57,7 @@ Use ``patch_class`` and ``allow_constructor``::
 
 ``allow_constructor`` supports all of the same functionality as ``allow``::
 
-    from doubles import patch_class, allow_constructor
+    from dobles import patch_class, allow_constructor
 
     import myapp
 
@@ -73,9 +73,9 @@ Use ``patch_class`` and ``allow_constructor``::
 How can I patch something like I do with mock?
 ----------------------------------------------
 
-Doubles also has ``patch`` but it isn't a decorator::
+dobles also has ``patch`` but it isn't a decorator::
 
-    from doubles import allow, patch
+    from dobles import allow, patch
 
     import myapp
 

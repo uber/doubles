@@ -3,11 +3,11 @@ Installation
 
 From PyPI::
 
-  $ pip install doubles
+  $ pip install dobles
 
 
 From source::
 
-  $ git clone https://github.com/uber/doubles
-  $ cd doubles
+  $ git clone https://github.com/uber/dobles
+  $ cd dobles
   $ python setup.py install
